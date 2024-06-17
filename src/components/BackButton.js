@@ -18,7 +18,6 @@ const styles = StyleSheet.create({
   },
 
   backText: {
-    fontWeight: "bold",
     fontSize: 25,
   },
 });
