@@ -1,15 +1,20 @@
 import React, {useState} from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, SafeAreaView, Linking, Pressable } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Linking, Pressable, Image} from "react-native";
+
+import BackButton from "../components/BackButton";
 
 export default function SignInScreen() {
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <Pressable>
-        <Image source={require("./src/assets/back.png")} />
+        <BackButton />
       </Pressable>
-      <View style={styles.container}>
+      <View style={styles.body}>
         <Text style={styles.title}>Sign in</Text>
+        <Text style={styles.paragraph}>
+          {}
+        </Text>
       </View>
     </SafeAreaView>
   );
@@ -18,12 +23,30 @@ export default function SignInScreen() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
+    padding: "1%"
+  },
+
+  back: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  backText: {
+    fontWeight: "bold",
+    fontSize: 25,
+  },
+
+  body: {
     alignItems: "center",
     justifyContent: "center",
   },
 
   title: {
     fontWeight: "bold",
-    fontSize: 24,
-  }
+    fontSize: 45,
+  },
+
+  paragraph: {
+    fontSize: 30,
+  },
 });
