@@ -1,12 +1,24 @@
 import React from "react";
-import { Text, View, Image} from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 
 export default function BackButton() {
     return (
-      <View style={{flexDirection: "row", alignItems: "center"}}>
+      <View style={styles.back}>
         <Text>{"\n\n\n"}</Text>
         <Image source={require("./../assets/caret-left.png")} />
-        <Text style={{fontWeight: "bold", fontSize: 25}}>Back</Text>
+        <Text style={styles.backText}>Back</Text>
       </View>
     );
 }
+
+const styles = StyleSheet.create({
+  back: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  backText: {
+    fontWeight: "bold",
+    fontSize: 25,
+  },
+});
