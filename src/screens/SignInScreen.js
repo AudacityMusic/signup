@@ -11,7 +11,7 @@ export default function SignInScreen() {
         <BackButton />
       </Pressable>
       <View style={styles.body}>
-        <Text style={styles.title}>Sign in</Text>
+        <Text style={styles.title}>Sign In</Text>
         <Text style={styles.paragraph}>
           {"\n"}
           {"Thank you for choosing to help\n"}
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 300,
     height: 50,
-    borderRadius: 10,
+    borderRadius: 15,
   },
 
   OAuthLogo: {
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   },
 
   GoogleOAuth: {
-    backgroundColor: "#000",
+    backgroundColor: "#353535",
     color: "#fff",
   },
 });
