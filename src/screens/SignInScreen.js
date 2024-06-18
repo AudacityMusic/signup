@@ -1,6 +1,5 @@
-import React, {useState} from "react";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, SafeAreaView, Linking, Pressable, Image} from "react-native";
+import React from "react";
+import { StyleSheet, Text, View, SafeAreaView, Pressable, Image} from "react-native";
 
 import BackButton from "../components/BackButton";
 
