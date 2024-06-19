@@ -1,15 +1,11 @@
 name: preview
 on:
-  # This workflow should only be run on trusted pull requests
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize]
 
 jobs:
   update:
     name: EAS Update
-    if: |
-      github.event.pull_request.author_association == 'MEMBER' ||
-      github.event.pull_request.author_association == 'COLLABORATOR'
     runs-on: ubuntu-latest
     permissions:
       contents: read
