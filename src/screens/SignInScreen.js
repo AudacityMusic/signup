@@ -1,5 +1,12 @@
 import React from "react";
-import { StyleSheet, Text, View, SafeAreaView, Pressable, Image} from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Pressable,
+  Image,
+} from "react-native";
 
 import BackButton from "../components/BackButton";
 
@@ -20,8 +27,11 @@ export default function SignInScreen() {
         </Text>
 
         <Pressable style={[styles.OAuth, styles.GoogleOAuth]}>
-          <Image style={styles.OAuthLogo} source={require("./../assets/google-logo.png")}/>
-          <Text style={[styles.OAuthText]}>  Sign in with Google</Text>
+          <Image
+            style={styles.OAuthLogo}
+            source={require("./../assets/google-logo.png")}
+          />
+          <Text style={[styles.OAuthText]}> Sign in with Google</Text>
         </Pressable>
       </View>
     </SafeAreaView>
@@ -31,7 +41,7 @@ export default function SignInScreen() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
-    padding: "1%"
+    padding: "1%",
   },
 
   body: {
