@@ -1,8 +1,8 @@
 import "@expo/metro-runtime";
 import React from "react";
 
-import SignInScreen from "./src/screens/SignInScreen";
+import HomeScreen from "./src/screens/HomeScreen";
 
 export default function App() {
-  return <SignInScreen />;
+  return <HomeScreen />;
 }
