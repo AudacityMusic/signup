@@ -1,4 +1,3 @@
-import React from "react";
 import { StyleSheet, Text, Image, View, Pressable } from "react-native";
 
 export default function HomeScreen() {
