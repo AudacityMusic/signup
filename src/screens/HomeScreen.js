@@ -3,7 +3,6 @@ import { StyleSheet, Text, Image, View, Pressable } from "react-native";
 
 export default function HomeScreen() {
   return (
-    // TODO
     <View style={styles.container}>
       <Image source={require("./../assets/logo.png")} style={styles.logo} />
       <Pressable style={styles.volunteer}>
@@ -78,5 +77,4 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 10,
   },
-  // TODO
 });
