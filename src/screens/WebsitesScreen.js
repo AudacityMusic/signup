@@ -20,7 +20,7 @@ export default function WebsitesScreen() {
           <Text style={{ fontSize: 15 }}>
             <Image
               source={require("../assets/caret-left.png")}
-              style={styles.fitsizeback}
+              style={styles.fitSizeBack}
             />
             Back
           </Text>
@@ -40,7 +40,7 @@ export default function WebsitesScreen() {
           Eternity Band
         </Text>
       </Pressable>
-      <Text style={styles.space}></Text>
+
       <Pressable
         style={styles.linkContainer2}
         onPress={() => openURL("https://goaudacity.com/")}
@@ -53,7 +53,6 @@ export default function WebsitesScreen() {
           Audacity Workshop
         </Text>
       </Pressable>
-      <Text style={styles.space}></Text>
 
       <Pressable
         style={styles.linkContainer3}
@@ -84,7 +83,6 @@ export default function WebsitesScreen() {
 }
 
 const styles = StyleSheet.create({
-  // TODO
   container: {
     flex: 1,
     justifyContent: "center",
@@ -93,7 +91,6 @@ const styles = StyleSheet.create({
   },
   header: {
     top: -180,
-    maginTop: 10,
     fontSize: 50,
     fontWeight: "bold",
   },
@@ -105,7 +102,7 @@ const styles = StyleSheet.create({
   linkContainer2: {
     marginVertical: 10,
     top: -180,
-    left: -20,
+    left: -25,
   },
   linkContainer3: {
     marginVertical: 10,
@@ -114,7 +111,7 @@ const styles = StyleSheet.create({
   },
   linkContainer4: {
     marginVertical: 10,
-    top: -165,
+    top: -180,
     left: -65,
   },
   linkText: {
@@ -122,16 +119,10 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
     fontSize: 20,
   },
-  space: {
-    height: 10,
-  },
   backButton: {
     top: -200,
     marginLeft: -200,
     flexDirection: "row",
-  },
-  imageSize: {
-    fontSize: 10,
   },
   fitSize: {
     margin: 2,
@@ -139,7 +130,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  fitsizeback: {
+  fitSizeBack: {
     width: 24,
     height: 24,
   },
