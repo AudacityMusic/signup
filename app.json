@@ -12,13 +12,15 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "org.eternityband.signup"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/logo.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "org.eternityband.signup"
     },
     "web": {
       "favicon": "./src/assets/logo.png"
