@@ -1,21 +1,27 @@
 import { StyleSheet, Text, Image, View, Pressable } from "react-native";
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Image source={require("./../assets/logo.png")} style={styles.logo} />
-      <Pressable style={styles.volunteer}>
+      <Pressable
+        style={styles.volunteer}
+        onPress={() => navigation.navigate("Sign In")}
+      >
         <Text style={styles.buttonText}>Volunteer</Text>
       </Pressable>
-      <Pressable style={styles.request}>
+      <Pressable
+        style={styles.request}
+        onPress={() => navigation.navigate("Sign In")}
+      >
         <Text style={[styles.buttonText, { fontSize: 24 }]}>
           Request a Concert
         </Text>
       </Pressable>
-      <Pressable>
+      <Pressable onPress={() => navigation.navigate("Donate")}>
         <Text style={styles.smallButton}>Donate</Text>
       </Pressable>
-      <Pressable>
+      <Pressable onPress={() => navigation.navigate("Websites")}>
         <Text style={styles.smallButton}>Visit our websites</Text>
       </Pressable>
     </View>
