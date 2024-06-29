@@ -1,10 +1,13 @@
-import { StyleSheet, Text ,TextInput,View} from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function TextField(props) {
   return (
     // TODO
     <View style={styles.container}>
-      <Text>{props.title}<Text style={styles.red}>*</Text></Text>
+      <Text>
+        {props.title}
+        <Text style={styles.red}>*</Text>
+      </Text>
       <TextInput style={styles.inputField}></TextInput>
     </View>
   );
@@ -12,15 +15,15 @@ export default function TextField(props) {
 
 const styles = StyleSheet.create({
   inputField: {
-    borderRadius:15,
-    borderWidth:3,
-    flexGrow:0.5,
-    textAlignVertical:"top"
+    borderRadius: 15,
+    borderWidth: 3,
+    flexGrow: 0.5,
+    textAlignVertical: "top",
   },
-  red:{
-    color:"red"
+  red: {
+    color: "red",
   },
-  container:{
-    flexGrow:1
-  }
+  container: {
+    flexGrow: 1,
+  },
 });
