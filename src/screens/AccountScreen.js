@@ -1,7 +1,7 @@
-
 import { StyleSheet, Text, View } from "react-native";
 import LogOutButton from "../components/Logout.js";
 import Profile from "../components/Profile.js";
+
 export default function AccountScreen() {
   return (
     <View>
@@ -11,4 +11,3 @@ export default function AccountScreen() {
     </View>
   );
 }
-
