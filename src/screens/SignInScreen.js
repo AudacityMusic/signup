@@ -28,7 +28,7 @@ export default function SignInScreen() {
         <Pressable style={[styles.OAuth, styles.GoogleOAuth]}>
           <Image
             style={styles.OAuthLogo}
-            source={require("../assets/google-logo.png")}
+            source={require("../assets/google.png")}
           />
           <Text style={[styles.OAuthText]}> Sign in with Google</Text>
         </Pressable>

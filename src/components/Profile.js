@@ -5,7 +5,7 @@ export default function Profile() {
     <View style={styles.background}>
       <Image
         style={styles.image}
-        source={require("./../assets/logo.png")}
+        source={require("./../assets/audacity-music-club.png")}
       ></Image>
       <View>
         <Text style={styles.name}>Rick</Text>

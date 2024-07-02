@@ -3,7 +3,10 @@ import { StyleSheet, Text, Image, View, Pressable } from "react-native";
 export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
-      <Image source={require("./../assets/logo.png")} style={styles.logo} />
+      <Image
+        source={require("./../assets/audacity-music-club.png")}
+        style={styles.logo}
+      />
       <Pressable
         style={styles.volunteer}
         onPress={() => navigation.navigate("Sign In")}

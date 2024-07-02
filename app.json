@@ -4,10 +4,10 @@
     "slug": "audacity-music-club",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/assets/logo.png",
+    "icon": "./src/assets/audacity-music-club.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./src/assets/logo.png",
+      "image": "./src/assets/audacity-music-club.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,13 +17,13 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/logo.png",
+        "foregroundImage": "./src/assets/audacity-music-club.png",
         "backgroundColor": "#ffffff"
       },
       "package": "org.eternityband.signup"
     },
     "web": {
-      "favicon": "./src/assets/logo.png"
+      "favicon": "./src/assets/audacity-music-club.png"
     },
     "extra": {
       "eas": {
