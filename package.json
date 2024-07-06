@@ -11,6 +11,7 @@
     "check": "prettier --check src/**/*.js App.js"
   },
   "dependencies": {
+    "@expo/metro-runtime": "^3.2.1",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.10.0",
     "expo": "~51.0.17",

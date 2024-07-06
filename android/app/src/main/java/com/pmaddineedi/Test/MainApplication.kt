@@ -1,4 +1,4 @@
-package com.pmaddineedi.Test
+package org.eternityband.signup
 
 import android.app.Application
 import android.content.res.Configuration
