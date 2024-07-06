@@ -7,6 +7,8 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web"
+    "format": "prettier --write src/**/*.js App.js",
+    "check": "prettier --check src/**/*.js App.js"
   },
   "dependencies": {
     "@react-navigation/native": "^6.1.17",
