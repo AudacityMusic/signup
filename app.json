@@ -1,28 +1,35 @@
 {
   "expo": {
-    "name": "Test",
-    "slug": "Test",
+    "name": "Audacity Music Club",
+    "slug": "audacity-music-club",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./src/assets/audacity-music-club.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./src/assets/audacity-music-club.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "org.eternityband.signup"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./src/assets/audacity-music-club.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.pmaddineedi.Test"
+      "package": "org.eternityband.signup"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./src/assets/audacity-music-club.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "56bb99cb-9cbe-423d-9a88-3f82a0cf3aa0"
+      }
+    },
+    "owner": "audacitymusic"
   }
 }

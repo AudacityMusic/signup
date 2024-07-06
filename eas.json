@@ -1,11 +1,11 @@
 {
-    "build": {
-      "preview": {
-        "distribution": "internal",
-        "channel": "preview",
-        "ios": {
-          "simulator": true
-        }
+  "build": {
+    "preview": {
+      "distribution": "internal",
+      "channel": "preview",
+      "ios": {
+        "simulator": true
       }
     }
   }
+}
