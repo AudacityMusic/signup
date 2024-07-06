@@ -1,34 +1,26 @@
 {
-  "name": "signup",
+  "name": "test",
   "version": "1.0.0",
   "main": "expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "format": "prettier --write src/**/*.js App.js",
-    "check": "prettier --check src/**/*.js App.js"
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web"
   },
   "dependencies": {
-    "@react-native-community/cli": "^13.6.9",
     "@react-navigation/native": "^6.1.17",
-    "@react-navigation/native-stack": "^6.9.26",
-    "expo": "~51.0.11",
-    "expo-constants": "^16.0.2",
+    "@react-navigation/native-stack": "^6.10.0",
+    "expo": "~51.0.17",
+    "expo-linear-gradient": "^13.0.2",
     "expo-status-bar": "~1.12.1",
-    "expo-updates": "~0.25.17",
-    "react": "^18.2.0",
-    "react-dom": "18.2.0",
+    "react": "18.2.0",
     "react-native": "0.74.2",
-    "react-native-web": "~0.19.10",
-    "react-native-screens": "3.31.1",
-    "react-native-safe-area-context": "4.10.1"
+    "react-native-safe-area-context": "^4.10.7",
+    "react-native-screens": "^3.32.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0",
-    "@expo/metro-runtime": "^3.2.1",
-    "prettier": "^3.3.2"
+    "@babel/core": "^7.20.0"
   },
   "private": true
 }
