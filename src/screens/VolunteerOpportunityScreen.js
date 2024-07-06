@@ -110,13 +110,13 @@ const styles = StyleSheet.create({
   about: {
     flex: 3,
     paddingLeft: "4%",
-    paddingTop:"5%",
+    paddingTop: "5%",
     paddingRight: "8%",
   },
   tagsContainer: {
     flex: 1.5,
     paddingLeft: "4%",
-    paddingTop:"5%",
+    paddingTop: "5%",
     flexDirection: "column",
   },
   tags: {
