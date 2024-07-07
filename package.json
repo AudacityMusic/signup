@@ -6,8 +6,6 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
     "web": "expo start --web",
     "format": "prettier --write src/**/*.js App.js",
     "check": "prettier --check src/**/*.js App.js"
@@ -19,7 +17,6 @@
     "expo": "~51.0.17",
     "expo-constants": "^16.0.2",
     "expo-linear-gradient": "^13.0.2",
-    "expo-linear-gradient": "^13.0.2",
     "expo-status-bar": "~1.12.1",
     "react": "18.2.0",
     "react-native": "0.74.2",
@@ -27,7 +24,8 @@
     "react-native-screens": "^3.32.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "prettier": "^3.3.2"
   },
   "private": true
 }
