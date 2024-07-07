@@ -39,16 +39,15 @@ const styles = StyleSheet.create({
   background: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f5f5f5", 
+    backgroundColor: "#f5f5f5",
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
     borderBottomLeftRadius: 1005,
-    borderTopLeftRadius: 1000, 
-    
+    borderTopLeftRadius: 1000,
+
     borderColor: "#e0e0e0",
     borderWidth: 1,
     margin: 10,
-    
   },
   image: {
     width: 80,
@@ -57,7 +56,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 1,
     borderBottomRightRadius: 1,
     borderBottomLeftRadius: 10,
-    borderTopLeftRadius: 10, 
+    borderTopLeftRadius: 10,
   },
   title: {
     fontSize: 20,
@@ -72,7 +71,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 10,
     height: 10,
-    marginRight:5,
+    marginRight: 5,
   },
   caret: {
     width: 20,
