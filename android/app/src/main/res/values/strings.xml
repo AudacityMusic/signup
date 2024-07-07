@@ -2,4 +2,5 @@
   <string name="app_name">Audacity Music Club</string>
   <string name="expo_splash_screen_resize_mode" translatable="false">contain</string>
   <string name="expo_splash_screen_status_bar_translucent" translatable="false">false</string>
+  <string name="server_client_id">761199370622-jil48n0qf2v7k01td350tponk1f8digo.apps.googleusercontent.com</string>
 </resources>
