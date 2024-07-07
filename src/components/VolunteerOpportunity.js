@@ -29,7 +29,7 @@ export default function VolunteerOpportunity(props) {
       </View>
       <Image
         style={styles.caret}
-        source={require("./../assets/caret-left-1.png")}
+        source={require("./../assets/caret-left.png")}
       />
     </View>
   );

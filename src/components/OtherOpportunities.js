@@ -9,12 +9,12 @@ export default function OtherOpportunities() {
         <Pressable style={[styles.card, styles.first]}>
           <Image
             style={styles.icon}
-            source={require("./../assets/music-note-1.png")}
+            source={require("./../assets/music-note.png")}
           />
           <Text style={styles.text}>Request a Concert</Text>
           <Image
             style={styles.arrow}
-            source={require("./../assets/caret-left-1.png")}
+            source={require("./../assets/caret-left.png")}
           />
         </Pressable>
         <View style={styles.divider} />
@@ -23,7 +23,7 @@ export default function OtherOpportunities() {
           <Text style={styles.text}>Make a Donation</Text>
           <Image
             style={styles.arrow}
-            source={require("./../assets/caret-left-1.png")}
+            source={require("./../assets/caret-left.png")}
           />
         </Pressable>
       </View>
