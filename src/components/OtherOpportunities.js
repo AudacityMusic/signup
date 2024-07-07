@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 
-export default function otherOpportunities() {
+export default function OtherOpportunities() {
     return (
     <View>
       <Text style={styles.header}>Other Opportunities</Text>
@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
   arrow: {
     width: 20,
     height: 20,
+    transform: [{ rotateZ: "180deg" }],
   },
   divider: {
     height: 0.1,
