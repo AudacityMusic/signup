@@ -6,6 +6,8 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "format": "prettier --write src/**/*.js App.js",
     "check": "prettier --check src/**/*.js App.js"
@@ -16,6 +18,7 @@
     "@react-navigation/native-stack": "^6.10.0",
     "expo": "~51.0.17",
     "expo-constants": "^16.0.2",
+    "expo-linear-gradient": "^13.0.2",
     "expo-linear-gradient": "^13.0.2",
     "expo-status-bar": "~1.12.1",
     "react": "18.2.0",
