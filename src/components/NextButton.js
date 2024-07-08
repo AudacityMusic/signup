@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Image } from "react-native";
 export default function NextButton() {
   return (
     <View style={styles.back}>
-      <Text>{"\n\n\n"}</Text>
       <Text style={styles.backText}>Next</Text>
       <Image
         source={require("./../assets/caret-left.png")}

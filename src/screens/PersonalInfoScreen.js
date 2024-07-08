@@ -13,7 +13,7 @@ import BackButton from "../components/BackButton";
 import TextField from "../components/TextField";
 import NextButton from "../components/NextButton";
 
-export default function ContactInfoScreen() {
+export default function PersonalInfoScreen() {
   const [fullName, setFullName] = useState("");
   const [city, setCity] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -39,24 +39,20 @@ export default function ContactInfoScreen() {
       <View style={styles.body}>
         <View style={styles.form}>
           <TextField
-            style={styles.field}
             title="Performer's Full Name "
             setText={(text) => setFullName(text)}
           ></TextField>
           <TextField
-            style={styles.field}
             title="City of Residence "
-            setText={setCity}
+            setText={(text) => setCity(text)}
           ></TextField>
-          <TextField 
-            style={styles.field}
+          <TextField
             title="Phone Number "
-            setText={setPhoneNumber}>
+            setText={(text) => setPhoneNumber(text)}>
           </TextField>
           <TextField
-            style={styles.field} 
             title="Performer's Age "
-            setText={setAge}>
+            setText={(text) => setAge(text)}>
           </TextField>
         </View>
         <Pressable style={styles.nextButton}>
@@ -105,10 +101,6 @@ const styles = StyleSheet.create({
   instructions: {
     fontSize: 20,
     flexWrap: "wrap",
-  },
-  field: {
-    flex: 1,
-    backgroundColor: "blue",
   },
   nextButton: {
     alignSelf: "flex-end",
