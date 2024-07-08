@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image } from "react-native";
 export default function NextButton() {
   return (
     <View style={styles.back}>
-      <Text style={styles.backText}>Next</Text>
+      <Text style={styles.backText}>{"Next"}</Text>
       <Image
         source={require("./../assets/caret-left.png")}
         style={styles.caret}
@@ -16,11 +16,10 @@ const styles = StyleSheet.create({
   back: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    paddingLeft: "5%",
+    justifyContent: "flex-end",
     borderRadius: 15,
-    height: 59,
-    width: 114,
+    height: 60,
+    width: 120,
     backgroundColor: "black",
   },
 
