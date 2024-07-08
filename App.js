@@ -6,18 +6,20 @@ import HomeScreen from "./src/screens/HomeScreen";
 import SignInScreen from "./src/screens/SignInScreen";
 import DonateScreen from "./src/screens/DonateScreen";
 import WebsitesScreen from "./src/screens/WebsitesScreen";
+import ContactInfoScreen from "./src/screens/ContactInfoScreen";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Sign In" component={SignInScreen} />
-        <Stack.Screen name="Donate" component={DonateScreen} />
-        <Stack.Screen name="Websites" component={WebsitesScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    // <NavigationContainer>
+    //   <Stack.Navigator initialRouteName="Home">
+    //     <Stack.Screen name="Home" component={HomeScreen} />
+    //     <Stack.Screen name="Sign In" component={SignInScreen} />
+    //     <Stack.Screen name="Donate" component={DonateScreen} />
+    //     <Stack.Screen name="Websites" component={WebsitesScreen} />
+    //   </Stack.Navigator>
+    // </NavigationContainer>
+    <ContactInfoScreen></ContactInfoScreen>
   );
 }

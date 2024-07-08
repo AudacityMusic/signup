@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
   Pressable,
   View,
@@ -6,11 +8,17 @@ import {
   StyleSheet,
   Text,
 } from "react-native";
+
 import BackButton from "../components/BackButton";
 import TextField from "../components/TextField";
 import NextButton from "../components/NextButton";
 
 export default function ContactInfoScreen() {
+  const [fullName, setFullName] = useState("");
+  const [city, setCity] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [age, setAge] = useState("");
+
   return (
     // TODO
     <SafeAreaView style={styles.container}>
@@ -21,31 +29,40 @@ export default function ContactInfoScreen() {
       </View>
 
       <View style={styles.header}>
-        <Text style={[styles.heading, { textAlign: "center" }]}>
-          Contact Info
-        </Text>
-        <Text style={[styles.instructions, { textAlign: "center" }]}>
-          Please fill in the following details about the person who will be
-          performing at the concert.
+        <Text style={styles.heading}>{"Contact Info"}</Text>
+        <Text style={styles.instructions}>
+          {"\n\n\n"}
+          {"Please fill in the following details about the person who will be"} 
+          {"performing at the concert."}
         </Text>
       </View>
-      <KeyboardAvoidingView style={styles.body} behavior="height">
+      <View style={styles.body}>
         <View style={styles.form}>
           <TextField
             style={styles.field}
             title="Performer's Full Name "
+            setText={(text) => setFullName(text)}
           ></TextField>
           <TextField
             style={styles.field}
             title="City of Residence "
+            setText={setCity}
           ></TextField>
-          <TextField style={styles.field} title="Phone Number "></TextField>
-          <TextField style={styles.field} title="Performer's Age "></TextField>
+          <TextField 
+            style={styles.field}
+            title="Phone Number "
+            setText={setPhoneNumber}>
+          </TextField>
+          <TextField
+            style={styles.field} 
+            title="Performer's Age "
+            setText={setAge}>
+          </TextField>
         </View>
         <Pressable style={styles.nextButton}>
           <NextButton />
         </Pressable>
-      </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -73,11 +90,12 @@ const styles = StyleSheet.create({
     flex: 6,
   },
   heading: {
-    fontSize: 64,
-    fontWeight: "condensedBold",
+    fontSize: 45,
+    fontWeight: "bold",
   },
   header: {
     alignItems: "center",
+    textAlign: "center",
     paddingHorizontal: "5%",
     flex: 1,
   },

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 
-export default function TextField(props) {
+export default function TextField(props, setText) {
   return (
     // TODO
     <View style={styles.container}>
@@ -8,7 +8,7 @@ export default function TextField(props) {
         {props.title}
         <Text style={styles.red}>*</Text>
       </Text>
-      <TextInput style={styles.inputField}></TextInput>
+      <TextInput style={styles.inputField} onChangeText={text => setText(text)}></TextInput>
     </View>
   );
 }
