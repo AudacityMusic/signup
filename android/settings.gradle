@@ -1,4 +1,4 @@
-rootProject.name = 'signup'
+rootProject.name = 'Audacity Music Club'
 
 dependencyResolutionManagement {
   versionCatalogs {

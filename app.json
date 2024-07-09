@@ -30,6 +30,14 @@
         "projectId": "56bb99cb-9cbe-423d-9a88-3f82a0cf3aa0"
       }
     },
+    "plugins": [
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.761199370622-qdq0afvq19r47p34rgjsso84leub5dlj"
+        }
+      ]
+    ],
     "owner": "audacitymusic"
   }
 }
