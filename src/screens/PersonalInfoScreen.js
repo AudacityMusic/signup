@@ -4,7 +4,7 @@ import {
   Pressable,
   View,
   SafeAreaView,
-  KeyboardAvoidingView,
+  ScrollView,
   StyleSheet,
   Text,
 } from "react-native";
@@ -18,6 +18,9 @@ export default function PersonalInfoScreen() {
   const [city, setCity] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [age, setAge] = useState("");
+  const [musicPiece, setMusicPiece] = useState("");
+  const [composer, setComposer] = useState("");
+  const [instrument, setInstrument] = useState("");
 
   return (
     // TODO
@@ -27,17 +30,17 @@ export default function PersonalInfoScreen() {
           <BackButton />
         </Pressable>
       </View>
-
       <View style={styles.header}>
         <Text style={styles.heading}>{"Contact Info"}</Text>
+        <Text style={{fontSize: 10}}>{"\n".repeat(3)}</Text>
         <Text style={styles.instructions}>
-          {"\n\n\n"}
           {"Please fill in the following details about the person who will be"} 
           {"performing at the concert."}
         </Text>
       </View>
+      <Text style={{fontSize: 10}}>{"\n".repeat(3)}</Text>
       <View style={styles.body}>
-        <View style={styles.form}>
+        <ScrollView contentContainerStyle={styles.form}>
           <TextField
             title="Performer's Full Name "
             setText={(text) => setFullName(text)}
@@ -54,7 +57,19 @@ export default function PersonalInfoScreen() {
             title="Performer's Age "
             setText={(text) => setAge(text)}>
           </TextField>
-        </View>
+          <TextField
+            title="Name of Music Piece "
+            setText={(text) => setMusicPiece(text)}>
+          </TextField>
+          <TextField
+            title="Composer of Music Piece "
+            setText={(text) => setComposer(text)}>
+          </TextField>
+          <TextField
+            title="Instrument Type "
+            setText={(text) => setInstrument(text)}>
+          </TextField>
+        </ScrollView>
         <Pressable style={styles.nextButton}>
           <NextButton />
         </Pressable>
@@ -84,6 +99,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "stretch",
     flex: 6,
+    backgroundColor: "#00ffff",
   },
   heading: {
     fontSize: 45,

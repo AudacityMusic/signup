@@ -4,8 +4,8 @@ export default function TextField({title, setText}) {
   return (
     // TODO
     <View style={styles.container}>
-      <Text>
-        {title}
+      <Text style={{fontSize: 20}}>
+        <Text>{title}</Text>
         <Text style={styles.red}>*</Text>
       </Text>
       <TextInput style={styles.inputField} onChangeText={text => setText(text)}></TextInput>
@@ -15,10 +15,12 @@ export default function TextField({title, setText}) {
 
 const styles = StyleSheet.create({
   inputField: {
+    height: 50,
     borderRadius: 15,
     borderWidth: 3,
-    flexGrow: 0.5,
-    textAlignVertical: "top",
+    fontSize: 25,
+    textAlign: "center",
+    marginBottom: 20,
   },
   red: {
     color: "red",
