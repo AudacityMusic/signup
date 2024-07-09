@@ -17,10 +17,9 @@ import BackButton from "../components/BackButton";
 
 GoogleSignin.configure({
   webClientId:
-    "761199370622-3r5phtt6a1s6lm6554htodbk8u4k9p8f.apps.googleusercontent.com", // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
-  scopes: ["https://www.googleapis.com/auth/drive.readonly"], // what API you want to access on behalf of the user, default is email and profile
+    "761199370622-3r5phtt6a1s6lm6554htodbk8u4k9p8f.apps.googleusercontent.com",
   iosClientId:
-    "761199370622-qdq0afvq19r47p34rgjsso84leub5dlj.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+    "761199370622-qdq0afvq19r47p34rgjsso84leub5dlj.apps.googleusercontent.com",
 });
 
 export default function SignInScreen() {
