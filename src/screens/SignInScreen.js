@@ -16,8 +16,10 @@ import {
 import BackButton from "../components/BackButton";
 
 GoogleSignin.configure({
-  webClientId: "761199370622-3r5phtt6a1s6lm6554htodbk8u4k9p8f.apps.googleusercontent.com",
-  iosClientId: "761199370622-qdq0afvq19r47p34rgjsso84leub5dlj.apps.googleusercontent.com",
+  webClientId:
+    "761199370622-3r5phtt6a1s6lm6554htodbk8u4k9p8f.apps.googleusercontent.com",
+  iosClientId:
+    "761199370622-qdq0afvq19r47p34rgjsso84leub5dlj.apps.googleusercontent.com",
 });
 
 export default function SignInScreen() {
