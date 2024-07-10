@@ -7,6 +7,8 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  Dimensions,
+  KeyboardAvoidingView
 } from "react-native";
 
 import BackButton from "../components/BackButton";
@@ -29,49 +31,58 @@ export default function PersonalInfoScreen() {
         <BackButton />
       </Pressable>
       <View style={styles.header}>
-        <Text style={styles.heading}>{"Contact Info"}</Text>
+        <Text style={styles.heading}>{"Personal Info"}</Text>
         <Text style={styles.instructions}>
           {"\n"}
           {"Please fill in the following details about the person who will be"} 
           {"performing at the concert."}
-          {"\n"}
+          {"\n\n"}
         </Text>
       </View>
-      <ScrollView contentContainerStyle={styles.body}>
-        <View style={styles.form}>
-          <TextField
-            title="Performer's Full Name "
-            setText={(text) => setFullName(text)}
-          ></TextField>
-          <TextField
-            title="City of Residence "
-            setText={(text) => setCity(text)}
-          ></TextField>
-          <TextField
-            title="Phone Number "
-            setText={(text) => setPhoneNumber(text)}>
-          </TextField>
-          <TextField
-            title="Performer's Age "
-            setText={(text) => setAge(text)}>
-          </TextField>
-          <TextField
-            title="Name of Music Piece "
-            setText={(text) => setMusicPiece(text)}>
-          </TextField>
-          <TextField
-            title="Composer of Music Piece "
-            setText={(text) => setComposer(text)}>
-          </TextField>
-          <TextField
-            title="Instrument Type "
-            setText={(text) => setInstrument(text)}>
-          </TextField>
-        </View>
-        <Pressable style={styles.nextButton}>
-          <NextButton />
-        </Pressable>
-      </ScrollView>
+      <KeyboardAvoidingView style={[styles.body, {height: Dimensions.get("window").height - 380}]} behavior="height">
+        <ScrollView>
+          <View style={styles.form}>
+            <TextField
+              title="Performer's Full Name "
+              setText={(text) => setFullName(text)}
+              keyboardType="default">
+            </TextField>
+            <TextField
+              title="City of Residence "
+              setText={(text) => setCity(text)}
+              keyboardType="default">
+            </TextField>
+            <TextField
+              title="Phone Number "
+              setText={(text) => setPhoneNumber(text)}
+              keyboardType="phone-pad">
+            </TextField>
+            <TextField
+              title="Performer's Age "
+              setText={(text) => setAge(text)}
+              keyboardType="numeric">
+            </TextField>
+            <TextField
+              title="Name of Music Piece "
+              setText={(text) => setMusicPiece(text)}
+              keyboardType="default">
+            </TextField>
+            <TextField
+              title="Composer of Music Piece "
+              setText={(text) => setComposer(text)}
+              keyboardType="default">
+            </TextField>
+            <TextField
+              title="Instrument Type "
+              setText={(text) => setInstrument(text)}
+              keyboardType="default">
+            </TextField>
+          </View>
+          <Pressable style={styles.nextButton}>
+            <NextButton />
+          </Pressable>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -90,7 +101,6 @@ const styles = StyleSheet.create({
   },
   form: {
     alignItems: "stretch",
-    // flex: 7,
   },
   heading: {
     fontSize: 45,
@@ -100,11 +110,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     paddingHorizontal: "5%",
-    // flex: 1,
   },
-  // backButton: {
-  //   alignSelf: "flex-start",
-  // },
   instructions: {
     fontSize: 20,
     flexWrap: "wrap",

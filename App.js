@@ -7,6 +7,7 @@ import HomeScreen from "./src/screens/HomeScreen";
 import DonateScreen from "./src/screens/DonateScreen";
 import WebsitesScreen from "./src/screens/WebsitesScreen";
 import PersonalInfoScreen from "./src/screens/PersonalInfoScreen";
+import PerformanceDetailsScreen from "./src/screens/PerformanceDetailsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,7 @@ export default function App() {
     //     <Stack.Screen name="Websites" component={WebsitesScreen} />
     //   </Stack.Navigator>
     // </NavigationContainer>
-    <PersonalInfoScreen></PersonalInfoScreen>
+    // <PersonalInfoScreen></PersonalInfoScreen>
+    <PerformanceDetailsScreen></PerformanceDetailsScreen>
   );
 }

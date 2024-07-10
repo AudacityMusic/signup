@@ -17,7 +17,6 @@ export default function BackButton(props) {
           Back
         </Text>
       </View>
-      <Text>{"\n".repeat(1)}</Text>
     </View>
   );
 }
