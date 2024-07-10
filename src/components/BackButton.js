@@ -9,7 +9,6 @@ export default function BackButton(props) {
           props.opaque ? { backgroundColor: "rgba(0,0,0,0.8)" } : {},
         ]}
       >
-        <Text>{"\n\n\n"}</Text>
         <Image
           source={require("./../assets/caret-left.png")}
           style={props.opaque ? { tintColor: "white" } : {}}
@@ -18,7 +17,7 @@ export default function BackButton(props) {
           Back
         </Text>
       </View>
-      <Text style={{fontSize: 19}}>{"\n".repeat(3)}</Text>
+      <Text>{"\n".repeat(1)}</Text>
     </View>
   );
 }
@@ -26,12 +25,7 @@ export default function BackButton(props) {
 const styles = StyleSheet.create({
   back: {
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "flex-start",
-    paddingRight: "13%",
-    borderRadius: 30,
-    marginVertical: "-10%",
+    alignItems: "center"
   },
 
   backText: {

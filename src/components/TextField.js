@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 15,
     borderWidth: 3,
-    fontSize: 25,
+    fontSize: 35,
     textAlign: "center",
     marginBottom: 20,
   },
@@ -26,6 +26,6 @@ const styles = StyleSheet.create({
     color: "red",
   },
   container: {
-    flexGrow: 1,
+    // flex: 1,
   },
 });

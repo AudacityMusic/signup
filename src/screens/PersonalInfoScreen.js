@@ -25,22 +25,20 @@ export default function PersonalInfoScreen() {
   return (
     // TODO
     <SafeAreaView style={styles.container}>
-      <View style={styles.backButton}>
-        <Pressable>
-          <BackButton />
-        </Pressable>
-      </View>
+      <Pressable>
+        <BackButton />
+      </Pressable>
       <View style={styles.header}>
         <Text style={styles.heading}>{"Contact Info"}</Text>
-        <Text style={{fontSize: 10}}>{"\n".repeat(3)}</Text>
         <Text style={styles.instructions}>
+          {"\n"}
           {"Please fill in the following details about the person who will be"} 
           {"performing at the concert."}
+          {"\n"}
         </Text>
       </View>
-      <Text style={{fontSize: 10}}>{"\n".repeat(3)}</Text>
-      <View style={styles.body}>
-        <ScrollView contentContainerStyle={styles.form}>
+      <ScrollView contentContainerStyle={styles.body}>
+        <View style={styles.form}>
           <TextField
             title="Performer's Full Name "
             setText={(text) => setFullName(text)}
@@ -69,11 +67,11 @@ export default function PersonalInfoScreen() {
             title="Instrument Type "
             setText={(text) => setInstrument(text)}>
           </TextField>
-        </ScrollView>
+        </View>
         <Pressable style={styles.nextButton}>
           <NextButton />
         </Pressable>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -81,25 +79,18 @@ export default function PersonalInfoScreen() {
 const styles = StyleSheet.create({
   container: {
     paddingVertical: "7%",
-    display: "flex",
     alignItems: "stretch",
-    flexDirection: "column",
-    flex: 1,
-    minHeight: "100%",
+    flexDirection: "column"
   },
   body: {
-    display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    flex: 3,
     alignItems: "stretch",
-    paddingHorizontal: "8%",
+    paddingHorizontal: "10%",
   },
   form: {
-    display: "flex",
     alignItems: "stretch",
-    flex: 6,
-    backgroundColor: "#00ffff",
+    // flex: 7,
   },
   heading: {
     fontSize: 45,
@@ -109,18 +100,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     paddingHorizontal: "5%",
-    flex: 1,
+    // flex: 1,
   },
-  backButton: {
-    alignSelf: "flex-start",
-  },
+  // backButton: {
+  //   alignSelf: "flex-start",
+  // },
   instructions: {
     fontSize: 20,
     flexWrap: "wrap",
   },
   nextButton: {
     alignSelf: "flex-end",
-    flex: 2,
     justifyContent: "flex-end",
   },
 });
