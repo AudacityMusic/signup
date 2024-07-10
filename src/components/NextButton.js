@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     height: 60,
     width: 120,
-    backgroundColor: "black"
+    backgroundColor: "black",
   },
 
   backText: {

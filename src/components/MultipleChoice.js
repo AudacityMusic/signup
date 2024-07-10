@@ -4,10 +4,10 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 const MultipleChoice = ({ title, options, selectedOption, onSelect }) => {
   return (
-    <View style={{marginBottom: 20}}>
+    <View style={{ marginBottom: 20 }}>
       <Text style={styles.label}>
         <Text>{title}</Text>
-        <Text style={{color: "red"}}> *</Text>
+        <Text style={{ color: "red" }}> *</Text>
       </Text>
       {options.map((option) => (
         <TouchableOpacity
@@ -23,7 +23,7 @@ const MultipleChoice = ({ title, options, selectedOption, onSelect }) => {
           <Text
             style={[
               styles.optionText,
-              selectedOption === option.value && styles.selectedText
+              selectedOption === option.value && styles.selectedText,
             ]}
           >
             {option.label}

@@ -24,7 +24,7 @@ export default function BackButton(props) {
 const styles = StyleSheet.create({
   back: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
 
   backText: {
