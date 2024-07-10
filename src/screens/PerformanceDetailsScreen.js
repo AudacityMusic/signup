@@ -76,7 +76,6 @@ export default function PersonalInfoScreen() {
   }
 
   return (
-    // TODO
     <SafeAreaView style={styles.container}>
       <Pressable>
         <BackButton />
@@ -86,24 +85,24 @@ export default function PersonalInfoScreen() {
       <KeyboardAvoidingView style={[styles.body, {height: Dimensions.get("window").height - 260}]} behavior="height">
         <ScrollView>
           <View style={styles.form}>
-          <MultipleChoice
-            title="Performance Type"
-            options={performanceOptions}
-            selectedOption={performanceType}
-            onSelect={(text) => onSelectionChange(text)}
-          />
-          <TextField
-            title="Length of Performance"
-            subtitle={"Time Limit: " + timeLimit + " minutes"}
-            setText={(text) => setLength(text)}
-            keyboardType="numeric"
-          />
-          <TextField
-            title="Recording Link"
-            subtitle="Share to YouTube / Google Drive"
-            setText={(text) => setRecordingLink(text)}
-            keyboardType="default"
-          />
+            <MultipleChoice
+              title="Performance Type"
+              options={performanceOptions}
+              selectedOption={performanceType}
+              onSelect={(text) => onSelectionChange(text)}
+            />
+            <TextField
+              title="Length of Performance"
+              subtitle={"Time Limit: " + timeLimit + " minutes"}
+              setText={(text) => setLength(text)}
+              keyboardType="numeric"
+            />
+            <TextField
+              title="Recording Link"
+              subtitle="Share to YouTube / Google Drive"
+              setText={(text) => setRecordingLink(text)}
+              keyboardType="default"
+            />
           </View>
           <Pressable style={styles.nextButton} onPress={() => {printAll()}}>
             <NextButton />
