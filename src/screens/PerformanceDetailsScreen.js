@@ -28,7 +28,7 @@ const PerformanceDetailsScreen = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <MultipleChoice
+      {/* <MultipleChoice
         options={performanceOptions}
         selectedOption={performanceType}
         onSelect={setPerformanceType}
@@ -45,7 +45,7 @@ const PerformanceDetailsScreen = () => {
         value={recordingLink}
         onChangeText={setRecordingLink}
       />
-      <Button title="Next" onPress={() => {}} />
+      <Button title="Next" onPress={() => {}} /> */}
     </ScrollView>
   );
 };
