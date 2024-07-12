@@ -1,29 +1,38 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 
-export default function TextField(props) {
+export default function TextField({
+  title,
+  subtitle = "",
+  setText,
+  keyboardType,
+  borderColor = "black",
+}) {
   return (
     // TODO
-    <View style={styles.container}>
-      <Text>
-        {props.title}
-        <Text style={styles.red}>*</Text>
+    <View>
+      <Text style={{ fontSize: 25 }}>
+        <Text>{title}</Text>
+        <Text style={{ color: "red" }}> *</Text>
       </Text>
-      <TextInput style={styles.inputField}></TextInput>
+      <Text style={{ fontSize: 1 }}>{"\n"}</Text>
+      <Text style={{ fontSize: 20, color: "#707070" }}>{subtitle}</Text>
+      <TextInput
+        style={[styles.inputField, { borderColor: borderColor }]}
+        onChangeText={(text) => setText(text)}
+        keyboardType={keyboardType}
+      ></TextInput>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   inputField: {
+    height: 50,
     borderRadius: 15,
     borderWidth: 3,
-    flexGrow: 0.5,
-    textAlignVertical: "top",
-  },
-  red: {
-    color: "red",
-  },
-  container: {
-    flexGrow: 1,
+    fontSize: 30,
+    textAlign: "center",
+    marginBottom: 20,
+    paddingHorizontal: "10%",
   },
 });

@@ -2,10 +2,19 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-const MultipleChoice = ({ options, selectedOption, onSelect }) => {
+const MultipleChoice = ({
+  title,
+  options,
+  selectedOption,
+  onSelect,
+  color = "black",
+}) => {
   return (
-    <View>
-      <Text style={styles.label}>Performance Type *</Text>
+    <View style={{ marginBottom: 20 }}>
+      <Text style={styles.label}>
+        <Text style={{ color: color }}>{title}</Text>
+        <Text style={{ color: "red" }}> *</Text>
+      </Text>
       {options.map((option) => (
         <TouchableOpacity
           key={option.value}
@@ -33,9 +42,8 @@ const MultipleChoice = ({ options, selectedOption, onSelect }) => {
 
 const styles = StyleSheet.create({
   label: {
-    fontSize: 16,
+    fontSize: 25,
     marginVertical: 10,
-    fontWeight: "bold",
   },
   option: {
     flexDirection: "row",
@@ -59,11 +67,12 @@ const styles = StyleSheet.create({
   },
   optionText: {
     marginLeft: 10,
-    fontSize: 14,
+    fontSize: 20,
+    flexWrap: "wrap",
   },
   selectedText: {
     color: "#1E90FF",
-    fontWeight: "bold",
+    fontWeight: "condensedBold",
   },
 });
 
