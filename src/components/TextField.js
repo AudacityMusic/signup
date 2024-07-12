@@ -5,7 +5,7 @@ export default function TextField({
   subtitle = "",
   setText,
   keyboardType,
-  borderColor="black"
+  borderColor = "black",
 }) {
   return (
     // TODO
@@ -17,7 +17,7 @@ export default function TextField({
       <Text style={{ fontSize: 1 }}>{"\n"}</Text>
       <Text style={{ fontSize: 20, color: "#707070" }}>{subtitle}</Text>
       <TextInput
-        style={[styles.inputField, {borderColor: borderColor}]}
+        style={[styles.inputField, { borderColor: borderColor }]}
         onChangeText={(text) => setText(text)}
         keyboardType={keyboardType}
       ></TextInput>

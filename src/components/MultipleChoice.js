@@ -2,11 +2,17 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-const MultipleChoice = ({ title, options, selectedOption, onSelect, color="black"}) => {
+const MultipleChoice = ({
+  title,
+  options,
+  selectedOption,
+  onSelect,
+  color = "black",
+}) => {
   return (
     <View style={{ marginBottom: 20 }}>
       <Text style={styles.label}>
-        <Text style={{color: color}}>{title}</Text>
+        <Text style={{ color: color }}>{title}</Text>
         <Text style={{ color: "red" }}> *</Text>
       </Text>
       {options.map((option) => (

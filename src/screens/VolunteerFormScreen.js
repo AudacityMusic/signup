@@ -9,7 +9,7 @@ import {
   Text,
   Dimensions,
   KeyboardAvoidingView,
-  Platform
+  Platform,
 } from "react-native";
 
 import BackButton from "../components/BackButton";
@@ -50,7 +50,7 @@ export default function VolunteerFormScreen() {
 
   const onSelectionChange = (type) => {
     setPerformanceType(type);
-    console.log("change")
+    console.log("change");
 
     switch (type) {
       case "individual":
@@ -84,14 +84,29 @@ export default function VolunteerFormScreen() {
     console.log(timeLimit);
   };
 
-  const [borderColors, setBorderColors] = useState(["black", "black", "black", 
-                                                    "black", "black", "black", 
-                                                    "black", "black", "black"]);
+  const [borderColors, setBorderColors] = useState([
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+  ]);
 
   const [performanceTypeColor, setPerformanceTypeColor] = useState("black");
 
   const validate = () => {
-    const variables = [city, phoneNumber, age, musicPiece, composer, instrument]; 
+    const variables = [
+      city,
+      phoneNumber,
+      age,
+      musicPiece,
+      composer,
+      instrument,
+    ];
 
     console.log(fullName.trim());
     console.log(city.trim());
@@ -105,24 +120,22 @@ export default function VolunteerFormScreen() {
     console.log(length);
     console.log(recordingLink.trim());
 
-    borderColors[0] = (fullName.split(' ').length - 1 == 0) ? "red" : "black";
+    borderColors[0] = fullName.split(" ").length - 1 == 0 ? "red" : "black";
     setPerformanceTypeColor(performanceType == "" ? "red" : "black");
-    borderColors[7] = (length > timeLimit || length == 0) ? "red" : "black";
+    borderColors[7] = length > timeLimit || length == 0 ? "red" : "black";
 
     try {
       let url = new URL(recordingLink);
       borderColors[8] = "black";
-    }
-
-    catch (error) {
-      borderColors[8] = "red"
+    } catch (error) {
+      borderColors[8] = "red";
       console.error(error);
     }
 
     let index = 1;
 
     variables.forEach((variable) => {
-      borderColors[index] = (variable == "0" || variable == 0) ? "red" : "black";
+      borderColors[index] = variable == "0" || variable == 0 ? "red" : "black";
       index++;
     });
 
