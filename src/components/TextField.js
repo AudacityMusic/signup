@@ -10,12 +10,11 @@ export default function TextField({
   return (
     // TODO
     <View>
-      <Text style={{ fontSize: 25 }}>
+      <Text style={{ fontSize: 14 }}>
         <Text>{title}</Text>
         <Text style={{ color: "red" }}> *</Text>
+        <Text style={{ fontSize: 20, color: "#707070" }}>{subtitle}</Text>
       </Text>
-      <Text style={{ fontSize: 1 }}>{"\n"}</Text>
-      <Text style={{ fontSize: 20, color: "#707070" }}>{subtitle}</Text>
       <TextInput
         style={[styles.inputField, { borderColor: borderColor }]}
         onChangeText={(text) => setText(text)}
