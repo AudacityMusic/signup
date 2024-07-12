@@ -109,6 +109,16 @@ export default function VolunteerFormScreen() {
     setPerformanceTypeColor(performanceType == "" ? "red" : "black");
     borderColors[7] = (length > timeLimit || length == 0) ? "red" : "black";
 
+    try {
+      let url = new URL(recordingLink);
+      borderColors[8] = "black";
+    }
+
+    catch (error) {
+      borderColors[8] = "red"
+      console.error(error);
+    }
+
     let index = 1;
 
     variables.forEach((variable) => {
