@@ -99,13 +99,13 @@ export default function VolunteerFormScreen() {
   const [performanceTypeColor, setPerformanceTypeColor] = useState("black");
 
   const validate = () => {
-    const variables = [
-      city,
-      phoneNumber,
-      age,
-      musicPiece,
-      composer,
-      instrument,
+    const basicCheckingVariables = [
+      ["instrument", instrument],
+      ["composer", composer],
+      ["musicPiece", musicPiece],
+      ["age", age],
+      ["phoneNumber", phoneNumber],
+      ["city", city],
     ];
 
     console.log(fullName.trim());
@@ -134,8 +134,8 @@ export default function VolunteerFormScreen() {
 
     let index = 1;
 
-    variables.forEach((variable) => {
-      borderColors[index] = variable == "0" || variable == 0 ? "red" : "black";
+    basicCheckingVariables.forEach(([name, variable]) => {
+      borderColors[index] = (variable == "0" || variable == 0 ? "red" : "black");
       index++;
     });
 
