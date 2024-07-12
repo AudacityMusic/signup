@@ -5,11 +5,9 @@ export default function UploadButton() {
     <View style={styles.back}>
       <Image
         source={require("./../assets/upload.png")}
-        style={{height:30,width:30}}
+        style={{ height: 30, width: 30 }}
       />
-      <Text style={styles.backText}>
-        Upload
-      </Text>
+      <Text style={styles.backText}>Upload</Text>
     </View>
   );
 }
@@ -18,17 +16,16 @@ const styles = StyleSheet.create({
   back: {
     flexDirection: "row",
     justifyContent: "flex-start",
-    alignItems:"center",
+    alignItems: "center",
     alignSelf: "flex-start",
-    paddingHorizontal:"2%",
-    paddingVertical:"2%",
+    paddingHorizontal: "2%",
+    paddingVertical: "2%",
     borderRadius: 20,
     borderWidth: 3,
   },
 
   backText: {
     fontSize: 16,
-    paddingLeft:"3%",
-
+    paddingLeft: "3%",
   },
 });
