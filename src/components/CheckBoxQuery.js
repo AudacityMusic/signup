@@ -3,8 +3,7 @@ import { Checkbox } from "expo-checkbox";
 import { useState } from "react";
 
 export default function CheckBoxQuery(props) {
-  const [yes, setYes] = useState(false);
-  const [no, setNo] = useState(false);
+  const [value, setValue] = useState(false);
 
   return (
     // TODO
@@ -16,15 +15,15 @@ export default function CheckBoxQuery(props) {
       <View style={{ flexDirection: "row", paddingVertical: "1%" }}>
         <Checkbox
           color={"#0d79ff"}
-          value={yes}
-          onValueChange={setYes}
+          value={value}
+          onValueChange={setValue}
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
         />
         <Text style={[styles.text, { paddingHorizontal: "3%" }]}>Yes</Text>
         <Checkbox
           color={"#0d79ff"}
-          value={no}
-          onValueChange={setNo}
+          value={!value}
+          onValueChange={setValue}
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
         />
         <Text style={[styles.text, { paddingHorizontal: "3%" }]}>No</Text>
