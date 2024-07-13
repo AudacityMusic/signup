@@ -1,17 +1,10 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Checkbox } from "expo-checkbox";
 import { useState } from "react";
 
 export default function CheckBoxQuery(props) {
-  const [value, setValue] = useState(false);
-  const handleYes = () => {
-    setValue(true);
-  };
-  const handleNo = () => {
-    setValue(false);
-  };
+  const [value, setValue] = useState(true);
   return (
-    // TODO
     <View style={styles.container}>
       <Text style={[styles.text, { paddingBottom: "2%" }]}>
         {props.question}
@@ -21,14 +14,14 @@ export default function CheckBoxQuery(props) {
         <Checkbox
           color={"#0d79ff"}
           value={value}
-          onValueChange={handleYes}
+          onValueChange={() => setValue(true)}
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
         />
         <Text style={[styles.text, { paddingHorizontal: "3%" }]}>Yes</Text>
         <Checkbox
           color={"#0d79ff"}
           value={!value}
-          onValueChange={handleNo}
+          onValueChange={() => setValue(false)}
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
         />
         <Text style={[styles.text, { paddingHorizontal: "3%" }]}>No</Text>

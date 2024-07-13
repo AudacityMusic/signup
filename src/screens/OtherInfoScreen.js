@@ -5,15 +5,11 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  Image,
-  ImageBackground,
   KeyboardAvoidingView,
   Dimensions,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import NextButton from "../components/NextButton";
-import BackButton from "../components/BackButton";
-import { LinearGradient } from "expo-linear-gradient";
 import CheckBoxQuery from "../components/CheckBoxQuery";
 import UploadButton from "../components/UploadButton";
 import TextField from "../components/TextField";
@@ -23,7 +19,10 @@ export default function OtherInfoScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView style={{height: Dimensions.get("window").height}} behavior="padding">
+      <KeyboardAvoidingView
+        style={{ height: Dimensions.get("window").height }}
+        behavior="padding"
+      >
         <ScrollView>
           <View style={styles.checkBoxesContainer}>
             <View
@@ -43,7 +42,7 @@ export default function OtherInfoScreen() {
               />
               <CheckBoxQuery
                 question={
-                  "My parent have given their consent for my participation. "
+                  "My parent has given their consent for my participation. "
                 }
               />
             </View>
@@ -53,8 +52,8 @@ export default function OtherInfoScreen() {
               <Text style={{ paddingBottom: "3%" }}>
                 Our volunteer piano accompanist can provide sight reading
                 accompaniment for entry level players. To request this service,
-                upload the main score AND accompaniment score in one PDF file. (100
-                MB file size limit)
+                upload the main score AND accompaniment score in one PDF file.
+                (100 MB file size limit)
               </Text>
               <UploadButton />
             </View>
@@ -70,7 +69,9 @@ export default function OtherInfoScreen() {
               title={
                 "\nOther Information, such as special requests in sequence arrangement (optional) "
               }
-              setText={(text) => {setOtherInfo(text)}}
+              setText={(text) => {
+                setOtherInfo(text);
+              }}
               keyboardType="default"
             />
           </View>
