@@ -12,7 +12,6 @@ import DonateScreen from "./src/screens/DonateScreen";
 import WebsitesScreen from "./src/screens/WebsitesScreen";
 import VolunteerFormScreen from "./src/screens/VolunteerFormScreen";
 import VolunteerOpportunityScreen from "./src/screens/VolunteerOpportunityScreen";
-import OtherInfoScreen from "./src/screens/OtherInfoScreen";
 import HomeHeader from "./src/components/HomeHeader";
 
 const Stack = createNativeStackNavigator();
@@ -40,7 +39,6 @@ export default function App() {
         <Stack.Screen name="Account" component={AccountScreen} />
         <Stack.Screen name="Donate" component={DonateScreen} />
         <Stack.Screen name="Websites" component={WebsitesScreen} />
-        <Stack.Screen name="Other Info" component={OtherInfoScreen} />
         <Stack.Screen
           name="Volunteer Opportunity"
           component={VolunteerOpportunityScreen}
