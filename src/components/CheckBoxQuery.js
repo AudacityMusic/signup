@@ -4,7 +4,12 @@ import { useState } from "react";
 
 export default function CheckBoxQuery(props) {
   const [value, setValue] = useState(false);
-
+  const handleYes = () => {
+    setValue(true);
+  };
+  const handleNo = () => {
+    setValue(false);
+  };
   return (
     // TODO
     <View style={styles.container}>
@@ -16,14 +21,14 @@ export default function CheckBoxQuery(props) {
         <Checkbox
           color={"#0d79ff"}
           value={value}
-          onValueChange={setValue}
+          onValueChange={handleYes}
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
         />
         <Text style={[styles.text, { paddingHorizontal: "3%" }]}>Yes</Text>
         <Checkbox
           color={"#0d79ff"}
           value={!value}
-          onValueChange={setValue}
+          onValueChange={handleNo}
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
         />
         <Text style={[styles.text, { paddingHorizontal: "3%" }]}>No</Text>
