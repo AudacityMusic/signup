@@ -8,7 +8,7 @@ const MultipleChoice = ({
   selectedOption,
   onSelect,
   color = "black",
-  setY,
+  setY=(y)=>{},
 }) => {
   return (
     <View 

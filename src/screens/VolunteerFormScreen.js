@@ -14,6 +14,8 @@ import {
 
 import BackButton from "../components/BackButton";
 import TextField from "../components/TextField";
+import CheckBoxQuery from "../components/CheckBoxQuery";
+import UploadButton from "../components/UploadButton";
 import NextButton from "../components/NextButton";
 import MultipleChoice from "../components/MultipleChoice";
 
@@ -30,6 +32,10 @@ export default function VolunteerFormScreen() {
   const [timeLimit, setTimeLimit] = useState(0);
   const [length, setLength] = useState(0);
   const [recordingLink, setRecordingLink] = useState("");
+
+  const [permissions, setPermissions] = useState(null);
+  const [parentalConsent, setParentalConsent] = useState(null);
+  const [otherInfo, setOtherInfo] = useState("");
 
   const basicCheckingVariables = [
     ["instrument", instrument],
@@ -50,6 +56,8 @@ export default function VolunteerFormScreen() {
   const [performanceTypeY, setPerformanceTypeY] = useState(0);
   const [lengthY, setLengthY] = useState(0);
   const [recordingLinkY, setRecordingLinkY] = useState(0);
+  const [permissionsY, setPermissionsY] = useState(0);
+  const [parentalConsentY, setParentalConsentY] = useState(0);
 
   const locations = new Map();
   locations.set("fullName", fullNameY);
@@ -62,6 +70,8 @@ export default function VolunteerFormScreen() {
   locations.set("performanceType", performanceTypeY);
   locations.set("length", lengthY);
   locations.set("recordingLink", recordingLinkY);
+  locations.set("permissions", permissionsY);
+  locations.set("parentalConsent", parentalConsentY);
 
   const performanceOptions = [
     { label: "Individual performance only", value: "individual" },
@@ -129,6 +139,9 @@ export default function VolunteerFormScreen() {
   ]);
 
   const [performanceTypeColor, setPerformanceTypeColor] = useState("black");
+  const [permissionsColor, setPermissionsColor] = useState("dodger-blue");
+  const [parentalConsentColor, setParentalConsentColor] = useState("dodger-blue")
+
   const [scrollObject, setScrollObject] = useState(null);
 
   const validate = () => {
@@ -143,8 +156,31 @@ export default function VolunteerFormScreen() {
     console.log(timeLimit);
     console.log(length);
     console.log(recordingLink.trim());
+    console.log(permissions);
+    console.log(parentalConsent);
+    console.log(otherInfo);
 
     const center = Dimensions.get("window").width / 2;
+
+    if (permissions != null) {
+      setPermissionsColor("dodger-blue")
+      console.log("Is null and none the same? " + (null == false))
+    }
+
+    else {
+      setPermissionsColor("red")
+      scrollObject.scrollTo({x: center, y: locations.get("permissions"), animated: true})
+    }
+
+    if (parentalConsent) {
+      setParentalConsentColor("dodger-blue")
+      console.log("pc")
+    }
+
+    else {
+      setParentalConsentColor("red")
+      scrollObject.scrollTo({x: center, y: locations.get("parentalConsent"), animated: true})
+    }
 
     try {
       let url = new URL(recordingLink);
@@ -300,6 +336,54 @@ export default function VolunteerFormScreen() {
               borderColor={borderColors[8]}
               setY={setRecordingLinkY}
             />
+            <View style={styles.checkBoxesContainer}>
+              <CheckBoxQuery
+                question={
+                  "Do you give permission for Audacity Music Club to post recordings of your performance on public websites? "
+                }
+                boxColor={permissionsColor}
+                value={permissions}
+                setValue={setPermissions}
+                setY={setPermissionsY}
+              />
+              <CheckBoxQuery
+                question={
+                  "My parent has given their consent for my participation. "
+                }
+                boxColor={parentalConsentColor}
+                value={parentalConsent}
+                setValue={setParentalConsent}
+                setY={setParentalConsent}
+              />
+            </View>
+            <View style={styles.uploadsContainer}>
+              <View style={{justifyContent: "center"}}>
+                <Text style={{ paddingBottom: "3%", fontSize: 25 }}>
+                  Our volunteer piano accompanist can provide sight reading
+                  accompaniment for entry level players. To request this service,
+                  upload the main score AND accompaniment score in one PDF file.
+                  (100 MB file size limit){"\n"}
+                </Text>
+                <UploadButton />
+              </View>
+              <View style={{ paddingTop: "3%" }}>
+                <Text style={{ paddingBottom: "3%", fontSize: 25 }}>
+                  Upload your Library Band Ensemble profile as one PDF file.{"\n"}
+                </Text>
+                <UploadButton />
+              </View>
+            </View>
+            <View style={styles.otherInfoContainer}>
+              <TextField
+                title={
+                  "\nOther Information, such as special requests in sequence arrangement (optional)"
+                }
+                setText={(text) => {
+                  setOtherInfo(text);
+                }}
+                keyboardType="default"
+              />
+            </View>
           </View>
           <Pressable style={styles.nextButton} onPress={() => validate()}>
             <NextButton />
@@ -337,6 +421,24 @@ const styles = StyleSheet.create({
   instructions: {
     fontSize: 20,
     flexWrap: "wrap",
+  },
+  checkBoxesContainer: {
+    flex: 1,
+    justifyContent: "center",
+    flexDirection: "column",
+    textAlignVertical: "center"
+  },
+  uploadsContainer: {
+    flex: 3.5,
+    justifyContent: "center",
+    flexDirection: "column",
+    textAlignVertical: "center",
+    fontSize: 20
+  },
+  otherInfoContainer: {
+    paddingTop: "3%",
+    flex: 1.2,
+    backgroundColor: "re",
   },
   nextButton: {
     alignSelf: "flex-end",
