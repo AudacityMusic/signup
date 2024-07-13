@@ -5,11 +5,11 @@ export default function Profile() {
     <View style={styles.background}>
       <Image
         style={styles.image}
-        source={require("./../assets/audacity-music-club.png")}
+        source={require("./../assets/placeholder-profile.png")}
       ></Image>
       <View>
-        <Text style={styles.name}>Rick</Text>
-        <Text style={styles.email}>cat</Text>
+        <Text style={styles.name}>Rick Astley</Text>
+        <Text style={styles.email}>nevergonnagiveyouup@gmail.com</Text>
       </View>
     </View>
   );
@@ -20,16 +20,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#f5f5f5", // Light grey background color
-    padding: 20,
+    padding: 15,
     borderRadius: 10,
     borderColor: "#e0e0e0",
     borderWidth: 1,
     margin: 10,
   },
   image: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 60,
+    height: 60,
+    borderRadius: 100,
     marginRight: 10,
   },
   name: {
