@@ -1,42 +1,33 @@
-import React from "react";
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 
 export default function OtherOpportunities() {
   return (
-    <View>
-      <Text style={styles.header}>Other Opportunities</Text>
-      <View style={styles.cardContainer}>
-        <Pressable style={[styles.card, styles.first]}>
-          <Image
-            style={styles.icon}
-            source={require("./../assets/music-note.png")}
-          />
-          <Text style={styles.text}>Request a Concert</Text>
-          <Image
-            style={styles.arrow}
-            source={require("./../assets/caret-left.png")}
-          />
-        </Pressable>
-        <View style={styles.divider} />
-        <Pressable style={[styles.card, styles.last]}>
-          <Image style={styles.icon} source={require("./../assets/gift.png")} />
-          <Text style={styles.text}>Make a Donation</Text>
-          <Image
-            style={styles.arrow}
-            source={require("./../assets/caret-left.png")}
-          />
-        </Pressable>
-      </View>
+    <View style={styles.cardContainer}>
+      <Pressable style={[styles.card, styles.first]}>
+        <Image
+          style={styles.icon}
+          source={require("./../assets/music-note.png")}
+        />
+        <Text style={styles.text}>Request a Concert</Text>
+        <Image
+          style={styles.arrow}
+          source={require("./../assets/caret-left.png")}
+        />
+      </Pressable>
+      <View style={styles.divider} />
+      <Pressable style={[styles.card, styles.last]}>
+        <Image style={styles.icon} source={require("./../assets/gift.png")} />
+        <Text style={styles.text}>Make a Donation</Text>
+        <Image
+          style={styles.arrow}
+          source={require("./../assets/caret-left.png")}
+        />
+      </Pressable>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
   cardContainer: {
     backgroundColor: "#f5f5f5",
     borderRadius: 10,

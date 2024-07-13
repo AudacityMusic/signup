@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View, Image } from "react-native";
+import colors from "../constants/colors";
 
 export default function SignUpButton() {
   return (
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     height: 59,
     width: 145,
-    backgroundColor: "#007913",
+    backgroundColor: colors.primary,
   },
 
   backText: {

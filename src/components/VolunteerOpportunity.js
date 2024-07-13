@@ -1,62 +1,61 @@
-import React from "react";
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 
-export default function VolunteerOpportunity(props) {
+export default function VolunteerOpportunity({ navigation }) {
   return (
-    <View style={styles.background}>
+    <Pressable
+      style={styles.container}
+      onPress={() => navigation.navigate("Volunteer Opportunity")}
+    >
       <Image
         style={styles.image}
         source={require("./../assets/warm-springs-bart.png")}
       />
       <View>
-        <Pressable>
-          <Text style={styles.title}>Library Music Hour</Text>
-          <Text style={styles.info}>
-            <Image
-              style={styles.icon}
-              source={require("./../assets/clock.png")}
-            />
-            Saturday, August 10, 2024 2:30 PM
-          </Text>
-          <Text style={styles.info}>
-            <Image
-              style={styles.icon}
-              source={require("./../assets/location.png")}
-            />
-            Fremont Main Library
-          </Text>
-        </Pressable>
+        <Text style={styles.title}>Library Music Hour</Text>
+        <Text style={styles.info}>
+          <Image
+            style={styles.icon}
+            source={require("./../assets/clock.png")}
+          />
+          Saturday, August 10, 2024 2:30 PM
+        </Text>
+        <Text style={styles.info}>
+          <Image
+            style={styles.icon}
+            source={require("./../assets/location.png")}
+          />
+          Fremont Main Library
+        </Text>
       </View>
       <Image
         style={styles.caret}
         source={require("./../assets/caret-left.png")}
       />
-    </View>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  background: {
+  container: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#f5f5f5",
-    borderTopRightRadius: 10,
-    borderBottomRightRadius: 10,
-    borderBottomLeftRadius: 1005,
+    borderTopRightRadius: 50,
+    borderBottomRightRadius: 50,
+    borderBottomLeftRadius: 1000,
     borderTopLeftRadius: 1000,
-
     borderColor: "#e0e0e0",
     borderWidth: 1,
-    margin: 10,
+    marginBottom: 10,
   },
   image: {
     width: 80,
     height: 80,
     marginRight: 10,
-    borderTopRightRadius: 1,
-    borderBottomRightRadius: 1,
-    borderBottomLeftRadius: 10,
-    borderTopLeftRadius: 10,
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
+    borderBottomLeftRadius: 15,
+    borderTopLeftRadius: 15,
   },
   title: {
     fontSize: 20,
