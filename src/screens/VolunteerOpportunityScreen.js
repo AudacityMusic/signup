@@ -8,11 +8,11 @@ import {
   ImageBackground,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import BackButton from "../components/BackButton";
 import SignUpButton from "../components/SignUpButton";
 import Tag from "../components/Tag";
+import Heading from "../components/Heading";
 
-export default function VolunteerOpportunityScreen() {
+export default function VolunteerOpportunityScreen({ navigation }) {
   const tagTexts = ["Electric Piano", "Indoors", "Presentation Equipment"];
   const tags = tagTexts.map((text) => <Tag key={text} text={text} />);
   return (
@@ -27,9 +27,6 @@ export default function VolunteerOpportunityScreen() {
             style={{ width: "100%", height: "100%", position: "absolute" }}
           ></LinearGradient>
         </ImageBackground>
-        <Pressable style={styles.backButton}>
-          <BackButton opaque={true} />
-        </Pressable>
         <View
           style={[
             {
@@ -42,49 +39,46 @@ export default function VolunteerOpportunityScreen() {
           <Text style={styles.headerText}>Music By The Tracks</Text>
         </View>
       </View>
-      <View style={styles.details}>
-        <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
-          <Image
-            source={require("./../assets/clock.png")}
-            style={{ height: 18, width: 18 }}
-          ></Image>
-          <Text style={styles.detailsText}>
-            Saturday, July 27, 2024 4:00 PM
+      <View style={styles.subcontainer}>
+        <View style={styles.details}>
+          <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+            <Image
+              source={require("./../assets/clock.png")}
+              style={{ height: 18, width: 18 }}
+            ></Image>
+            <Text style={styles.detailsText}>
+              Saturday, July 27, 2024 4:00 PM
+            </Text>
+          </View>
+          <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+            <Image
+              source={require("./../assets/location.png")}
+              style={{ height: 18, width: 18 }}
+            ></Image>
+            <Text style={styles.detailsText}>Warm Springs BART Station</Text>
+          </View>
+        </View>
+        <View style={styles.about}>
+          <Heading>About</Heading>
+          <Text style={{ fontSize: 14 }}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In sit amet
+            nibh nulla. Vestibulum ante ipsum primis in faucibus orci luctus et
+            ultrices posuere cubilia curae; Aenean vitae orci in mi ultricies
+            varius et at tellus. Maecenas posuere vestibulum tortor, euismod
+            aliquam odio ullamcorper eget. Phasellus quam mi, bibendum id
+            elementum eget, semper id risus. Nunc eu bibendum erat, nec
+            pellentesque est. Nullam lobortis mattis laoreet. Aliquam quis ipsum
+            at arcu tempus scelerisque.
           </Text>
         </View>
-        <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
-          <Image
-            source={require("./../assets/location.png")}
-            style={{ height: 18, width: 18 }}
-          ></Image>
-          <Text style={styles.detailsText}>Warm Springs BART Station</Text>
+        <View style={styles.tagsContainer}>
+          <Heading>Tags</Heading>
+          <View style={styles.tags}>{tags}</View>
         </View>
-      </View>
-      <View style={styles.about}>
-        <Text style={{ fontSize: 16, color: "353535", fontWeight: "bold" }}>
-          About
-        </Text>
-        <Text style={{ fontSize: 14 }}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. In sit amet
-          nibh nulla. Vestibulum ante ipsum primis in faucibus orci luctus et
-          ultrices posuere cubilia curae; Aenean vitae orci in mi ultricies
-          varius et at tellus. Maecenas posuere vestibulum tortor, euismod
-          aliquam odio ullamcorper eget. Phasellus quam mi, bibendum id
-          elementum eget, semper id risus. Nunc eu bibendum erat, nec
-          pellentesque est. Nullam lobortis mattis laoreet. Aliquam quis ipsum
-          at arcu tempus scelerisque. Nullam malesuada, enim quis dignissim
-          suscipit, neque massa tristique diam, non rhoncus diam felis at
-          turpis. Ut ullamcorper quis leo a pharetra.
-        </Text>
-      </View>
-      <View style={styles.tagsContainer}>
-        <Text style={[{ fontSize: 16, fontWeight: "bold", color: "353535" }]}>
-          Tags
-        </Text>
-        <View style={styles.tags}>{tags}</View>
-      </View>
-      <View style={styles.signUpButton}>
-        <Pressable style={[{ marginBottom: "5%", marginRight: "4%" }]}>
+        <Pressable
+          style={styles.signUpButton}
+          onPress={() => navigation.navigate("Volunteer Form")}
+        >
           <SignUpButton />
         </Pressable>
       </View>
@@ -100,34 +94,30 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   banner: {
-    flex: 4,
+    flex: 0.5,
+  },
+  subcontainer: {
+    flex: 1,
+    marginHorizontal: 20,
   },
   details: {
-    flex: 1,
-    paddingLeft: "4%",
+    paddingTop: 10,
     justifyContent: "center",
   },
   about: {
-    flex: 3,
-    paddingLeft: "4%",
-    paddingTop: "5%",
-    paddingRight: "8%",
+    paddingVertical: 10,
   },
   tagsContainer: {
-    flex: 1.5,
-    paddingLeft: "4%",
-    paddingTop: "5%",
     flexDirection: "column",
   },
   tags: {
+    paddingVertical: 5,
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 10,
-    paddingTop: "1%",
-    paddingRight: "4%",
+    gap: 5,
   },
   signUpButton: {
-    flex: 1.5,
+    flex: 1,
     justifyContent: "flex-end",
     alignItems: "flex-end",
   },
@@ -135,12 +125,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     resizeMode: "cover",
-  },
-  backButton: {
-    position: "absolute",
-    paddingTop: "15%",
-
-    transform: [{ scale: 0.8 }],
   },
   headerText: {
     position: "absolute",
