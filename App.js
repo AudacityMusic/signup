@@ -6,10 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import colors from "./src/constants/colors";
 import HomeScreen from "./src/screens/HomeScreen";
-<<<<<<< HEAD
-=======
 import AccountScreen from "./src/screens/AccountScreen";
->>>>>>> origin
 // import SignInScreen from "./src/screens/SignInScreen";
 import DonateScreen from "./src/screens/DonateScreen";
 import WebsitesScreen from "./src/screens/WebsitesScreen";
@@ -22,19 +19,6 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-<<<<<<< HEAD
-    // <NavigationContainer>
-    //   <Stack.Navigator initialRouteName="Other Info">
-    //     <Stack.Screen name="Home" component={HomeScreen} />
-    //     <Stack.Screen name="Donate" component={DonateScreen} />
-    //     <Stack.Screen name="Websites" component={WebsitesScreen} />
-    //     <Stack.Screen name="Other Info" component={OtherInfoScreen} />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
-    // <SignInScreen></SignInScreen>
-    // <OtherInfoScreen></OtherInfoScreen>
-    <VolunteerFormScreen></VolunteerFormScreen>
-=======
     <NavigationContainer>
       <StatusBar style="light" />
       <Stack.Navigator
@@ -70,6 +54,5 @@ export default function App() {
         <Stack.Screen name="Volunteer Form" component={VolunteerFormScreen} />
       </Stack.Navigator>
     </NavigationContainer>
->>>>>>> origin
   );
 }

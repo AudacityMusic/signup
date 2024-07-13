@@ -17,7 +17,7 @@ export default function CheckBoxQuery({question, boxColor, value, setValue, setY
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Checkbox
           color={"#0d79ff"}
-          value={value}
+          value={value == true}
           onValueChange={() => {setValue(true); console.log("YES")}}
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
         />
@@ -25,7 +25,7 @@ export default function CheckBoxQuery({question, boxColor, value, setValue, setY
         <Text>       </Text>
         <Checkbox
           color={"#0d79ff"}
-          value={!value}
+          value={value == false}
           onValueChange={() => {setValue(false); console.log("NO")}}
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
         />

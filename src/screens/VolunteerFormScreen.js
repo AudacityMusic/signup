@@ -139,8 +139,8 @@ export default function VolunteerFormScreen() {
   ]);
 
   const [performanceTypeColor, setPerformanceTypeColor] = useState("black");
-  const [permissionsColor, setPermissionsColor] = useState("dodger-blue");
-  const [parentalConsentColor, setParentalConsentColor] = useState("dodger-blue")
+  const [permissionsColor, setPermissionsColor] = useState("black");
+  const [parentalConsentColor, setParentalConsentColor] = useState("black")
 
   const [scrollObject, setScrollObject] = useState(null);
 
@@ -163,7 +163,7 @@ export default function VolunteerFormScreen() {
     const center = Dimensions.get("window").width / 2;
 
     if (permissions != null) {
-      setPermissionsColor("dodger-blue")
+      setPermissionsColor("black")
       console.log("Is null and none the same? " + (null == false))
     }
 
@@ -172,8 +172,8 @@ export default function VolunteerFormScreen() {
       scrollObject.scrollTo({x: center, y: locations.get("permissions"), animated: true})
     }
 
-    if (parentalConsent) {
-      setParentalConsentColor("dodger-blue")
+    if (parentalConsent == true || age >= 18) {
+      setParentalConsentColor("black")
       console.log("pc")
     }
 
@@ -346,6 +346,7 @@ export default function VolunteerFormScreen() {
                 setValue={setPermissions}
                 setY={setPermissionsY}
               />
+              {(age < 18) ? 
               <CheckBoxQuery
                 question={
                   "My parent has given their consent for my participation. "
@@ -355,6 +356,7 @@ export default function VolunteerFormScreen() {
                 setValue={setParentalConsent}
                 setY={setParentalConsent}
               />
+              : null}
             </View>
             <View style={styles.uploadsContainer}>
               <View style={{justifyContent: "center"}}>
