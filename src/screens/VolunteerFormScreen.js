@@ -31,6 +31,38 @@ export default function VolunteerFormScreen() {
   const [length, setLength] = useState(0);
   const [recordingLink, setRecordingLink] = useState("");
 
+  const basicCheckingVariables = [
+    ["instrument", instrument],
+    ["composer", composer],
+    ["musicPiece", musicPiece],
+    ["age", age],
+    ["phoneNumber", phoneNumber],
+    ["city", city],
+  ];
+
+  const [fullNameY, setFullNameY] = useState(0);
+  const [cityY, setCityY] = useState(0);
+  const [phoneNumberY, setPhoneNumberY] = useState(0);
+  const [ageY, setAgeY] = useState(0);
+  const [musicPieceY, setMusicPieceY] = useState(0);
+  const [composerY, setComposerY] = useState(0);
+  const [instrumentY, setInstrumentY] = useState(0);
+  const [performanceTypeY, setPerformanceTypeY] = useState(0);
+  const [lengthY, setLengthY] = useState(0);
+  const [recordingLinkY, setRecordingLinkY] = useState(0);
+
+  const locations = new Map();
+  locations.set("fullName", fullNameY);
+  locations.set("city", cityY);
+  locations.set("phoneNumber", phoneNumberY);
+  locations.set("age", ageY);
+  locations.set("musicPiece", musicPieceY);
+  locations.set("composer", composerY);
+  locations.set("instrument", instrumentY);
+  locations.set("performanceType", performanceTypeY);
+  locations.set("length", lengthY);
+  locations.set("recordingLink", recordingLinkY);
+
   const performanceOptions = [
     { label: "Individual performance only", value: "individual" },
     {
@@ -97,17 +129,9 @@ export default function VolunteerFormScreen() {
   ]);
 
   const [performanceTypeColor, setPerformanceTypeColor] = useState("black");
+  const [scrollObject, setScrollObject] = useState(null);
 
   const validate = () => {
-    const basicCheckingVariables = [
-      ["instrument", instrument],
-      ["composer", composer],
-      ["musicPiece", musicPiece],
-      ["age", age],
-      ["phoneNumber", phoneNumber],
-      ["city", city],
-    ];
-
     console.log(fullName.trim());
     console.log(city.trim());
     console.log(phoneNumber.trim());
@@ -120,23 +144,49 @@ export default function VolunteerFormScreen() {
     console.log(length);
     console.log(recordingLink.trim());
 
-    borderColors[0] = fullName.split(" ").length - 1 == 0 ? "red" : "black";
-    setPerformanceTypeColor(performanceType == "" ? "red" : "black");
-    borderColors[7] = length > timeLimit || length == 0 ? "red" : "black";
+    const center = Dimensions.get("window").width / 2;
 
     try {
       let url = new URL(recordingLink);
       borderColors[8] = "black";
+
     } catch (error) {
       borderColors[8] = "red";
-      console.error(error);
+      console.error(error);      
+      scrollObject.scrollTo({x: center, y: locations.get("recordingLink"), animated: true});
     }
 
-    let index = 1;
+    if (length > timeLimit || length == 0) {
+      borderColors[7] = "red";
+      scrollObject.scrollTo({x: center, y: locations.get("length"), behavior: "smooth"});
+    }
+
+    else {
+      borderColors[7] = "black";
+    }
+
+    if (performanceType == "") {
+      setPerformanceTypeColor("red");
+      scrollObject.scrollTo({x: center, y: locations.get("performanceType"), animated: true});
+    }
+
+    else {
+      setPerformanceTypeColor("black");
+    }
+
+    let index = 6;
 
     basicCheckingVariables.forEach(([name, variable]) => {
-      borderColors[index] = (variable == "0" || variable == 0 ? "red" : "black");
-      index++;
+      if (variable == "0" || variable == 0) {
+        borderColors[index] = "red";
+        scrollObject.scrollTo({x: center, y: locations.get(name), animated: true});
+      }
+
+      else {
+        borderColors[index] = "black";
+      }
+
+      index--;
     });
 
     borderColors.forEach((color) => console.log(color));
@@ -175,49 +225,56 @@ export default function VolunteerFormScreen() {
         ]}
         behavior="padding"
       >
-        <ScrollView>
+        <ScrollView ref={(ref) => {setScrollObject(ref)}}>
           <View style={styles.form}>
             <TextField
               title="Performer's Full Name "
               setText={(text) => setFullName(text)}
               keyboardType="default"
               borderColor={borderColors[0]}
+              setY={setFullNameY}
             ></TextField>
             <TextField
               title="City of Residence "
               setText={(text) => setCity(text)}
               keyboardType="default"
               borderColor={borderColors[1]}
+              setY={setCityY}
             ></TextField>
             <TextField
               title="Phone Number "
               setText={(text) => setPhoneNumber(text)}
               keyboardType="phone-pad"
               borderColor={borderColors[2]}
+              setY={setPhoneNumberY}
             ></TextField>
             <TextField
               title="Performer's Age "
               setText={(text) => setAge(text)}
               keyboardType="numeric"
               borderColor={borderColors[3]}
+              setY={setAgeY}
             ></TextField>
             <TextField
               title="Name of Music Piece "
               setText={(text) => setMusicPiece(text)}
               keyboardType="default"
               borderColor={borderColors[4]}
+              setY={setMusicPieceY}
             ></TextField>
             <TextField
               title="Composer of Music Piece "
               setText={(text) => setComposer(text)}
               keyboardType="default"
               borderColor={borderColors[5]}
+              setY={setComposerY}
             ></TextField>
             <TextField
               title="Instrument Type "
               setText={(text) => setInstrument(text)}
               keyboardType="default"
               borderColor={borderColors[6]}
+              setY={setInstrumentY}
             ></TextField>
             <MultipleChoice
               title="Performance Type"
@@ -225,6 +282,7 @@ export default function VolunteerFormScreen() {
               selectedOption={performanceType}
               onSelect={(text) => onSelectionChange(text)}
               color={performanceTypeColor}
+              setY={setPerformanceTypeY}
             />
             <TextField
               title={"Length of Performance (min)"}
@@ -232,6 +290,7 @@ export default function VolunteerFormScreen() {
               setText={(text) => setLength(text)}
               keyboardType={"numeric"}
               borderColor={borderColors[7]}
+              setY={setLengthY}
             />
             <TextField
               title="Recording Link"
@@ -239,6 +298,7 @@ export default function VolunteerFormScreen() {
               setText={(text) => setRecordingLink(text)}
               keyboardType="url"
               borderColor={borderColors[8]}
+              setY={setRecordingLinkY}
             />
           </View>
           <Pressable style={styles.nextButton} onPress={() => validate()}>

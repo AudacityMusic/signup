@@ -8,9 +8,16 @@ const MultipleChoice = ({
   selectedOption,
   onSelect,
   color = "black",
+  setY,
 }) => {
   return (
-    <View style={{ marginBottom: 20 }}>
+    <View 
+      style={{ marginBottom: 20 }}
+      onLayout={(event) => {
+          const { x, y, width, height } = event.nativeEvent.layout;
+          setY(y);
+      }}
+    >
       <Text style={styles.label}>
         <Text style={{ color: color }}>{title}</Text>
         <Text style={{ color: "red" }}> *</Text>

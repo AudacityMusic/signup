@@ -6,10 +6,16 @@ export default function TextField({
   setText,
   keyboardType,
   borderColor = "black",
+  setY,
 }) {
   return (
     // TODO
-    <View>
+    <View        
+      onLayout={(event) => {
+      const { x, y, width, height } = event.nativeEvent.layout;
+      setY(y);
+      }}
+    >
       <Text style={{ fontSize: 25 }}>
         <Text>{title}</Text>
         <Text style={{ color: "red" }}> *</Text>
