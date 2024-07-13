@@ -7,7 +7,7 @@ export default function UploadButton() {
         source={require("./../assets/upload.png")}
         style={{ height: 30, width: 30 }}
       />
-      <Text style={styles.uploadText}>   Upload</Text>
+      <Text style={styles.uploadText}> Upload</Text>
     </View>
   );
 }

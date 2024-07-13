@@ -140,7 +140,7 @@ export default function VolunteerFormScreen() {
 
   const [performanceTypeColor, setPerformanceTypeColor] = useState("black");
   const [permissionsColor, setPermissionsColor] = useState("black");
-  const [parentalConsentColor, setParentalConsentColor] = useState("black")
+  const [parentalConsentColor, setParentalConsentColor] = useState("black");
 
   const [scrollObject, setScrollObject] = useState(null);
 
@@ -163,50 +163,61 @@ export default function VolunteerFormScreen() {
     const center = Dimensions.get("window").width / 2;
 
     if (permissions != null) {
-      setPermissionsColor("black")
-      console.log("Is null and none the same? " + (null == false))
-    }
-
-    else {
-      setPermissionsColor("red")
-      scrollObject.scrollTo({x: center, y: locations.get("permissions"), animated: true})
+      setPermissionsColor("black");
+      console.log("Is null and none the same? " + (null == false));
+    } else {
+      setPermissionsColor("red");
+      scrollObject.scrollTo({
+        x: center,
+        y: locations.get("permissions"),
+        animated: true,
+      });
     }
 
     if (parentalConsent == true || age >= 18) {
-      setParentalConsentColor("black")
-      console.log("pc")
-    }
-
-    else {
-      setParentalConsentColor("red")
-      scrollObject.scrollTo({x: center, y: locations.get("parentalConsent"), animated: true})
+      setParentalConsentColor("black");
+      console.log("pc");
+    } else {
+      setParentalConsentColor("red");
+      scrollObject.scrollTo({
+        x: center,
+        y: locations.get("parentalConsent"),
+        animated: true,
+      });
     }
 
     try {
       let url = new URL(recordingLink);
       borderColors[8] = "black";
-
     } catch (error) {
       borderColors[8] = "red";
-      console.error(error);      
-      scrollObject.scrollTo({x: center, y: locations.get("recordingLink"), animated: true});
+      console.error(error);
+      scrollObject.scrollTo({
+        x: center,
+        y: locations.get("recordingLink"),
+        animated: true,
+      });
     }
 
     if (length > timeLimit || length == 0) {
       borderColors[7] = "red";
-      scrollObject.scrollTo({x: center, y: locations.get("length"), behavior: "smooth"});
-    }
-
-    else {
+      scrollObject.scrollTo({
+        x: center,
+        y: locations.get("length"),
+        behavior: "smooth",
+      });
+    } else {
       borderColors[7] = "black";
     }
 
     if (performanceType == "") {
       setPerformanceTypeColor("red");
-      scrollObject.scrollTo({x: center, y: locations.get("performanceType"), animated: true});
-    }
-
-    else {
+      scrollObject.scrollTo({
+        x: center,
+        y: locations.get("performanceType"),
+        animated: true,
+      });
+    } else {
       setPerformanceTypeColor("black");
     }
 
@@ -215,10 +226,12 @@ export default function VolunteerFormScreen() {
     basicCheckingVariables.forEach(([name, variable]) => {
       if (variable == "0" || variable == 0) {
         borderColors[index] = "red";
-        scrollObject.scrollTo({x: center, y: locations.get(name), animated: true});
-      }
-
-      else {
+        scrollObject.scrollTo({
+          x: center,
+          y: locations.get(name),
+          animated: true,
+        });
+      } else {
         borderColors[index] = "black";
       }
 
@@ -261,7 +274,11 @@ export default function VolunteerFormScreen() {
         ]}
         behavior="padding"
       >
-        <ScrollView ref={(ref) => {setScrollObject(ref)}}>
+        <ScrollView
+          ref={(ref) => {
+            setScrollObject(ref);
+          }}
+        >
           <View style={styles.form}>
             <TextField
               title="Performer's Full Name "
@@ -346,31 +363,32 @@ export default function VolunteerFormScreen() {
                 setValue={setPermissions}
                 setY={setPermissionsY}
               />
-              {(age < 18) ? 
-              <CheckBoxQuery
-                question={
-                  "My parent has given their consent for my participation. "
-                }
-                boxColor={parentalConsentColor}
-                value={parentalConsent}
-                setValue={setParentalConsent}
-                setY={setParentalConsent}
-              />
-              : null}
+              {age < 18 ? (
+                <CheckBoxQuery
+                  question={
+                    "My parent has given their consent for my participation. "
+                  }
+                  boxColor={parentalConsentColor}
+                  value={parentalConsent}
+                  setValue={setParentalConsent}
+                  setY={setParentalConsent}
+                />
+              ) : null}
             </View>
             <View style={styles.uploadsContainer}>
-              <View style={{justifyContent: "center"}}>
+              <View style={{ justifyContent: "center" }}>
                 <Text style={{ paddingBottom: "3%", fontSize: 25 }}>
                   Our volunteer piano accompanist can provide sight reading
-                  accompaniment for entry level players. To request this service,
-                  upload the main score AND accompaniment score in one PDF file.
-                  (100 MB file size limit){"\n"}
+                  accompaniment for entry level players. To request this
+                  service, upload the main score AND accompaniment score in one
+                  PDF file. (100 MB file size limit){"\n"}
                 </Text>
                 <UploadButton />
               </View>
               <View style={{ paddingTop: "3%" }}>
                 <Text style={{ paddingBottom: "3%", fontSize: 25 }}>
-                  Upload your Library Band Ensemble profile as one PDF file.{"\n"}
+                  Upload your Library Band Ensemble profile as one PDF file.
+                  {"\n"}
                 </Text>
                 <UploadButton />
               </View>
@@ -428,14 +446,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     flexDirection: "column",
-    textAlignVertical: "center"
+    textAlignVertical: "center",
   },
   uploadsContainer: {
     flex: 3.5,
     justifyContent: "center",
     flexDirection: "column",
     textAlignVertical: "center",
-    fontSize: 20
+    fontSize: 20,
   },
   otherInfoContainer: {
     paddingTop: "3%",

@@ -8,14 +8,14 @@ const MultipleChoice = ({
   selectedOption,
   onSelect,
   color = "black",
-  setY=(y)=>{},
+  setY = (y) => {},
 }) => {
   return (
-    <View 
+    <View
       style={{ marginBottom: 20 }}
       onLayout={(event) => {
-          const { x, y, width, height } = event.nativeEvent.layout;
-          setY(y);
+        const { x, y, width, height } = event.nativeEvent.layout;
+        setY(y);
       }}
     >
       <Text style={styles.label}>
