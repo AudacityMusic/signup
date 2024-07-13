@@ -10,7 +10,6 @@ export default function TextField({
 }) {
   return (
     // TODO
-<<<<<<< HEAD
     <View        
       onLayout={(event) => {
       const { x, y, width, height } = event.nativeEvent.layout;
@@ -18,14 +17,11 @@ export default function TextField({
       }}
     >
       <Text style={{ fontSize: 25 }}>
-=======
-    <View>
-      <Text style={{ fontSize: 14 }}>
->>>>>>> origin
         <Text>{title}</Text>
         <Text style={{ color: "red" }}> *</Text>
-        <Text style={{ fontSize: 20, color: "#707070" }}>{subtitle}</Text>
       </Text>
+      <Text style={{ fontSize: 1 }}>{"\n"}</Text>
+      <Text style={{ fontSize: 20, color: "#707070" }}>{subtitle}</Text>
       <TextInput
         style={[styles.inputField, { borderColor: borderColor }]}
         onChangeText={(text) => setText(text)}

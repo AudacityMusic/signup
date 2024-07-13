@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import HomeScreen from "./src/screens/HomeScreen";
-import SignInScreen from "./src/screens/SignInScreen";
+// import SignInScreen from "./src/screens/SignInScreen";
 import DonateScreen from "./src/screens/DonateScreen";
 import WebsitesScreen from "./src/screens/WebsitesScreen";
 import VolunteerFormScreen from "./src/screens/VolunteerFormScreen";
@@ -24,6 +24,7 @@ export default function App() {
     //   </Stack.Navigator>
     // </NavigationContainer>
     // <SignInScreen></SignInScreen>
-    <OtherInfoScreen></OtherInfoScreen>
+    // <OtherInfoScreen></OtherInfoScreen>
+    <VolunteerFormScreen></VolunteerFormScreen>
   );
 }
