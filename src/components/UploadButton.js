@@ -2,18 +2,18 @@ import { StyleSheet, Text, View, Image } from "react-native";
 
 export default function UploadButton() {
   return (
-    <View style={styles.back}>
+    <View style={styles.upload}>
       <Image
         source={require("./../assets/upload.png")}
         style={{ height: 30, width: 30 }}
       />
-      <Text style={styles.backText}>Upload</Text>
+      <Text style={styles.uploadText}>Upload</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  back: {
+  upload: {
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
@@ -22,9 +22,10 @@ const styles = StyleSheet.create({
     paddingVertical: "2%",
     borderRadius: 20,
     borderWidth: 3,
+    marginBottom: 20,
   },
 
-  backText: {
+  uploadText: {
     fontSize: 16,
     paddingLeft: "3%",
   },
