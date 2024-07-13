@@ -11,9 +11,14 @@ export default function BackButton(props) {
       >
         <Image
           source={require("./../assets/caret-left.png")}
-          style={props.opaque ? { tintColor: "white" } : {}}
+          style={props.opaque || props.white ? { tintColor: "white" } : {}}
         />
-        <Text style={[styles.backText, props.opaque ? { color: "white" } : {}]}>
+        <Text
+          style={[
+            styles.backText,
+            props.opaque || props.white ? { color: "white" } : {},
+          ]}
+        >
           Back
         </Text>
       </View>

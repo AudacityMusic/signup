@@ -12,10 +12,12 @@
   },
   "dependencies": {
     "@expo/metro-runtime": "^3.2.1",
+    "@react-native-community/cli-server-api": "^13.6.9",
     "@react-native-google-signin/google-signin": "^12.2.1",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.10.0",
     "expo": "~51.0.17",
+    "expo-checkbox": "~3.0.0",
     "expo-constants": "^16.0.2",
     "expo-linear-gradient": "^13.0.2",
     "expo-status-bar": "~1.12.1",
