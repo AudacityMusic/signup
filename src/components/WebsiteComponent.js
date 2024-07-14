@@ -49,7 +49,7 @@ export default function WebsiteComponent() {
         <View style={styles.divider} />
         <Pressable
           style={styles.card}
-          onPress={() => openLink("https://funyouth.us/")}
+          onPress={() => openLink("https://funyouth.us/art")}
         >
           <Image
             style={styles.icon}
@@ -64,7 +64,7 @@ export default function WebsiteComponent() {
         <View style={styles.divider} />
         <Pressable
           style={[styles.card, styles.last]}
-          onPress={() => openLink("https://funyouth.us/art")}
+          onPress={() => openLink("https://funyouth.us/")}
         >
           <Image
             style={styles.icon}
