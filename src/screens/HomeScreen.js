@@ -1,9 +1,7 @@
 import { StyleSheet, Text, Image, View, Pressable } from "react-native";
-import VolunteerOpportunity from "../components/VolunteerOpportunity.js";
+import Website_component from "../components/Website_component.js";
 export default function HomeScreen({ navigation }) {
   return (
-    <VolunteerOpportunity></VolunteerOpportunity>
-    /*
     <View style={styles.container}>
       <Image
         source={require("./../assets/audacity-music-club.png")}
@@ -30,7 +28,6 @@ export default function HomeScreen({ navigation }) {
         <Text style={styles.smallButton}>Visit our websites</Text>
       </Pressable>
     </View>
-    */
   );
 }
 
