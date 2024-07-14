@@ -7,7 +7,7 @@ export default function UploadButton() {
         source={require("./../assets/upload.png")}
         style={{ height: 30, width: 30 }}
       />
-      <Text style={styles.uploadText}>Upload</Text>
+      <Text style={styles.uploadText}> Upload</Text>
     </View>
   );
 }
@@ -15,9 +15,9 @@ export default function UploadButton() {
 const styles = StyleSheet.create({
   upload: {
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     alignItems: "center",
-    alignSelf: "flex-start",
+    alignSelf: "center",
     paddingHorizontal: "2%",
     paddingVertical: "2%",
     borderRadius: 20,
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
 
   uploadText: {
-    fontSize: 16,
+    fontSize: 25,
     paddingLeft: "3%",
   },
 });

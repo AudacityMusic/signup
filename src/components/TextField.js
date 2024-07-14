@@ -6,15 +6,26 @@ export default function TextField({
   setText,
   keyboardType,
   borderColor = "black",
+  setY = (y) => {},
 }) {
   return (
     // TODO
-    <View>
-      <Text style={{ fontSize: 14 }}>
+    <View
+      onLayout={(event) => {
+        const { x, y, width, height } = event.nativeEvent.layout;
+        setY(y);
+      }}
+    >
+      <Text style={{ fontSize: 25 }}>
         <Text>{title}</Text>
-        <Text style={{ color: "red" }}> *</Text>
-        <Text style={{ fontSize: 20, color: "#707070" }}>{subtitle}</Text>
+        {title.slice(-10) == "(optional)" ? (
+          <Text></Text>
+        ) : (
+          <Text style={{ color: "red" }}> *</Text>
+        )}
       </Text>
+      <Text style={{ fontSize: 1 }}>{"\n"}</Text>
+      <Text style={{ fontSize: 20, color: "#707070" }}>{subtitle}</Text>
       <TextInput
         style={[styles.inputField, { borderColor: borderColor }]}
         onChangeText={(text) => setText(text)}
