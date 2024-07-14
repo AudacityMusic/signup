@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, Pressable, Linking } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Pressable,
+  Linking,
+} from "react-native";
 
 export default function OtherOpportunities() {
   const openLink = (url) => {
@@ -12,7 +19,7 @@ export default function OtherOpportunities() {
       <View style={styles.cardContainer}>
         <Pressable
           style={[styles.card, styles.first]}
-          onPress={() => openLink('https://eternityband.org/')}
+          onPress={() => openLink("https://eternityband.org/")}
         >
           <Image
             style={styles.icon}
@@ -27,7 +34,7 @@ export default function OtherOpportunities() {
         <View style={styles.divider} />
         <Pressable
           style={styles.card}
-          onPress={() => openLink('https://goaudacity.com/')}
+          onPress={() => openLink("https://goaudacity.com/")}
         >
           <Image
             style={styles.icon}
@@ -42,7 +49,7 @@ export default function OtherOpportunities() {
         <View style={styles.divider} />
         <Pressable
           style={styles.card}
-          onPress={() => openLink('https://funyouth.us/')}
+          onPress={() => openLink("https://funyouth.us/")}
         >
           <Image
             style={styles.icon}
@@ -57,7 +64,7 @@ export default function OtherOpportunities() {
         <View style={styles.divider} />
         <Pressable
           style={[styles.card, styles.last]}
-          onPress={() => openLink('https://funyouth.us/art')}
+          onPress={() => openLink("https://funyouth.us/art")}
         >
           <Image
             style={styles.icon}
