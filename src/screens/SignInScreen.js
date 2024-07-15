@@ -1,19 +1,19 @@
-// import {
-//   StyleSheet,
-//   Text,
-//   View,
-//   SafeAreaView,
-//   Pressable,
-//   Image,
-// } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Pressable,
+  Image,
+} from "react-native";
 
-// import {
-//   GoogleSignin,
-//   statusCodes,
-//   isErrorWithCode,
-// } from "@react-native-google-signin/google-signin";
+import {
+  GoogleSignin,
+  statusCodes,
+  isErrorWithCode,
+} from "@react-native-google-signin/google-signin";
 
-// import BackButton from "../components/BackButton";
+import BackButton from "../components/BackButton";
 
 GoogleSignin.configure({
   webClientId:
@@ -23,21 +23,21 @@ GoogleSignin.configure({
     "761199370622-qdq0afvq19r47p34rgjsso84leub5dlj.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
 });
 
-// export default function SignInScreen() {
-//   return (
-//     <SafeAreaView style={styles.container}>
-//       <Pressable>
-//         <BackButton />
-//       </Pressable>
-//       <View style={styles.body}>
-//         <Text style={styles.title}>Sign In</Text>
-//         <Text style={styles.paragraph}>
-//           {"\n"}
-//           {"Thank you for choosing to help\n"}
-//           {"make our volunteer concerts a\n"}
-//           {"success! To begin, please sign\n"}
-//           {"in using your Google account.\n"}
-//         </Text>
+export default function SignInScreen() {
+  return (
+    <SafeAreaView style={styles.container}>
+      <Pressable>
+        <BackButton />
+      </Pressable>
+      <View style={styles.body}>
+        <Text style={styles.title}>Sign In</Text>
+        <Text style={styles.paragraph}>
+          {"\n"}
+          {"Thank you for choosing to help\n"}
+          {"make our volunteer concerts a\n"}
+          {"success! To begin, please sign\n"}
+          {"in using your Google account.\n"}
+        </Text>
 
         <Pressable
           style={[styles.OAuth, styles.GoogleOAuth]}
@@ -88,47 +88,47 @@ GoogleSignin.configure({
   );
 }
 
-// const styles = StyleSheet.create({
-//   container: {
-//     backgroundColor: "#fff",
-//     padding: "1%",
-//   },
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#fff",
+    padding: "1%",
+  },
 
-//   body: {
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
+  body: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
 
-//   title: {
-//     fontWeight: "bold",
-//     fontSize: 45,
-//   },
+  title: {
+    fontWeight: "bold",
+    fontSize: 45,
+  },
 
-//   paragraph: {
-//     fontSize: 18,
-//   },
+  paragraph: {
+    fontSize: 18,
+  },
 
-//   OAuth: {
-//     flexDirection: "row",
-//     alignItems: "center",
-//     justifyContent: "center",
-//     width: 300,
-//     height: 50,
-//     borderRadius: 15,
-//   },
+  OAuth: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 300,
+    height: 50,
+    borderRadius: 15,
+  },
 
-//   OAuthLogo: {
-//     width: 40,
-//     height: 40,
-//   },
+  OAuthLogo: {
+    width: 40,
+    height: 40,
+  },
 
-//   OAuthText: {
-//     color: "#fff",
-//     fontSize: 25,
-//   },
+  OAuthText: {
+    color: "#fff",
+    fontSize: 25,
+  },
 
-//   GoogleOAuth: {
-//     backgroundColor: "#353535",
-//     color: "#fff",
-//   },
-// });
+  GoogleOAuth: {
+    backgroundColor: "#353535",
+    color: "#fff",
+  },
+});
