@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import colors from "./src/constants/colors";
 import HomeScreen from "./src/screens/HomeScreen";
 import AccountScreen from "./src/screens/AccountScreen";
-// import SignInScreen from "./src/screens/SignInScreen";
+import SignInScreen from "./src/screens/SignInScreen";
 import DonateScreen from "./src/screens/DonateScreen";
 import WebsitesScreen from "./src/screens/WebsitesScreen";
 import VolunteerFormScreen from "./src/screens/VolunteerFormScreen";
@@ -21,7 +21,7 @@ export default function App() {
     <NavigationContainer>
       <StatusBar style="light" />
       <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName="Signin"
         screenOptions={{
           headerStyle: {
             backgroundColor: colors.primary,
@@ -29,6 +29,7 @@ export default function App() {
           headerTintColor: colors.white,
         }}
       >
+        <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen
           name="Home"
           component={HomeScreen}
