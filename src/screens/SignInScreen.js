@@ -18,7 +18,6 @@ import BackButton from "../components/BackButton";
 GoogleSignin.configure({
   webClientId:
     "761199370622-3r5phtt6a1s6lm6554htodbk8u4k9p8f.apps.googleusercontent.com", // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
-  scopes: ["https://www.googleapis.com/auth/drive.readonly"], // what API you want to access on behalf of the user, default is email and profile
   iosClientId:
     "761199370622-qdq0afvq19r47p34rgjsso84leub5dlj.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
 });
@@ -52,26 +51,26 @@ export default function SignInScreen() {
                 switch (error.code) {
                   case statusCodes.SIGN_IN_CANCELLED:
                     // user cancelled the login flow
-                    console.log("Cancelled");
+                    console.error("Cancelled");
                     break;
                   case statusCodes.IN_PROGRESS:
                     // operation (eg. sign in) already in progress
-                    console.log("In progress");
+                    console.error("In progress");
                     break;
                   case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
                     // play services not available or outdated
-                    console.log("Play services not available or outdated");
+                    console.error("Play services not available or outdated");
                     break;
                   case statusCodes.SIGN_IN_REQUIRED:
-                    console.log("Sign in required");
+                    console.error("Sign in required");
                     break;
                   default:
-                    console.log(error);
+                    console.error(error);
                     break;
                   // some other error happened
                 }
               } else {
-                console.log("WOAH This is outta my control");
+                console.error("No error code for: " + error);
                 // an error that's not related to google sign in occurred
               }
             }
