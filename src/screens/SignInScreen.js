@@ -22,7 +22,7 @@ GoogleSignin.configure({
     "761199370622-qdq0afvq19r47p34rgjsso84leub5dlj.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
 });
 
-export default function SignInScreen() {
+export default function SignInScreen(setName, setEmail, setProfilePicture) {
   return (
     <SafeAreaView style={styles.container}>
       <Pressable>
@@ -45,7 +45,10 @@ export default function SignInScreen() {
               await GoogleSignin.hasPlayServices();
               const userInfo = await GoogleSignin.signIn();
               console.log("success");
-              console.log(JSON.stringify(userInfo, null, 2));
+              // console.log(JSON.stringify(userInfo, null, 2));
+              setName(userInfo.user.name);
+              setEmail(userInfo.user.email);
+              setProfilePicture(userInfo.user.photo);
             } catch (error) {
               if (isErrorWithCode(error)) {
                 switch (error.code) {

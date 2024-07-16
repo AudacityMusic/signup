@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 
-export default function Profile() {
+export default function Profile({email, name, profilePicture}) {
   return (
     <View style={styles.background}>
       <Image
         style={styles.image}
-        source={require("./../assets/placeholder-profile.png")}
+        source={{width: 50, height: 50, uri: profilePicture}}
       ></Image>
       <View>
         <Text style={styles.name}>Rick Astley</Text>
