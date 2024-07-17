@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
   Pressable,
@@ -12,6 +12,10 @@ import {
   Platform,
 } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { getUser } from "./SignInScreen";
+
 import BackButton from "../components/BackButton";
 import TextField from "../components/TextField";
 import CheckBoxQuery from "../components/CheckBoxQuery";
@@ -20,7 +24,16 @@ import NextButton from "../components/NextButton";
 import MultipleChoice from "../components/MultipleChoice";
 
 export default function VolunteerFormScreen() {
-  const [fullName, setFullName] = useState("");
+  const [user, setUser] = useState(JSON.parse("{}"));
+
+  useEffect(() => {
+    async function asynchronouslyGetUser() {
+      return await getUser();
+    }
+    asynchronouslyGetUser().then(setUser);
+  }, []);
+  console.log("Name is: " + user.name);
+  const [fullName, setFullName] = useState(JSON.stringify(user.name));
   const [city, setCity] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [age, setAge] = useState(0);

@@ -12,7 +12,7 @@ export default function HomeHeader({ navigation }) {
     async function asynchronouslyGetUser() {
       return await getUser();
     }
-    setUser(asynchronouslyGetUser());
+    asynchronouslyGetUser().then(setUser);
   }, []);
 
   console.log(JSON.stringify(user));

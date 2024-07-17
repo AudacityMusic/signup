@@ -9,7 +9,7 @@ export default function Profile() {
     async function asynchronouslyGetUser() {
       return await getUser();
     }
-    setUser(asynchronouslyGetUser());
+    asynchronouslyGetUser().then(setUser);
   }, []);
 
   return (
