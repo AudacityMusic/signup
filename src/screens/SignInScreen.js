@@ -26,7 +26,7 @@ GoogleSignin.configure({
 
 export async function getUser() {
   try {
-    const userString = await AsyncStorage.getItem('user');
+    const userString = await AsyncStorage.getItem("user");
     if (userString === null) {
       throw "EMPTY User";
     }
@@ -36,7 +36,7 @@ export async function getUser() {
   }
 }
 
-export default function SignInScreen({navigation}) {
+export default function SignInScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   return (
@@ -63,7 +63,14 @@ export default function SignInScreen({navigation}) {
               console.log("success");
               // console.log(JSON.stringify(userInfo, null, 2));
               AsyncStorage.setItem("user", JSON.stringify(userInfo.user));
-              console.log("name: " + userInfo.user.name + "\nemail: " + userInfo.user.email + "\nPhoto: " + userInfo.user.photo);
+              console.log(
+                "name: " +
+                  userInfo.user.name +
+                  "\nemail: " +
+                  userInfo.user.email +
+                  "\nPhoto: " +
+                  userInfo.user.photo,
+              );
               navigation.navigate("Home");
             } catch (error) {
               if (isErrorWithCode(error)) {
@@ -99,7 +106,7 @@ export default function SignInScreen({navigation}) {
             style={styles.OAuthLogo}
             source={require("../assets/google.png")}
           />
-          <Text style={[styles.OAuthText]}>    Sign in with Google</Text>
+          <Text style={[styles.OAuthText]}> Sign in with Google</Text>
         </Pressable>
         <Text style={styles.loading}>{loading ? "Loading ..." : "\n"}</Text>
       </View>
@@ -111,7 +118,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
     padding: "1%",
-    height: "100%"
+    height: "100%",
   },
 
   body: {
@@ -157,5 +164,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     fontSize: 20,
-  }
+  },
 });

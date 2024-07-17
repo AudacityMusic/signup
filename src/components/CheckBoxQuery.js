@@ -35,7 +35,7 @@ export default function CheckBoxQuery({
         >
           Yes
         </Text>
-        <Text>            </Text>
+        <Text> </Text>
         <Checkbox
           color={"#0d79ff"}
           value={value == false}

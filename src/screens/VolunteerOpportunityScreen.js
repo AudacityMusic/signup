@@ -66,7 +66,7 @@ export default function VolunteerOpportunityScreen({ navigation }) {
             ultrices posuere cubilia curae; Aenean vitae orci in mi ultricies
             varius et at tellus. Maecenas posuere vestibulum tortor, euismod
             aliquam odio ullamcorper eget. Phasellus quam mi, bibendum id
-            elementum eget, semper id risus. 
+            elementum eget, semper id risus.
           </Text>
         </View>
         <View style={styles.tagsContainer}>

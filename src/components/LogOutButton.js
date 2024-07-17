@@ -3,17 +3,20 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../constants/colors";
 
-export default function LogOutButton({navigation}) {
+export default function LogOutButton({ navigation }) {
   return (
-    <Pressable style={styles.button} onPress={async () => {
-      try {
-        await GoogleSignin.signOut();
-        AsyncStorage.removeItem("user");
-        navigation.navigate("SignIn");      
-      } catch (error) {
-        console.error(error);
-      }
-    }}>
+    <Pressable
+      style={styles.button}
+      onPress={async () => {
+        try {
+          await GoogleSignin.signOut();
+          AsyncStorage.removeItem("user");
+          navigation.navigate("SignIn");
+        } catch (error) {
+          console.error(error);
+        }
+      }}
+    >
       <Text style={styles.text}>Log Out</Text>
     </Pressable>
   );

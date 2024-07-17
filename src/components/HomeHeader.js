@@ -24,10 +24,14 @@ export default function HomeHeader({ navigation }) {
       <View style={styles.subcontainer}>
         <Text style={styles.headerText}>Audacity Music Club</Text>
         <Pressable onPress={() => navigation.navigate("Account")}>
-        <Image
-          source={user.photo ? {width: 250, height: 250, uri: user.photo} : require("../assets/placeholder-profile.png")}
-          style={styles.profile}
-        />
+          <Image
+            source={
+              user.photo
+                ? { width: 250, height: 250, uri: user.photo }
+                : require("../assets/placeholder-profile.png")
+            }
+            style={styles.profile}
+          />
         </Pressable>
       </View>
     </LinearGradient>

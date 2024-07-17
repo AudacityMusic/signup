@@ -26,7 +26,9 @@ export default function TextField({
         )}
       </Text>
       <Text style={{ fontSize: 1 }}>{"\n"}</Text>
-      <Text style={{ fontSize: subtitle ? 15 : 5, color: "#707070" }}>{subtitle}</Text>
+      <Text style={{ fontSize: subtitle ? 15 : 5, color: "#707070" }}>
+        {subtitle}
+      </Text>
       <TextInput
         style={[styles.inputField, { borderColor: borderColor }]}
         defaultValue={defaultText}

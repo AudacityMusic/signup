@@ -16,7 +16,11 @@ export default function Profile() {
     <View style={styles.background}>
       <Image
         style={styles.image}
-        source={user.photo ? {width: 250, height: 250, uri: user.photo} : require("../assets/placeholder-profile.png")}
+        source={
+          user.photo
+            ? { width: 250, height: 250, uri: user.photo }
+            : require("../assets/placeholder-profile.png")
+        }
       ></Image>
       <View>
         <Text style={styles.name}>{user.name ? user.name : "..."}</Text>

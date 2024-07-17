@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: 120,
     backgroundColor: colors.primary,
-    marginBottom: 35
+    marginBottom: 35,
   },
 
   signUpText: {

@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "./src/constants/colors";
 import HomeScreen from "./src/screens/HomeScreen";
 import AccountScreen from "./src/screens/AccountScreen";
-import SignInScreen, {getUser} from "./src/screens/SignInScreen";
+import SignInScreen, { getUser } from "./src/screens/SignInScreen";
 import DonateScreen from "./src/screens/DonateScreen";
 import WebsitesScreen from "./src/screens/WebsitesScreen";
 import VolunteerFormScreen from "./src/screens/VolunteerFormScreen";

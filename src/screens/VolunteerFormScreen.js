@@ -29,7 +29,7 @@ export default function VolunteerFormScreen() {
     }
     asynchronouslyGetUser().then(setUser);
   }, []);
-  
+
   const [fullName, setFullName] = useState("");
   const [city, setCity] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -257,7 +257,10 @@ export default function VolunteerFormScreen() {
       <KeyboardAvoidingView
         style={[
           styles.body,
-          { height: Dimensions.get("window").height - 100, width: Dimensions.get("window").width},
+          {
+            height: Dimensions.get("window").height - 100,
+            width: Dimensions.get("window").width,
+          },
         ]}
         behavior="height"
       >
@@ -270,7 +273,9 @@ export default function VolunteerFormScreen() {
             <Text style={styles.heading}>Volunteer Form</Text>
             <Text style={styles.instructions}>
               {"\n"}
-              {"Please fill in the following details about the person who will be"}
+              {
+                "Please fill in the following details about the person who will be"
+              }
               {"performing at the concert."}
               {"\n"}
             </Text>
@@ -374,7 +379,13 @@ export default function VolunteerFormScreen() {
             </View>
             <View style={styles.uploadsContainer}>
               <View style={{ justifyContent: "center" }}>
-                <Text style={{ paddingBottom: "3%", fontSize: 18, flexWrap: "wrap" }}>
+                <Text
+                  style={{
+                    paddingBottom: "3%",
+                    fontSize: 18,
+                    flexWrap: "wrap",
+                  }}
+                >
                   Our volunteer piano accompanist can provide sight reading
                   accompaniment for entry level players. To request this
                   service, upload the main score AND accompaniment score in one
@@ -383,7 +394,13 @@ export default function VolunteerFormScreen() {
                 <UploadButton />
               </View>
               <View style={{ paddingTop: "3%" }}>
-                <Text style={{ paddingBottom: "3%", fontSize: 18, flexWrap: "wrap" }}>
+                <Text
+                  style={{
+                    paddingBottom: "3%",
+                    fontSize: 18,
+                    flexWrap: "wrap",
+                  }}
+                >
                   Upload your Library Band Ensemble profile as one PDF file.
                   {"\n"}
                 </Text>
@@ -454,7 +471,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   otherInfoContainer: {
-    flex: 1.2
+    flex: 1.2,
   },
   nextButton: {
     alignSelf: "flex-end",
