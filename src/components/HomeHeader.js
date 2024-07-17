@@ -26,7 +26,7 @@ export default function HomeHeader({ navigation }) {
         <Text style={styles.headerText}>Audacity Music Club</Text>
         <Pressable onPress={() => navigation.navigate("Account")}>
         <Image
-          source={{width: 250, height: 250, uri: user.photo}}
+          source={user.photo ? {width: 250, height: 250, uri: user.photo} : require("../assets/placeholder-profile.png")}
           style={styles.profile}
         />
         </Pressable>
