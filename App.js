@@ -20,22 +20,15 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
-  // try {
-  //   const [user, setUser] = useState(JSON.parse("{}"));
-
-  //   useEffect(() => {
-  //     async function asynchronouslyGetUser() {
-  //       return await getUser();
-  //     }
-  //     asynchronouslyGetUser().then(setUser);
-  //   }, []);
-  
-  //   console.log(JSON.stringify(user));
-  //   setLoggedIn(true);
-  // }
-
-  // catch (error) {
-  // }
+  useEffect(() => {
+    async function asynchronouslyGetUser() {
+      return await getUser();
+    }
+    try {
+      asynchronouslyGetUser();
+      setLoggedIn(true);
+    } catch (error) {}
+  }, []);
 
   return (
     <NavigationContainer>
