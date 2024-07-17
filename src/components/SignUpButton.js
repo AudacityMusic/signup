@@ -3,9 +3,9 @@ import colors from "../constants/colors";
 
 export default function SignUpButton() {
   return (
-    <View style={styles.back}>
+    <View style={styles.signUp}>
       <Text>{"\n\n\n"}</Text>
-      <Text style={styles.backText}>Sign Up</Text>
+      <Text style={styles.signUpText}>Sign Up</Text>
       <Image
         source={require("./../assets/caret-left.png")}
         style={styles.caret}
@@ -15,19 +15,20 @@ export default function SignUpButton() {
 }
 
 const styles = StyleSheet.create({
-  back: {
+  signUp: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     paddingLeft: "5%",
     borderRadius: 15,
-    height: 59,
-    width: 145,
+    height: 50,
+    width: 120,
     backgroundColor: colors.primary,
+    marginBottom: 35
   },
 
-  backText: {
-    fontSize: 25,
+  signUpText: {
+    fontSize: 20,
     color: "white",
   },
   caret: {

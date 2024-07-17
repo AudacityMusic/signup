@@ -17,8 +17,6 @@ import {
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import BackButton from "../components/BackButton";
-
 GoogleSignin.configure({
   webClientId:
     "761199370622-3r5phtt6a1s6lm6554htodbk8u4k9p8f.apps.googleusercontent.com", // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
@@ -41,9 +39,6 @@ export async function getUser() {
 export default function SignInScreen({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
-      <Pressable>
-        <BackButton />
-      </Pressable>
       <View style={styles.body}>
         <Text style={styles.title}>Sign In</Text>
         <Text style={styles.paragraph}>
@@ -57,6 +52,7 @@ export default function SignInScreen({navigation}) {
         <Pressable
           style={[styles.OAuth, styles.GoogleOAuth]}
           onPress={async () => {
+            console.log("Signing In...");
             try {
               await GoogleSignin.hasPlayServices();
               const userInfo = await GoogleSignin.signIn();
@@ -119,7 +115,7 @@ const styles = StyleSheet.create({
 
   title: {
     fontWeight: "bold",
-    fontSize: 45,
+    fontSize: 30,
   },
 
   paragraph: {
@@ -142,7 +138,7 @@ const styles = StyleSheet.create({
 
   OAuthText: {
     color: "#fff",
-    fontSize: 25,
+    fontSize: 18,
   },
 
   GoogleOAuth: {

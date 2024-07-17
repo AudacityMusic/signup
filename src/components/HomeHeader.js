@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Image, Text, StyleSheet, Pressable, View } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import colors from "../constants/colors";
 import { getUser } from "../screens/SignInScreen";
@@ -37,7 +36,7 @@ export default function HomeHeader({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    height: 120,
+    height: 80,
     paddingHorizontal: 20,
     paddingBottom: 10,
     justifyContent: "flex-end",
@@ -49,7 +48,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: colors.white,
-    fontSize: 20,
+    fontSize: 25,
   },
   profile: {
     width: 40,

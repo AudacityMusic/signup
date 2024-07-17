@@ -1,13 +1,14 @@
 import "@expo/metro-runtime";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import colors from "./src/constants/colors";
 import HomeScreen from "./src/screens/HomeScreen";
 import AccountScreen from "./src/screens/AccountScreen";
-import SignInScreen from "./src/screens/SignInScreen";
+import SignInScreen, {getUser} from "./src/screens/SignInScreen";
 import DonateScreen from "./src/screens/DonateScreen";
 import WebsitesScreen from "./src/screens/WebsitesScreen";
 import VolunteerFormScreen from "./src/screens/VolunteerFormScreen";
@@ -17,11 +18,30 @@ import HomeHeader from "./src/components/HomeHeader";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  // try {
+  //   const [user, setUser] = useState(JSON.parse("{}"));
+
+  //   useEffect(() => {
+  //     async function asynchronouslyGetUser() {
+  //       return await getUser();
+  //     }
+  //     asynchronouslyGetUser().then(setUser);
+  //   }, []);
+  
+  //   console.log(JSON.stringify(user));
+  //   setLoggedIn(true);
+  // }
+
+  // catch (error) {
+  // }
+
   return (
     <NavigationContainer>
       <StatusBar style="light" />
       <Stack.Navigator
-        initialRouteName="Signin"
+        initialRouteName={loggedIn ? "Home" : "Signin"}
         screenOptions={{
           headerStyle: {
             backgroundColor: colors.primary,

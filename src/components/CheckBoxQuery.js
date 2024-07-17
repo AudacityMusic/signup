@@ -35,7 +35,7 @@ export default function CheckBoxQuery({
         >
           Yes
         </Text>
-        <Text> </Text>
+        <Text>            </Text>
         <Checkbox
           color={"#0d79ff"}
           value={value == false}
@@ -67,9 +67,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   text: {
-    fontSize: 25,
+    fontSize: 18,
   },
   header: {
-    fontSize: 25,
+    fontSize: 20,
   },
 });

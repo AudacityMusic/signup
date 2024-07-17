@@ -6,6 +6,7 @@ export default function TextField({
   setText,
   keyboardType,
   borderColor = "black",
+  defaultText = "",
   setY = (y) => {},
 }) {
   return (
@@ -16,7 +17,7 @@ export default function TextField({
         setY(y);
       }}
     >
-      <Text style={{ fontSize: 25 }}>
+      <Text style={{ fontSize: 20 }}>
         <Text>{title}</Text>
         {title.slice(-10) == "(optional)" ? (
           <Text></Text>
@@ -25,9 +26,10 @@ export default function TextField({
         )}
       </Text>
       <Text style={{ fontSize: 1 }}>{"\n"}</Text>
-      <Text style={{ fontSize: 20, color: "#707070" }}>{subtitle}</Text>
+      <Text style={{ fontSize: subtitle ? 15 : 5, color: "#707070" }}>{subtitle}</Text>
       <TextInput
         style={[styles.inputField, { borderColor: borderColor }]}
+        defaultValue={defaultText}
         onChangeText={(text) => setText(text)}
         keyboardType={keyboardType}
       ></TextInput>
@@ -37,10 +39,10 @@ export default function TextField({
 
 const styles = StyleSheet.create({
   inputField: {
-    height: 50,
+    height: 40,
     borderRadius: 15,
     borderWidth: 3,
-    fontSize: 30,
+    fontSize: 20,
     textAlign: "center",
     marginBottom: 20,
     paddingHorizontal: "10%",

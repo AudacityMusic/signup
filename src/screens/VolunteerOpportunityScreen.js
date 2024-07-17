@@ -66,9 +66,7 @@ export default function VolunteerOpportunityScreen({ navigation }) {
             ultrices posuere cubilia curae; Aenean vitae orci in mi ultricies
             varius et at tellus. Maecenas posuere vestibulum tortor, euismod
             aliquam odio ullamcorper eget. Phasellus quam mi, bibendum id
-            elementum eget, semper id risus. Nunc eu bibendum erat, nec
-            pellentesque est. Nullam lobortis mattis laoreet. Aliquam quis ipsum
-            at arcu tempus scelerisque.
+            elementum eget, semper id risus. 
           </Text>
         </View>
         <View style={styles.tagsContainer}>
@@ -128,11 +126,11 @@ const styles = StyleSheet.create({
   },
   headerText: {
     position: "absolute",
-    fontSize: 48,
+    fontSize: 30,
     color: "white",
     fontWeight: "bold",
   },
   detailsText: {
-    fontSize: 20,
+    fontSize: 18,
   },
 });

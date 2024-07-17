@@ -49,7 +49,7 @@ const MultipleChoice = ({
 
 const styles = StyleSheet.create({
   label: {
-    fontSize: 25,
+    fontSize: 20,
     marginVertical: 10,
   },
   option: {
@@ -58,9 +58,9 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   radioCircle: {
-    height: 20,
-    width: 20,
-    borderRadius: 10,
+    height: 18,
+    width: 18,
+    borderRadius: 9,
     borderWidth: 2,
     borderColor: "#444",
     alignItems: "center",
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
   optionText: {
     marginLeft: 10,
-    fontSize: 20,
+    fontSize: 18,
     flexWrap: "wrap",
   },
   selectedText: {
