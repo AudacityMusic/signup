@@ -1,15 +1,26 @@
+import { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
+import { getUser } from "../screens/SignInScreen";
 
-export default function Profile({email, name, profilePicture}) {
+export default function Profile() {
+  const [user, setUser] = useState(JSON.parse("{}"));
+
+  useEffect(() => {
+    async function asynchronouslyGetUser() {
+      return await getUser();
+    }
+    setUser(asynchronouslyGetUser());
+  }, []);
+
   return (
     <View style={styles.background}>
       <Image
         style={styles.image}
-        source={{width: 50, height: 50, uri: profilePicture}}
+        source={{width: 250, height: 250, uri: user.photo}}
       ></Image>
       <View>
-        <Text style={styles.name}>Rick Astley</Text>
-        <Text style={styles.email}>nevergonnagiveyouup@gmail.com</Text>
+        <Text style={styles.name}>{user.name}</Text>
+        <Text style={styles.email}>{user.email}</Text>
       </View>
     </View>
   );

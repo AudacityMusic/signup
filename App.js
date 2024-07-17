@@ -17,10 +17,6 @@ import HomeHeader from "./src/components/HomeHeader";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [profilePicture, setProfilePicture] = useState("");
-
   return (
     <NavigationContainer>
       <StatusBar style="light" />
@@ -33,7 +29,7 @@ export default function App() {
           headerTintColor: colors.white,
         }}
       >
-        <Stack.Screen name="SignIn" component={SignInScreen({setName, setEmail, setProfilePicture})} />
+        <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen
           name="Home"
           component={HomeScreen}
@@ -41,7 +37,7 @@ export default function App() {
             header: (props) => <HomeHeader {...props} />,
           }}
         />
-        <Stack.Screen name="Account" component={AccountScreen({name, email, profilePicture})} />
+        <Stack.Screen name="Account" component={AccountScreen} />
         <Stack.Screen name="Donate" component={DonateScreen} />
         <Stack.Screen name="Websites" component={WebsitesScreen} />
         <Stack.Screen

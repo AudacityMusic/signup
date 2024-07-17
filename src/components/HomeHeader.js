@@ -1,8 +1,22 @@
+import { useState, useEffect } from "react";
 import { Image, Text, StyleSheet, Pressable, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import colors from "../constants/colors";
+import { getUser } from "../screens/SignInScreen";
 
 export default function HomeHeader({ navigation }) {
+  const [user, setUser] = useState(JSON.parse("{}"));
+
+  useEffect(() => {
+    async function asynchronouslyGetUser() {
+      return await getUser();
+    }
+    setUser(asynchronouslyGetUser());
+  }, []);
+
+  console.log(JSON.stringify(user));
+
   return (
     <LinearGradient
       colors={[colors.primaryLight, colors.primaryDark]}
@@ -11,10 +25,10 @@ export default function HomeHeader({ navigation }) {
       <View style={styles.subcontainer}>
         <Text style={styles.headerText}>Audacity Music Club</Text>
         <Pressable onPress={() => navigation.navigate("Account")}>
-          <Image
-            style={styles.profile}
-            source={require("../assets/placeholder-profile.png")}
-          />
+        <Image
+          source={{width: 250, height: 250, uri: user.photo}}
+          style={styles.profile}
+        />
         </Pressable>
       </View>
     </LinearGradient>

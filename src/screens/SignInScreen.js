@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
   StyleSheet,
   Text,
@@ -13,6 +15,8 @@ import {
   isErrorWithCode,
 } from "@react-native-google-signin/google-signin";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import BackButton from "../components/BackButton";
 
 GoogleSignin.configure({
@@ -22,7 +26,19 @@ GoogleSignin.configure({
     "761199370622-qdq0afvq19r47p34rgjsso84leub5dlj.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
 });
 
-export default function SignInScreen(setName, setEmail, setProfilePicture) {
+export async function getUser() {
+  try {
+    const userString = await AsyncStorage.getItem('user');
+    if (userString === null) {
+      throw "EMPTY User";
+    }
+    return JSON.parse(userString);
+  } catch (error) {
+    throw error;
+  }
+}
+
+export default function SignInScreen({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
       <Pressable>
@@ -46,9 +62,9 @@ export default function SignInScreen(setName, setEmail, setProfilePicture) {
               const userInfo = await GoogleSignin.signIn();
               console.log("success");
               // console.log(JSON.stringify(userInfo, null, 2));
-              setName(userInfo.user.name);
-              setEmail(userInfo.user.email);
-              setProfilePicture(userInfo.user.photo);
+              AsyncStorage.setItem("user", JSON.stringify(userInfo.user));
+              console.log("name: " + userInfo.user.name + "\nemail: " + userInfo.user.email + "\nPhoto: " + userInfo.user.photo);
+              navigation.navigate("Home");
             } catch (error) {
               if (isErrorWithCode(error)) {
                 switch (error.code) {
