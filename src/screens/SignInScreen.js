@@ -37,6 +37,8 @@ export async function getUser() {
 }
 
 export default function SignInScreen({navigation}) {
+  const [loading, setLoading] = useState(false);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.body}>
@@ -52,10 +54,12 @@ export default function SignInScreen({navigation}) {
         <Pressable
           style={[styles.OAuth, styles.GoogleOAuth]}
           onPress={async () => {
+            setLoading(true);
             console.log("Signing In...");
             try {
               await GoogleSignin.hasPlayServices();
               const userInfo = await GoogleSignin.signIn();
+              setLoading(false);
               console.log("success");
               // console.log(JSON.stringify(userInfo, null, 2));
               AsyncStorage.setItem("user", JSON.stringify(userInfo.user));
@@ -95,8 +99,9 @@ export default function SignInScreen({navigation}) {
             style={styles.OAuthLogo}
             source={require("../assets/google.png")}
           />
-          <Text style={[styles.OAuthText]}> Sign in with Google</Text>
+          <Text style={[styles.OAuthText]}>    Sign in with Google</Text>
         </Pressable>
+        <Text style={styles.loading}>{loading ? "Loading ..." : "\n"}</Text>
       </View>
     </SafeAreaView>
   );
@@ -106,6 +111,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
     padding: "1%",
+    height: "100%"
   },
 
   body: {
@@ -126,7 +132,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    width: 300,
+    width: 270,
     height: 50,
     borderRadius: 15,
   },
@@ -138,11 +144,18 @@ const styles = StyleSheet.create({
 
   OAuthText: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: 20,
   },
 
   GoogleOAuth: {
     backgroundColor: "#353535",
     color: "#fff",
   },
+
+  loading: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 20,
+  }
 });
