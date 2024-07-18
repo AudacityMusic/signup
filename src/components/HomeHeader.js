@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Image, Text, StyleSheet, Pressable, SafeAreaView } from "react-native";
+import { Image, Text, StyleSheet, Pressable, SafeAreaView, ActivityIndicator } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import colors from "../constants/colors";
 import { getUser } from "../screens/SignInScreen";
@@ -7,9 +7,11 @@ import { getUser } from "../screens/SignInScreen";
 export default function HomeHeader({ navigation }) {
   const [user, setUser] = useState(null);
 
+  console.log("Pre-Get-User");
   useEffect(() => {
     getUser().then(setUser);
   }, []);
+  console.log("Post-Get-User, result=" + JSON.stringify(user));
 
   return (
     <LinearGradient
@@ -19,12 +21,12 @@ export default function HomeHeader({ navigation }) {
       <SafeAreaView style={styles.subcontainer}>
         <Text style={styles.headerText}>Audacity Music Club</Text>
         <Pressable onPress={() => navigation.navigate("Account")}>
-          <Image
-            source={{
-              uri: user?.photo ?? require("../assets/placeholder-profile.png"),
-            }}
-            style={styles.profile}
-          />
+          {user?.photo ?         
+            <Image
+              style={styles.profile}
+              source={{ width: 0, height: 0, uri: user.photo }}
+            ></Image> 
+            : <ActivityIndicator size="large"></ActivityIndicator>}
         </Pressable>
       </SafeAreaView>
     </LinearGradient>

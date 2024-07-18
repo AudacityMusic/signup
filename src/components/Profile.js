@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, ActivityIndicator } from "react-native";
 import { getUser } from "../screens/SignInScreen";
 
 export default function Profile() {
@@ -11,12 +11,11 @@ export default function Profile() {
 
   return (
     <View style={styles.background}>
-      <Image
-        style={styles.image}
-        source={{
-          uri: user?.photo ?? require("../assets/placeholder-profile.png"),
-        }}
-      ></Image>
+      {user?.photo ?         
+        <Image
+          style={styles.image}
+          source={{ width: 0, height: 0, uri: user.photo }}
+        ></Image> : <ActivityIndicator size="large"></ActivityIndicator>}
       <View>
         <Text style={styles.name}>{user?.name ?? "Loading..."}</Text>
         <Text style={styles.email}>{user?.email ?? "Loading..."}</Text>
