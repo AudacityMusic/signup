@@ -1,53 +1,49 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Checkbox } from "expo-checkbox";
 
-export default function CheckBoxQuery({
-  question,
-  boxColor,
-  value,
-  setValue,
-  setY = (y) => {},
-}) {
+export default function CheckBoxQuery({ question, state, useState }) {
   return (
     <View
       style={styles.container}
       onLayout={(event) => {
-        const { x, y, width, height } = event.nativeEvent.layout;
-        setY(y);
+        useState((prevState) => ({
+          ...prevState,
+          y: event.nativeEvent.layout.y,
+        }));
       }}
     >
-      <Text style={[styles.header, { paddingBottom: "2%", color: boxColor }]}>
+      <Text style={[styles.header, { color: state.valid ? "black" : "red" }]}>
         {question}
-        <Text style={[styles.red]}>{"*\n"}</Text>
+        <Text style={styles.red}>{" *"}</Text>
       </Text>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <View style={styles.checkBoxContainer}>
         <Checkbox
           color={"#0d79ff"}
-          value={value == true}
+          value={state.value == true}
           onValueChange={() => {
-            setValue(true);
-            console.log("YES");
+            useState((prevState) => ({
+              ...prevState,
+              value: true,
+            }));
           }}
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
         />
-        <Text
-          style={[styles.text, { paddingHorizontal: "3%", color: boxColor }]}
-        >
+        <Text style={[styles.text, { color: state.valid ? "black" : "red" }]}>
           Yes
         </Text>
         <Text> </Text>
         <Checkbox
           color={"#0d79ff"}
-          value={value == false}
+          value={state.value == false}
           onValueChange={() => {
-            setValue(false);
-            console.log("NO");
+            useState((prevState) => ({
+              ...prevState,
+              value: false,
+            }));
           }}
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
         />
-        <Text
-          style={[styles.text, { paddingHorizontal: "3%", color: boxColor }]}
-        >
+        <Text style={[styles.text, { color: state.valid ? "black" : "red" }]}>
           No
         </Text>
       </View>
@@ -66,10 +62,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
   },
+  checkBoxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingTop: 15,
+  },
   text: {
     fontSize: 18,
+    paddingLeft: 8,
+    paddingRight: 20,
   },
   header: {
-    fontSize: 20,
+    fontSize: 18,
+    fontWeight: "600",
   },
 });

@@ -1,56 +1,54 @@
-// MultipleChoice.js
-import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Pressable, StyleSheet } from "react-native";
 
-const MultipleChoice = ({
+export default function MultipleChoice({
   title,
   options,
-  selectedOption,
   onSelect,
-  color = "black",
-  setY = (y) => {},
-}) => {
+  state,
+  useState,
+}) {
   return (
     <View
       style={{ marginBottom: 20 }}
       onLayout={(event) => {
-        const { x, y, width, height } = event.nativeEvent.layout;
-        setY(y);
+        useState((prevState) => ({
+          ...prevState,
+          y: event.nativeEvent.layout.y,
+        }));
       }}
     >
       <Text style={styles.label}>
-        <Text style={{ color: color }}>{title}</Text>
+        <Text style={{ color: state.valid ? "black" : "red" }}>{title}</Text>
         <Text style={{ color: "red" }}> *</Text>
       </Text>
-      {options.map((option) => (
-        <TouchableOpacity
-          key={option.value}
+      {mapObject(options, (key) => (
+        <Pressable
+          key={key}
           style={styles.option}
-          onPress={() => onSelect(option.value)}
+          onPress={() => onSelect(key)}
         >
           <View style={styles.radioCircle}>
-            {selectedOption === option.value && (
-              <View style={styles.selectedRb} />
-            )}
+            {state.value === key && <View style={styles.selectedRb} />}
           </View>
           <Text
             style={[
               styles.optionText,
-              selectedOption === option.value && styles.selectedText,
+              state.value === key && styles.selectedText,
             ]}
           >
-            {option.label}
+            {options[key].label}
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       ))}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   label: {
-    fontSize: 20,
-    marginVertical: 10,
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 10,
   },
   option: {
     flexDirection: "row",
@@ -70,11 +68,11 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: "#444",
+    backgroundColor: "#1E90FF",
   },
   optionText: {
     marginLeft: 10,
-    fontSize: 18,
+    fontSize: 16,
     flexWrap: "wrap",
   },
   selectedText: {
@@ -83,4 +81,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MultipleChoice;
+function mapObject(obj, callback) {
+  const items = [];
+  for (const key in obj) {
+    items.push(callback(key));
+  }
+  return items;
+}
