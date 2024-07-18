@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { Image, Text, StyleSheet, Pressable, SafeAreaView, ActivityIndicator } from "react-native";
+import {
+  Image,
+  Text,
+  StyleSheet,
+  Pressable,
+  SafeAreaView,
+  ActivityIndicator,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import colors from "../constants/colors";
 import { getUser } from "../screens/SignInScreen";
@@ -21,12 +28,14 @@ export default function HomeHeader({ navigation }) {
       <SafeAreaView style={styles.subcontainer}>
         <Text style={styles.headerText}>Audacity Music Club</Text>
         <Pressable onPress={() => navigation.navigate("Account")}>
-          {user?.photo ?         
+          {user?.photo ? (
             <Image
               style={styles.profile}
-              source={{ width: 0, height: 0, uri: user.photo }}
-            ></Image> 
-            : <ActivityIndicator size="large"></ActivityIndicator>}
+              source={{ width: 0, height: 0, uri: user.photo }} // Size doesn't matter
+            ></Image>
+          ) : (
+            <ActivityIndicator size="large"></ActivityIndicator>
+          )}
         </Pressable>
       </SafeAreaView>
     </LinearGradient>

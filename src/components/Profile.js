@@ -11,11 +11,14 @@ export default function Profile() {
 
   return (
     <View style={styles.background}>
-      {user?.photo ?         
+      {user?.photo ? (
         <Image
           style={styles.image}
-          source={{ width: 0, height: 0, uri: user.photo }}
-        ></Image> : <ActivityIndicator size="large"></ActivityIndicator>}
+          source={{ width: 0, height: 0, uri: user.photo }} // size doesn't matter
+        ></Image>
+      ) : (
+        <ActivityIndicator size="large"></ActivityIndicator>
+      )}
       <View>
         <Text style={styles.name}>{user?.name ?? "Loading..."}</Text>
         <Text style={styles.email}>{user?.email ?? "Loading..."}</Text>

@@ -6,7 +6,7 @@ import Websites from "../components/Websites";
 
 export default function HomeScreen({ navigation }) {
   console.log("Switched");
-  
+
   return (
     <View style={styles.container}>
       <Heading>Volunteer Opportunities</Heading>
