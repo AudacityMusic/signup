@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: "#f5f5f5",
     borderRadius: 10,
+    marginBottom: 10,
   },
   card: {
     flexDirection: "row",
