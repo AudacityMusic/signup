@@ -8,7 +8,7 @@ import {
   Linking,
 } from "react-native";
 
-export default function WebsiteComponent() {
+export default function Websites() {
   const openLink = (url) => {
     Linking.openURL(url);
   };
