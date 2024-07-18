@@ -20,7 +20,7 @@ import NextButton from "../components/NextButton";
 import MultipleChoice from "../components/MultipleChoice";
 
 export default function VolunteerFormScreen() {
-  const [user, setUser] = useState(JSON.parse("{}"));
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     getUser().then(setUser);
@@ -278,7 +278,7 @@ export default function VolunteerFormScreen() {
           <View style={styles.form}>
             <TextField
               title="Performer's Full Name "
-              defaultText={user.name}
+              defaultText={user?.name}
               setText={(text) => setFullName(text)}
               keyboardType="default"
               borderColor={borderColors[0]}
