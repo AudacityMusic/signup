@@ -1,46 +1,39 @@
 import { useState, useEffect } from "react";
-import { Image, Text, StyleSheet, Pressable, View } from "react-native";
+import { Image, Text, StyleSheet, Pressable, SafeAreaView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import colors from "../constants/colors";
 import { getUser } from "../screens/SignInScreen";
 
 export default function HomeHeader({ navigation }) {
-  const [user, setUser] = useState(JSON.parse("{}"));
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    async function asynchronouslyGetUser() {
-      return await getUser();
-    }
-    asynchronouslyGetUser().then(setUser);
+    getUser().then(setUser);
   }, []);
-
-  console.log(JSON.stringify(user));
 
   return (
     <LinearGradient
       colors={[colors.primaryLight, colors.primaryDark]}
       style={styles.container}
     >
-      <View style={styles.subcontainer}>
+      <SafeAreaView style={styles.subcontainer}>
         <Text style={styles.headerText}>Audacity Music Club</Text>
         <Pressable onPress={() => navigation.navigate("Account")}>
           <Image
-            source={
-              user.photo
-                ? { width: 250, height: 250, uri: user.photo }
-                : require("../assets/placeholder-profile.png")
-            }
+            source={{
+              uri: user?.photo ?? require("../assets/placeholder-profile.png"),
+            }}
             style={styles.profile}
           />
         </Pressable>
-      </View>
+      </SafeAreaView>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: 80,
+    height: 100,
     paddingHorizontal: 20,
     paddingBottom: 10,
     justifyContent: "flex-end",
@@ -52,7 +45,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: colors.white,
-    fontSize: 25,
+    fontSize: 23,
   },
   profile: {
     width: 40,

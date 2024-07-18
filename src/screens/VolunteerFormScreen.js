@@ -23,10 +23,7 @@ export default function VolunteerFormScreen() {
   const [user, setUser] = useState(JSON.parse("{}"));
 
   useEffect(() => {
-    async function asynchronouslyGetUser() {
-      return await getUser();
-    }
-    asynchronouslyGetUser().then(setUser);
+    getUser().then(setUser);
   }, []);
 
   const [fullName, setFullName] = useState("");
@@ -173,7 +170,6 @@ export default function VolunteerFormScreen() {
 
     if (permissions != null) {
       setPermissionsColor("black");
-      console.log("Is null and none the same? " + (null == false));
     } else {
       setPermissionsColor("red");
       scrollObject.scrollTo({

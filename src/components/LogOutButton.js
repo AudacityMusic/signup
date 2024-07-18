@@ -11,7 +11,7 @@ export default function LogOutButton({ navigation }) {
         try {
           await GoogleSignin.signOut();
           AsyncStorage.removeItem("user");
-          navigation.navigate("SignIn");
+          navigation.navigate("Sign In");
         } catch (error) {
           console.error(error);
         }

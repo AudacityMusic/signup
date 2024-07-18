@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import {
   StyleSheet,
   Text,
@@ -32,17 +30,14 @@ export async function getUser() {
     }
     return JSON.parse(userString);
   } catch (error) {
-    throw error;
+    console.error(error);
   }
 }
 
 export default function SignInScreen({ navigation }) {
-  const [loading, setLoading] = useState(false);
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.body}>
-        <Text style={styles.title}>Sign In</Text>
         <Text style={styles.paragraph}>
           {"\n"}
           {"Thank you for choosing to help\n"}
@@ -54,14 +49,10 @@ export default function SignInScreen({ navigation }) {
         <Pressable
           style={[styles.OAuth, styles.GoogleOAuth]}
           onPress={async () => {
-            setLoading(true);
             console.log("Signing In...");
             try {
               await GoogleSignin.hasPlayServices();
               const userInfo = await GoogleSignin.signIn();
-              setLoading(false);
-              console.log("success");
-              // console.log(JSON.stringify(userInfo, null, 2));
               AsyncStorage.setItem("user", JSON.stringify(userInfo.user));
               console.log(
                 "name: " +
@@ -93,7 +84,6 @@ export default function SignInScreen({ navigation }) {
                   default:
                     console.error(error);
                     break;
-                  // some other error happened
                 }
               } else {
                 console.error("No error code for: " + error);
@@ -108,7 +98,6 @@ export default function SignInScreen({ navigation }) {
           />
           <Text style={[styles.OAuthText]}> Sign in with Google</Text>
         </Pressable>
-        <Text style={styles.loading}>{loading ? "Loading ..." : "\n"}</Text>
       </View>
     </SafeAreaView>
   );
@@ -124,11 +113,6 @@ const styles = StyleSheet.create({
   body: {
     alignItems: "center",
     justifyContent: "center",
-  },
-
-  title: {
-    fontWeight: "bold",
-    fontSize: 30,
   },
 
   paragraph: {
