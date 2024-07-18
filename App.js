@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import colors from "./src/constants/colors";
 import HomeScreen from "./src/screens/HomeScreen";

@@ -9,7 +9,6 @@ import {
   Text,
   Dimensions,
   KeyboardAvoidingView,
-  Platform,
 } from "react-native";
 
 import { getUser } from "./SignInScreen";
