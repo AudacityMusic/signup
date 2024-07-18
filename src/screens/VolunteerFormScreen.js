@@ -78,7 +78,7 @@ export default function VolunteerFormScreen() {
     },
   };
 
-  const isAtLeast = (value, len) => value.trim().length >= len;
+  const isAtLeast = (value, len) => value?.trim().length >= len;
   const isNotEmpty = (value) => isAtLeast(value, 1);
 
   const questions = [
