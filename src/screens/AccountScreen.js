@@ -3,11 +3,11 @@ import { View } from "react-native";
 import LogOutButton from "../components/LogOutButton.js";
 import Profile from "../components/Profile.js";
 
-export default function AccountScreen() {
+export default function AccountScreen({ navigation }) {
   return (
-    <View>
-      <Profile />
-      <LogOutButton />
+    <View style={{ height: "100%" }}>
+      <Profile></Profile>
+      <LogOutButton navigation={navigation} />
     </View>
   );
 }

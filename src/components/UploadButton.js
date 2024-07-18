@@ -5,7 +5,7 @@ export default function UploadButton() {
     <View style={styles.upload}>
       <Image
         source={require("./../assets/upload.png")}
-        style={{ height: 30, width: 30 }}
+        style={{ height: 25, width: 25 }}
       />
       <Text style={styles.uploadText}> Upload</Text>
     </View>
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
 
   uploadText: {
-    fontSize: 25,
+    fontSize: 18,
     paddingLeft: "3%",
   },
 });

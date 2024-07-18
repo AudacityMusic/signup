@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
   Pressable,
@@ -9,10 +9,10 @@ import {
   Text,
   Dimensions,
   KeyboardAvoidingView,
-  Platform,
 } from "react-native";
 
-import BackButton from "../components/BackButton";
+import { getUser } from "./SignInScreen";
+
 import TextField from "../components/TextField";
 import CheckBoxQuery from "../components/CheckBoxQuery";
 import UploadButton from "../components/UploadButton";
@@ -20,6 +20,12 @@ import NextButton from "../components/NextButton";
 import MultipleChoice from "../components/MultipleChoice";
 
 export default function VolunteerFormScreen() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    getUser().then(setUser);
+  }, []);
+
   const [fullName, setFullName] = useState("");
   const [city, setCity] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -164,7 +170,6 @@ export default function VolunteerFormScreen() {
 
     if (permissions != null) {
       setPermissionsColor("black");
-      console.log("Is null and none the same? " + (null == false));
     } else {
       setPermissionsColor("red");
       scrollObject.scrollTo({
@@ -242,46 +247,38 @@ export default function VolunteerFormScreen() {
     setBorderColors([...borderColors]);
   };
 
-  const [topHeight, setTopHeight] = useState(0);
-
   return (
     <SafeAreaView style={styles.container}>
-      <View
-        onLayout={(event) => {
-          const { x, y, width, height } = event.nativeEvent.layout;
-          setTopHeight(height);
-        }}
-      >
-        <Pressable>
-          <BackButton />
-        </Pressable>
-        <View style={styles.header}>
-          <Text style={styles.heading}>{"Volunteer Form"}</Text>
-          <Text style={styles.instructions}>
-            {"\n"}
-            {
-              "Please fill in the following details about the person who will be"
-            }
-            {"performing at the concert."}
-            {"\n\n"}
-          </Text>
-        </View>
-      </View>
       <KeyboardAvoidingView
         style={[
           styles.body,
-          { height: Dimensions.get("window").height - topHeight - 60 - 10 },
+          {
+            height: Dimensions.get("window").height - 100,
+            width: Dimensions.get("window").width,
+          },
         ]}
-        behavior="padding"
+        behavior="height"
       >
         <ScrollView
           ref={(ref) => {
             setScrollObject(ref);
           }}
         >
+          <View style={styles.header}>
+            <Text style={styles.heading}>Volunteer Form</Text>
+            <Text style={styles.instructions}>
+              {"\n"}
+              {
+                "Please fill in the following details about the person who will be"
+              }
+              {"performing at the concert."}
+              {"\n"}
+            </Text>
+          </View>
           <View style={styles.form}>
             <TextField
               title="Performer's Full Name "
+              defaultText={user?.name}
               setText={(text) => setFullName(text)}
               keyboardType="default"
               borderColor={borderColors[0]}
@@ -371,13 +368,19 @@ export default function VolunteerFormScreen() {
                   boxColor={parentalConsentColor}
                   value={parentalConsent}
                   setValue={setParentalConsent}
-                  setY={setParentalConsent}
+                  setY={setParentalConsentY}
                 />
               ) : null}
             </View>
             <View style={styles.uploadsContainer}>
               <View style={{ justifyContent: "center" }}>
-                <Text style={{ paddingBottom: "3%", fontSize: 25 }}>
+                <Text
+                  style={{
+                    paddingBottom: "3%",
+                    fontSize: 18,
+                    flexWrap: "wrap",
+                  }}
+                >
                   Our volunteer piano accompanist can provide sight reading
                   accompaniment for entry level players. To request this
                   service, upload the main score AND accompaniment score in one
@@ -386,7 +389,13 @@ export default function VolunteerFormScreen() {
                 <UploadButton />
               </View>
               <View style={{ paddingTop: "3%" }}>
-                <Text style={{ paddingBottom: "3%", fontSize: 25 }}>
+                <Text
+                  style={{
+                    paddingBottom: "3%",
+                    fontSize: 18,
+                    flexWrap: "wrap",
+                  }}
+                >
                   Upload your Library Band Ensemble profile as one PDF file.
                   {"\n"}
                 </Text>
@@ -396,7 +405,7 @@ export default function VolunteerFormScreen() {
             <View style={styles.otherInfoContainer}>
               <TextField
                 title={
-                  "\nOther Information, such as special requests in sequence arrangement (optional)"
+                  "Other Information, such as special requests in sequence arrangement (optional)"
                 }
                 setText={(text) => {
                   setOtherInfo(text);
@@ -430,7 +439,7 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
   },
   heading: {
-    fontSize: 45,
+    fontSize: 30,
     fontWeight: "bold",
   },
   header: {
@@ -441,6 +450,7 @@ const styles = StyleSheet.create({
   instructions: {
     fontSize: 20,
     flexWrap: "wrap",
+    textAlign: "center",
   },
   checkBoxesContainer: {
     flex: 1,
@@ -456,9 +466,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   otherInfoContainer: {
-    paddingTop: "3%",
     flex: 1.2,
-    backgroundColor: "re",
   },
   nextButton: {
     alignSelf: "flex-end",
