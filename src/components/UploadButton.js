@@ -27,15 +27,18 @@ export default function UploadButton({ title, state, setState }) {
         <Text style={{ color: state.valid ? "black" : "red" }}>{title}</Text>
       </Text>
       <Text style={styles.fileName}>{fileName}</Text>
-      <Pressable style={styles.upload} onPress={async () => {
-        const file = await uploadFile();
-        setFileName(file?.name);
-        setState((prevState) => ({
-          ...prevState,
-          value: file,
-        }));
-        console.log(file?.size)
-      }}>
+      <Pressable
+        style={styles.upload}
+        onPress={async () => {
+          const file = await uploadFile();
+          setFileName(file?.name);
+          setState((prevState) => ({
+            ...prevState,
+            value: file,
+          }));
+          console.log(file?.size);
+        }}
+      >
         <Image
           source={require("./../assets/upload.png")}
           style={{ height: 25, width: 25 }}
