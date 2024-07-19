@@ -33,25 +33,24 @@ class Question {
 }
 
 export default function VolunteerFormScreen() {
-  const [user, setUser] = useState(null);
+  const [name, setName] = useState("");
 
   useEffect(() => {
-    getUser().then(setUser);
-  }, []);
-
-  if (!(user?.name)) {
-    return <ActivityIndicator size="large"></ActivityIndicator>
-  }
-
-  let name = user.name;
-  console.log("Name: " + name);
+    (async () => {
+      try {
+        const user = await getUser();
+        setName(user?.name);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  });
 
   function emptyQuestionState(initial=null) {
     return useState({ value: initial, y: null, valid: true });
   }
 
-  const [fullName, setFullName] = emptyQuestionState(name);
-  console.log("fullName " + fullName.value);
+  const [fullName, setFullName] = emptyQuestionState("");
   const [city, setCity] = emptyQuestionState();
   const [phoneNumber, setPhoneNumber] = emptyQuestionState();
   const [age, setAge] = emptyQuestionState();
@@ -69,6 +68,8 @@ export default function VolunteerFormScreen() {
 
   const [scrollObject, setScrollObject] = useState(null);
   const [timeLimit, setTimeLimit] = useState(0);
+
+  console.log(fullName.value)
 
   const performanceOptions = {
     individual: { label: "Individual performance only", timeLimit: 8 },
@@ -95,10 +96,10 @@ export default function VolunteerFormScreen() {
       component: (
         <TextField
           title="Performer's Full Name"
-          defaultText={user?.name}
           key="fullName"
           state={fullName}
           useState={setFullName}
+          defaultText={name}
         />
       ),
       validate: isNotEmpty,
