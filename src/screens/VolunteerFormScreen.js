@@ -273,17 +273,6 @@ export default function VolunteerFormScreen() {
 
     new Question({
       component: (
-        <TextField
-          title="Other Information (optional)"
-          key="otherInfo"
-          state={otherInfo}
-          useState={setOtherInfo}
-        />
-      ),
-    }),
-
-    new Question({
-      component: (
         <UploadButton
           title="Our volunteer piano accompanist can provide sight reading accompaniment for entry level players. To request this service, upload the main score AND accompaniment score in one PDF file. (100 MB file size limit)"
           key="pianoAccompaniment"
@@ -306,6 +295,17 @@ export default function VolunteerFormScreen() {
       // TODO: Make this required if the user selected ensemble
       // TODO: Validate that the file is a PDF and does not exceed 100 MB
       isVisible: () => performanceType.value == "ensemble",
+    }),
+
+    new Question({
+      component: (
+        <TextField
+          title="Other Information (optional)"
+          key="otherInfo"
+          state={otherInfo}
+          useState={setOtherInfo}
+        />
+      ),
     }),
   ];
 
