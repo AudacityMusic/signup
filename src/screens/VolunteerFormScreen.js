@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import {
+  Alert,
   Pressable,
   View,
   SafeAreaView,
@@ -9,6 +10,7 @@ import {
   Text,
   Dimensions,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
 
 import { getUser } from "./SignInScreen";
@@ -19,233 +21,324 @@ import UploadButton from "../components/UploadButton";
 import NextButton from "../components/NextButton";
 import MultipleChoice from "../components/MultipleChoice";
 
+class Question {
+  constructor({ component, validate = (_) => true, isVisible = () => true }) {
+    this.component = component;
+    this.validate = () => !isVisible() || validate(component.props.state.value);
+    this.isVisible = isVisible;
+    this.state = component.props.state;
+    this.useState = component.props.useState;
+    this.y = component.props.state.y;
+  }
+}
+
 export default function VolunteerFormScreen() {
-  const [user, setUser] = useState(null);
+  const [name, setName] = useState("");
 
   useEffect(() => {
-    getUser().then(setUser);
-  }, []);
+    (async () => {
+      try {
+        const user = await getUser();
+        setName(user?.name);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  });
 
-  const [fullName, setFullName] = useState("");
-  const [city, setCity] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [age, setAge] = useState(0);
-  const [musicPiece, setMusicPiece] = useState("");
-  const [composer, setComposer] = useState("");
-  const [instrument, setInstrument] = useState("");
+  function emptyQuestionState(initial = null) {
+    return useState({ value: initial, y: null, valid: true });
+  }
 
-  const [performanceType, setPerformanceType] = useState("");
-  const [timeLimit, setTimeLimit] = useState(0);
-  const [length, setLength] = useState(0);
-  const [recordingLink, setRecordingLink] = useState("");
-
-  const [permissions, setPermissions] = useState(null);
-  const [parentalConsent, setParentalConsent] = useState(null);
-  const [otherInfo, setOtherInfo] = useState("");
-
-  const basicCheckingVariables = [
-    ["instrument", instrument],
-    ["composer", composer],
-    ["musicPiece", musicPiece],
-    ["age", age],
-    ["phoneNumber", phoneNumber],
-    ["city", city],
-  ];
-
-  const [fullNameY, setFullNameY] = useState(0);
-  const [cityY, setCityY] = useState(0);
-  const [phoneNumberY, setPhoneNumberY] = useState(0);
-  const [ageY, setAgeY] = useState(0);
-  const [musicPieceY, setMusicPieceY] = useState(0);
-  const [composerY, setComposerY] = useState(0);
-  const [instrumentY, setInstrumentY] = useState(0);
-  const [performanceTypeY, setPerformanceTypeY] = useState(0);
-  const [lengthY, setLengthY] = useState(0);
-  const [recordingLinkY, setRecordingLinkY] = useState(0);
-  const [permissionsY, setPermissionsY] = useState(0);
-  const [parentalConsentY, setParentalConsentY] = useState(0);
-
-  const locations = new Map();
-  locations.set("fullName", fullNameY);
-  locations.set("city", cityY);
-  locations.set("phoneNumber", phoneNumberY);
-  locations.set("age", ageY);
-  locations.set("musicPiece", musicPieceY);
-  locations.set("composer", composerY);
-  locations.set("instrument", instrumentY);
-  locations.set("performanceType", performanceTypeY);
-  locations.set("length", lengthY);
-  locations.set("recordingLink", recordingLinkY);
-  locations.set("permissions", permissionsY);
-  locations.set("parentalConsent", parentalConsentY);
-
-  const performanceOptions = [
-    { label: "Individual performance only", value: "individual" },
-    {
-      label: "Individual performance and music instrument presentation",
-      value: "individualPresentation",
-    },
-    { label: "Group performance only", value: "group" },
-    {
-      label: "Group performance and music instrument presentation",
-      value: "groupPresentation",
-    },
-    {
-      label: "Library Band Ensemble (Band, Orchestra, or Choir)",
-      value: "library",
-    },
-  ];
-
-  const onSelectionChange = (type) => {
-    setPerformanceType(type);
-    console.log("change");
-
-    switch (type) {
-      case "individual":
-        setTimeLimit(8);
-        break;
-
-      case "individualPresentation":
-        setTimeLimit(12);
-        break;
-
-      case "group":
-        setTimeLimit(15);
-        break;
-
-      case "groupPresentation":
-        setTimeLimit(20);
-        break;
-
-      case "library":
-        setTimeLimit(60);
-        break;
-
-      default:
-        throw new Error(
-          "Value " +
-            type +
-            " is an invalid performanceType, or is not added to PerformanceDetailsScreen",
-        );
-    }
-
-    console.log(timeLimit);
-  };
-
-  const [borderColors, setBorderColors] = useState([
-    "black",
-    "black",
-    "black",
-    "black",
-    "black",
-    "black",
-    "black",
-    "black",
-    "black",
-  ]);
-
-  const [performanceTypeColor, setPerformanceTypeColor] = useState("black");
-  const [permissionsColor, setPermissionsColor] = useState("black");
-  const [parentalConsentColor, setParentalConsentColor] = useState("black");
+  const [fullName, setFullName] = emptyQuestionState("");
+  const [city, setCity] = emptyQuestionState();
+  const [phoneNumber, setPhoneNumber] = emptyQuestionState();
+  const [age, setAge] = emptyQuestionState();
+  const [musicPiece, setMusicPiece] = emptyQuestionState();
+  const [composer, setComposer] = emptyQuestionState();
+  const [instrument, setInstrument] = emptyQuestionState();
+  const [performanceType, setPerformanceType] = emptyQuestionState();
+  const [length, setLength] = emptyQuestionState();
+  const [recordingLink, setRecordingLink] = emptyQuestionState();
+  const [publicPermission, setPublicPermission] = emptyQuestionState();
+  const [parentalConsent, setParentalConsent] = emptyQuestionState();
+  const [pianoAccompaniment, setPianoAccompaniment] = emptyQuestionState();
+  const [ensembleProfile, setEnsembleProfile] = emptyQuestionState();
+  const [otherInfo, setOtherInfo] = emptyQuestionState();
 
   const [scrollObject, setScrollObject] = useState(null);
+  const [timeLimit, setTimeLimit] = useState(0);
 
-  const validate = () => {
-    console.log(fullName.trim());
-    console.log(city.trim());
-    console.log(phoneNumber.trim());
-    console.log(age);
-    console.log(musicPiece.trim());
-    console.log(composer.trim());
-    console.log(instrument.trim());
-    console.log(performanceType.trim());
-    console.log(timeLimit);
-    console.log(length);
-    console.log(recordingLink.trim());
-    console.log(permissions);
-    console.log(parentalConsent);
-    console.log(otherInfo);
+  console.log(fullName.value);
 
-    const center = Dimensions.get("window").width / 2;
-
-    if (permissions != null) {
-      setPermissionsColor("black");
-    } else {
-      setPermissionsColor("red");
-      scrollObject.scrollTo({
-        x: center,
-        y: locations.get("permissions"),
-        animated: true,
-      });
-    }
-
-    if (parentalConsent == true || age >= 18) {
-      setParentalConsentColor("black");
-      console.log("pc");
-    } else {
-      setParentalConsentColor("red");
-      scrollObject.scrollTo({
-        x: center,
-        y: locations.get("parentalConsent"),
-        animated: true,
-      });
-    }
-
-    try {
-      let url = new URL(recordingLink);
-      borderColors[8] = "black";
-    } catch (error) {
-      borderColors[8] = "red";
-      console.error(error);
-      scrollObject.scrollTo({
-        x: center,
-        y: locations.get("recordingLink"),
-        animated: true,
-      });
-    }
-
-    if (length > timeLimit || length == 0) {
-      borderColors[7] = "red";
-      scrollObject.scrollTo({
-        x: center,
-        y: locations.get("length"),
-        behavior: "smooth",
-      });
-    } else {
-      borderColors[7] = "black";
-    }
-
-    if (performanceType == "") {
-      setPerformanceTypeColor("red");
-      scrollObject.scrollTo({
-        x: center,
-        y: locations.get("performanceType"),
-        animated: true,
-      });
-    } else {
-      setPerformanceTypeColor("black");
-    }
-
-    let index = 6;
-
-    basicCheckingVariables.forEach(([name, variable]) => {
-      if (variable == "0" || variable == 0) {
-        borderColors[index] = "red";
-        scrollObject.scrollTo({
-          x: center,
-          y: locations.get(name),
-          animated: true,
-        });
-      } else {
-        borderColors[index] = "black";
-      }
-
-      index--;
-    });
-
-    borderColors.forEach((color) => console.log(color));
-    setBorderColors([...borderColors]);
+  const performanceOptions = {
+    individual: { label: "Individual performance only", timeLimit: 8 },
+    individualPresentation: {
+      label: "Individual performance and music instrument presentation",
+      timeLimit: 12,
+    },
+    group: { label: "Group performance only", timeLimit: 15 },
+    groupPresentation: {
+      label: "Group performance and music instrument presentation",
+      timeLimit: 20,
+    },
+    ensemble: {
+      label: "Library Band Ensemble\n(Band, Orchestra, or Choir)",
+      timeLimit: 60,
+    },
   };
+
+  const isAtLeast = (value, len) => value?.trim().length >= len;
+  const isNotEmpty = (value) => isAtLeast(value, 1);
+
+  const questions = [
+    new Question({
+      component: (
+        <TextField
+          title="Performer's Full Name"
+          key="fullName"
+          state={fullName}
+          useState={setFullName}
+          defaultText={name}
+        />
+      ),
+      validate: isNotEmpty,
+    }),
+
+    new Question({
+      component: (
+        <TextField
+          title="City of Residence"
+          key="city"
+          state={city}
+          useState={setCity}
+        />
+      ),
+      validate: isNotEmpty,
+    }),
+
+    new Question({
+      component: (
+        <TextField
+          title="Phone Number"
+          keyboardType="phone-pad"
+          maxLength={11}
+          key="phoneNumber"
+          state={phoneNumber}
+          useState={setPhoneNumber}
+        />
+      ),
+      validate: (value) => isAtLeast(value, 10),
+    }),
+
+    new Question({
+      component: (
+        <TextField
+          title="Performer's Age"
+          keyboardType="numeric"
+          key="age"
+          state={age}
+          useState={setAge}
+        />
+      ),
+      validate(value) {
+        const age = Number(value);
+        if (isNaN(age)) {
+          return false;
+        }
+        return age >= 5 && age <= 125;
+      },
+    }),
+
+    new Question({
+      component: (
+        <TextField
+          title="Name of Music Piece"
+          key="musicPiece"
+          state={musicPiece}
+          useState={setMusicPiece}
+        />
+      ),
+      validate: isNotEmpty,
+    }),
+
+    new Question({
+      component: (
+        <TextField
+          title="Name of Composer"
+          key="composer"
+          state={composer}
+          useState={setComposer}
+        />
+      ),
+      validate: isNotEmpty,
+    }),
+
+    new Question({
+      component: (
+        <TextField
+          title="Instrument Type"
+          key="instrument"
+          state={instrument}
+          useState={setInstrument}
+        />
+      ),
+      validate: isNotEmpty,
+    }),
+
+    new Question({
+      component: (
+        <MultipleChoice
+          title="Performance Type"
+          options={performanceOptions}
+          onSelect={(text) => {
+            setPerformanceType((prevState) => ({
+              ...prevState,
+              value: text,
+            }));
+            setTimeLimit(performanceOptions[text].timeLimit);
+          }}
+          key="performanceType"
+          state={performanceType}
+          useState={setPerformanceType}
+        />
+      ),
+      validate: isNotEmpty,
+    }),
+
+    new Question({
+      component: (
+        <TextField
+          title="Length of Performance (mins)"
+          subtitle={`Time Limit: ${timeLimit} minutes`}
+          keyboardType="numeric"
+          key="length"
+          state={length}
+          useState={setLength}
+        />
+      ),
+      validate(value) {
+        const time = Number(value);
+        if (isNaN(time)) {
+          return false;
+        }
+        return time > 0 && time <= timeLimit;
+      },
+    }),
+
+    new Question({
+      component: (
+        <TextField
+          title="Recording Link"
+          keyboardType="url"
+          key="recordingLink"
+          state={recordingLink}
+          useState={setRecordingLink}
+        />
+      ),
+      validate(value) {
+        try {
+          new URL(value);
+        } catch {
+          return false;
+        }
+        return true;
+      },
+    }),
+
+    new Question({
+      component: (
+        <CheckBoxQuery
+          question="Do you give permission for Audacity Music Club to post recordings of your performance on public websites?"
+          key="publicPermission"
+          state={publicPermission}
+          useState={setPublicPermission}
+        />
+      ),
+      validate: (value) => value != null,
+    }),
+
+    new Question({
+      component: (
+        <CheckBoxQuery
+          question="My parent has given their consent for my participation."
+          key="parentalConsent"
+          state={parentalConsent}
+          useState={setParentalConsent}
+        />
+      ),
+      validate: (value) => value,
+      isVisible: () => age.value < 18,
+    }),
+
+    new Question({
+      component: (
+        <TextField
+          title="Other Information (optional)"
+          key="otherInfo"
+          state={otherInfo}
+          useState={setOtherInfo}
+        />
+      ),
+    }),
+
+    new Question({
+      component: (
+        <UploadButton
+          title="Our volunteer piano accompanist can provide sight reading accompaniment for entry level players. To request this service, upload the main score AND accompaniment score in one PDF file. (100 MB file size limit)"
+          key="pianoAccompaniment"
+          state={pianoAccompaniment}
+          useState={setPianoAccompaniment}
+        />
+      ),
+      // TODO: Validate that the file is a PDF and does not exceed 100 MB
+    }),
+
+    new Question({
+      component: (
+        <UploadButton
+          title="Upload your Library Band Ensemble profile as one PDF file."
+          key="ensembleProfile"
+          state={ensembleProfile}
+          useState={setEnsembleProfile}
+        />
+      ),
+      // TODO: Make this required if the user selected ensemble
+      // TODO: Validate that the file is a PDF and does not exceed 100 MB
+      isVisible: () => performanceType.value == "ensemble",
+    }),
+  ];
+
+  function validate() {
+    let allValid = true;
+    let minInvalidY = Infinity;
+
+    for (const question of questions) {
+      const isValid = question.validate();
+      question.useState((prevState) => ({
+        ...prevState,
+        valid: isValid,
+      }));
+
+      if (!isValid) {
+        allValid = false;
+        if (question.y < minInvalidY) {
+          minInvalidY = question.y;
+        }
+      }
+    }
+
+    if (allValid) {
+      Alert.alert("All good!");
+      return;
+    }
+
+    scrollObject.scrollTo({
+      x: 0,
+      y: minInvalidY,
+      animated: true,
+    });
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -264,159 +357,22 @@ export default function VolunteerFormScreen() {
             setScrollObject(ref);
           }}
         >
-          <View style={styles.header}>
-            <Text style={styles.heading}>Volunteer Form</Text>
-            <Text style={styles.instructions}>
-              {"\n"}
-              {
-                "Please fill in the following details about the person who will be"
-              }
-              {"performing at the concert."}
-              {"\n"}
-            </Text>
+          <View style={styles.questions}>
+            <View style={styles.header}>
+              <Text style={styles.instructions}>
+                Please fill in the following details about the person who will
+                be performing at the concert.
+              </Text>
+            </View>
+            <View style={styles.form}>
+              {questions
+                .filter((question) => question.isVisible())
+                .map((question) => question.component)}
+            </View>
+            <Pressable style={styles.nextButton} onPress={() => validate()}>
+              <NextButton />
+            </Pressable>
           </View>
-          <View style={styles.form}>
-            <TextField
-              title="Performer's Full Name "
-              defaultText={user?.name}
-              setText={(text) => setFullName(text)}
-              keyboardType="default"
-              borderColor={borderColors[0]}
-              setY={setFullNameY}
-            ></TextField>
-            <TextField
-              title="City of Residence "
-              setText={(text) => setCity(text)}
-              keyboardType="default"
-              borderColor={borderColors[1]}
-              setY={setCityY}
-            ></TextField>
-            <TextField
-              title="Phone Number "
-              setText={(text) => setPhoneNumber(text)}
-              keyboardType="phone-pad"
-              borderColor={borderColors[2]}
-              setY={setPhoneNumberY}
-            ></TextField>
-            <TextField
-              title="Performer's Age "
-              setText={(text) => setAge(text)}
-              keyboardType="numeric"
-              borderColor={borderColors[3]}
-              setY={setAgeY}
-            ></TextField>
-            <TextField
-              title="Name of Music Piece "
-              setText={(text) => setMusicPiece(text)}
-              keyboardType="default"
-              borderColor={borderColors[4]}
-              setY={setMusicPieceY}
-            ></TextField>
-            <TextField
-              title="Composer of Music Piece "
-              setText={(text) => setComposer(text)}
-              keyboardType="default"
-              borderColor={borderColors[5]}
-              setY={setComposerY}
-            ></TextField>
-            <TextField
-              title="Instrument Type "
-              setText={(text) => setInstrument(text)}
-              keyboardType="default"
-              borderColor={borderColors[6]}
-              setY={setInstrumentY}
-            ></TextField>
-            <MultipleChoice
-              title="Performance Type"
-              options={performanceOptions}
-              selectedOption={performanceType}
-              onSelect={(text) => onSelectionChange(text)}
-              color={performanceTypeColor}
-              setY={setPerformanceTypeY}
-            />
-            <TextField
-              title={"Length of Performance (min)"}
-              subtitle={"Time Limit: " + timeLimit + " minutes"}
-              setText={(text) => setLength(text)}
-              keyboardType={"numeric"}
-              borderColor={borderColors[7]}
-              setY={setLengthY}
-            />
-            <TextField
-              title="Recording Link"
-              subtitle="Share to YouTube / Google Drive"
-              setText={(text) => setRecordingLink(text)}
-              keyboardType="url"
-              borderColor={borderColors[8]}
-              setY={setRecordingLinkY}
-            />
-            <View style={styles.checkBoxesContainer}>
-              <CheckBoxQuery
-                question={
-                  "Do you give permission for Audacity Music Club to post recordings of your performance on public websites? "
-                }
-                boxColor={permissionsColor}
-                value={permissions}
-                setValue={setPermissions}
-                setY={setPermissionsY}
-              />
-              {age < 18 ? (
-                <CheckBoxQuery
-                  question={
-                    "My parent has given their consent for my participation. "
-                  }
-                  boxColor={parentalConsentColor}
-                  value={parentalConsent}
-                  setValue={setParentalConsent}
-                  setY={setParentalConsentY}
-                />
-              ) : null}
-            </View>
-            <View style={styles.uploadsContainer}>
-              <View style={{ justifyContent: "center" }}>
-                <Text
-                  style={{
-                    paddingBottom: "3%",
-                    fontSize: 18,
-                    flexWrap: "wrap",
-                  }}
-                >
-                  Our volunteer piano accompanist can provide sight reading
-                  accompaniment for entry level players. To request this
-                  service, upload the main score AND accompaniment score in one
-                  PDF file. (100 MB file size limit){"\n"}
-                </Text>
-                <UploadButton />
-              </View>
-              <View style={{ paddingTop: "3%" }}>
-                <Text
-                  style={{
-                    paddingBottom: "3%",
-                    fontSize: 18,
-                    flexWrap: "wrap",
-                  }}
-                >
-                  Upload your Library Band Ensemble profile as one PDF file.
-                  {"\n"}
-                </Text>
-                <UploadButton />
-              </View>
-            </View>
-            <View style={styles.otherInfoContainer}>
-              <TextField
-                title={
-                  "Other Information, such as special requests in sequence arrangement (optional)"
-                }
-                setText={(text) => {
-                  setOtherInfo(text);
-                }}
-                keyboardType="default"
-              />
-            </View>
-          </View>
-          <Pressable style={styles.nextButton} onPress={() => validate()}>
-            <NextButton />
-          </Pressable>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -433,24 +389,22 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "stretch",
-    paddingHorizontal: "10%",
   },
   form: {
     alignItems: "stretch",
   },
-  heading: {
-    fontSize: 30,
-    fontWeight: "bold",
-  },
   header: {
     alignItems: "center",
     textAlign: "center",
-    paddingHorizontal: "5%",
+  },
+  questions: {
+    paddingHorizontal: 30,
   },
   instructions: {
     fontSize: 20,
     flexWrap: "wrap",
     textAlign: "center",
+    paddingVertical: 20,
   },
   checkBoxesContainer: {
     flex: 1,
@@ -471,5 +425,6 @@ const styles = StyleSheet.create({
   nextButton: {
     alignSelf: "flex-end",
     justifyContent: "flex-end",
+    marginBottom: 50,
   },
 });
