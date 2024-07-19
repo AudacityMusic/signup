@@ -10,7 +10,7 @@ import {
   Text,
   Dimensions,
   KeyboardAvoidingView,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 
 import { getUser } from "./SignInScreen";
@@ -46,7 +46,7 @@ export default function VolunteerFormScreen() {
     })();
   });
 
-  function emptyQuestionState(initial=null) {
+  function emptyQuestionState(initial = null) {
     return useState({ value: initial, y: null, valid: true });
   }
 
@@ -69,7 +69,7 @@ export default function VolunteerFormScreen() {
   const [scrollObject, setScrollObject] = useState(null);
   const [timeLimit, setTimeLimit] = useState(0);
 
-  console.log(fullName.value)
+  console.log(fullName.value);
 
   const performanceOptions = {
     individual: { label: "Individual performance only", timeLimit: 8 },
