@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Checkbox } from "expo-checkbox";
 
-export default function CheckBoxQuery({ question, state, useState }) {
+export default function CheckBoxQuery({ question, state, setState }) {
   return (
     <View
       style={styles.container}
       onLayout={(event) => {
-        useState((prevState) => ({
+        setState((prevState) => ({
           ...prevState,
           y: event.nativeEvent.layout.y,
         }));
@@ -21,7 +21,7 @@ export default function CheckBoxQuery({ question, state, useState }) {
           color={"#0d79ff"}
           value={state.value == true}
           onValueChange={() => {
-            useState((prevState) => ({
+            setState((prevState) => ({
               ...prevState,
               value: true,
             }));
@@ -36,7 +36,7 @@ export default function CheckBoxQuery({ question, state, useState }) {
           color={"#0d79ff"}
           value={state.value == false}
           onValueChange={() => {
-            useState((prevState) => ({
+            setState((prevState) => ({
               ...prevState,
               value: false,
             }));

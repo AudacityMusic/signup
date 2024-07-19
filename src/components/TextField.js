@@ -8,12 +8,12 @@ export default function TextField({
   keyboardType = "default",
   maxLength = 256,
   state,
-  useState,
+  setState,
 }) {
   return (
     <View
       onLayout={(event) => {
-        useState((prevState) => ({
+        setState((prevState) => ({
           ...prevState,
           y: event.nativeEvent.layout.y,
         }));
@@ -32,7 +32,7 @@ export default function TextField({
           { borderColor: state.valid ? "black" : "red" },
         ]}
         onChangeText={(text) => {
-          useState((prevState) => ({
+          setState((prevState) => ({
             ...prevState,
             value: text ? text : defaultText,
           }));

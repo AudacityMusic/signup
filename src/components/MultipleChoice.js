@@ -5,13 +5,13 @@ export default function MultipleChoice({
   options,
   onSelect,
   state,
-  useState,
+  setState,
 }) {
   return (
     <View
       style={{ marginBottom: 20 }}
       onLayout={(event) => {
-        useState((prevState) => ({
+        setState((prevState) => ({
           ...prevState,
           y: event.nativeEvent.layout.y,
         }));
