@@ -10,6 +10,7 @@ import {
   Text,
   Dimensions,
   KeyboardAvoidingView,
+  ActivityIndicator
 } from "react-native";
 
 import { getUser } from "./SignInScreen";
@@ -38,11 +39,19 @@ export default function VolunteerFormScreen() {
     getUser().then(setUser);
   }, []);
 
-  function emptyQuestionState() {
-    return useState({ value: null, y: null, valid: true });
+  if (!(user?.name)) {
+    return <ActivityIndicator size="large"></ActivityIndicator>
   }
 
-  const [fullName, setFullName] = emptyQuestionState();
+  let name = user.name;
+  console.log("Name: " + name);
+
+  function emptyQuestionState(initial=null) {
+    return useState({ value: initial, y: null, valid: true });
+  }
+
+  const [fullName, setFullName] = emptyQuestionState(name);
+  console.log("fullName " + fullName.value);
   const [city, setCity] = emptyQuestionState();
   const [phoneNumber, setPhoneNumber] = emptyQuestionState();
   const [age, setAge] = emptyQuestionState();
@@ -257,7 +266,7 @@ export default function VolunteerFormScreen() {
           useState={setParentalConsent}
         />
       ),
-      validate: (value) => value != null,
+      validate: (value) => value,
       isVisible: () => age.value < 18,
     }),
 
