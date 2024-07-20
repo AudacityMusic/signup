@@ -7,15 +7,18 @@ import Carousel from "react-native-snap-carousel";
 import CarouselPage from "../components/CarouselPage";
 
 export default function HomeScreen({ navigation }) {
-  console.log("Switched");
+  const testData = [
+    {title: "Library Music Hour", location: "Fremont Main Libary", time: "Saturday, August 10, 2024 2:30 PM", imagePath: "./../assets/warm-springs-bart.png"},
+    {title: "Library Music Hour", location: "Fremont Main Libary", time: "Saturday, August 10, 2024 2:30 PM", imagePath: "./../assets/warm-springs-bart.png"},
+    {title: "Library Music Hour", location: "Fremont Main Libary", time: "Saturday, August 10, 2024 2:30 PM", imagePath: "./../assets/warm-springs-bart.png"},
+    
+  
+  ];
 
   return (
     <ScrollView style={styles.container}>
       <Heading>Volunteer Opportunities</Heading>
-      <Carousel
-        layout={"default"}
-        renderItem={CarouselPage}
-      />
+      <CarouselPage navigation={navigation} data={testData}/>
       <Heading>Other Opportunities</Heading>
       <OtherOpportunities />
       <Heading>Websites</Heading>

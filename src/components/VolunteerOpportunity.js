@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 
-export default function VolunteerOpportunity({ navigation }) {
+export default function VolunteerOpportunity({ navigation, title, location, time }) {
   return (
     <Pressable
       style={styles.container}
@@ -11,20 +11,20 @@ export default function VolunteerOpportunity({ navigation }) {
         source={require("./../assets/warm-springs-bart.png")}
       />
       <View>
-        <Text style={styles.title}>Library Music Hour</Text>
+        <Text style={styles.title}>{title}</Text>
         <Text style={styles.info}>
           <Image
             style={styles.icon}
             source={require("./../assets/clock.png")}
           />
-          Saturday, August 10, 2024 2:30 PM
+          {time}
         </Text>
         <Text style={styles.info}>
           <Image
             style={styles.icon}
             source={require("./../assets/location.png")}
           />
-          Fremont Main Library
+          {location}
         </Text>
       </View>
       <Image

@@ -43,7 +43,7 @@ export default function App() {
     <NavigationContainer>
       <StatusBar style="light" />
       <Stack.Navigator
-        initialRouteName={isLoggedIn ? "Home" : "Sign In"}
+        initialRouteName={"Home"}
         screenOptions={{
           headerStyle: {
             backgroundColor: colors.primary,
