@@ -45,7 +45,7 @@ export default function VolunteerFormScreen() {
       try {
         const user = await getUser();
         setName(user?.name);
-        setFullName((prevState) => ({...prevState, value: user?.name}));
+        setFullName((prevState) => ({ ...prevState, value: user?.name }));
       } catch (error) {
         console.error(error);
       }

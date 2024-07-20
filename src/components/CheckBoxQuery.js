@@ -15,7 +15,7 @@ export default function CheckBoxQuery({ question, state, setState }) {
     >
       <Text style={styles.header}>
         {question}
-        <Text style={{color: "red"}}>{" *"}</Text>
+        <Text style={{ color: "red" }}>{" *"}</Text>
       </Text>
       <View style={styles.checkBoxContainer}>
         <Checkbox
@@ -29,7 +29,12 @@ export default function CheckBoxQuery({ question, state, setState }) {
           }}
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
         />
-        <Text style={[styles.text, { color: state.valid ? "black" : colors.danger }]}>
+        <Text
+          style={[
+            styles.text,
+            { color: state.valid ? "black" : colors.danger },
+          ]}
+        >
           Yes
         </Text>
         <Text> </Text>
@@ -44,7 +49,12 @@ export default function CheckBoxQuery({ question, state, setState }) {
           }}
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
         />
-        <Text style={[styles.text, { color: state.valid ? "black" : colors.danger }]}>
+        <Text
+          style={[
+            styles.text,
+            { color: state.valid ? "black" : colors.danger },
+          ]}
+        >
           No
         </Text>
       </View>

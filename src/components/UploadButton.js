@@ -26,7 +26,9 @@ export default function UploadButton({ title, state, setState }) {
   return (
     <View>
       <Text style={styles.label}>{title}</Text>
-      {fileName == null ? null : <Text style={styles.otherInfo}>{fileName}</Text>}
+      {fileName == null ? null : (
+        <Text style={styles.otherInfo}>{fileName}</Text>
+      )}
       <Pressable
         style={styles.upload}
         onPress={async () => {
@@ -45,7 +47,17 @@ export default function UploadButton({ title, state, setState }) {
         />
         <Text style={styles.uploadText}>Upload</Text>
       </Pressable>
-      <Text style={[styles.otherInfo, {color: state.valid ? colors.secondary : colors.danger, marginBottom: 20}]}>100MB Limit</Text>
+      <Text
+        style={[
+          styles.otherInfo,
+          {
+            color: state.valid ? colors.secondary : colors.danger,
+            marginBottom: 20,
+          },
+        ]}
+      >
+        100MB Limit
+      </Text>
     </View>
   );
 }

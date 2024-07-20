@@ -19,7 +19,9 @@ export default function MultipleChoice({
       }}
     >
       <Text style={styles.label}>
-        <Text style={{ color: state.valid ? "black" : colors.danger }}>{title}</Text>
+        <Text style={{ color: state.valid ? "black" : colors.danger }}>
+          {title}
+        </Text>
         <Text style={{ color: "red" }}> *</Text>
       </Text>
       {mapObject(options, (key) => (
