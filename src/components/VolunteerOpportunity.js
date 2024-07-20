@@ -1,6 +1,11 @@
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 
-export default function VolunteerOpportunity({ navigation, title, location, time }) {
+export default function VolunteerOpportunity({
+  navigation,
+  title,
+  location,
+  time,
+}) {
   return (
     <Pressable
       style={styles.container}
