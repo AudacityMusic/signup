@@ -45,21 +45,22 @@ export default function VolunteerFormScreen() {
       try {
         const user = await getUser();
         setName(user?.name);
+        setFullName((prevState) => ({...prevState, value: user?.name}));
       } catch (error) {
         console.error(error);
       }
     })();
   }, []);
 
-  if (name != null && name != undefined) {
-    console.log("Name: " + name);
-    useEffect(() => {
-      setFullName((prevState) => ({...prevState, value: name}));
-    }, []);
-    useEffect(() => {
-      console.log("CHANGED " + fullName.value);
-    }, [fullName]);
-  }
+  // if (name != null && name != undefined) {
+  //   useEffect(() => {
+  //     setFullName(name);
+  //   }, [])
+  // }
+
+  // useEffect(() => {
+  //   console.log("CHANGED " + fullName);
+  // }, [fullName])
 
   const [city, setCity] = emptyQuestionState();
   const [phoneNumber, setPhoneNumber] = emptyQuestionState();
@@ -107,7 +108,6 @@ export default function VolunteerFormScreen() {
           key="fullName"
           state={fullName}
           setState={setFullName}
-          defaultText={name}
         />
       ),
       validate: isNotEmpty,
@@ -282,7 +282,7 @@ export default function VolunteerFormScreen() {
     new Question({
       component: (
         <UploadButton
-          title="Our volunteer piano accompanist can provide sight reading accompaniment for entry level players. To request this service, upload the main score AND accompaniment score in one PDF file. (100 MB file size limit)"
+          title="Our volunteer piano accompanist can provide sight reading accompaniment for entry level players. To request this service, upload the main score AND accompaniment score in one PDF file."
           key="pianoAccompaniment"
           state={pianoAccompaniment}
           setState={setPianoAccompaniment}
@@ -290,7 +290,7 @@ export default function VolunteerFormScreen() {
       ),
       // Only PDF files can be uploaded
       validate: () =>
-        (pianoAccompaniment.value?.size ?? 1000000000) <= 104857600,
+        (pianoAccompaniment.value?.size ?? 1000000000) <= 104857600, // There are 104,857,600 bytes in 100 MB
     }),
 
     new Question({
@@ -305,7 +305,7 @@ export default function VolunteerFormScreen() {
       // Only PDF files can be uploaded
       isVisible: () => performanceType.value == "ensemble",
       validate: () =>
-        (pianoAccompaniment.value?.size ?? 1000000000) <= 104857600,
+        (pianoAccompaniment.value?.size ?? 1000000000) <= 104857600, // There are 104,857,600 bytes in 100 MB
     }),
 
     new Question({

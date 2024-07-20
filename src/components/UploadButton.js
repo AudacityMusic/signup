@@ -2,6 +2,8 @@ import { useState } from "react";
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import DocumentPicker from "react-native-document-picker";
 
+import colors from "../constants/colors";
+
 const uploadFile = async () => {
   try {
     const file = await DocumentPicker.pickSingle({
@@ -19,14 +21,12 @@ const uploadFile = async () => {
 };
 
 export default function UploadButton({ title, state, setState }) {
-  const [fileName, setFileName] = useState("");
+  const [fileName, setFileName] = useState(null);
 
   return (
     <View>
-      <Text style={styles.label}>
-        <Text style={{ color: state.valid ? "black" : "red" }}>{title}</Text>
-      </Text>
-      <Text style={styles.fileName}>{fileName}</Text>
+      <Text style={styles.label}>{title}</Text>
+      {fileName == null ? null : <Text style={styles.otherInfo}>{fileName}</Text>}
       <Pressable
         style={styles.upload}
         onPress={async () => {
@@ -45,6 +45,7 @@ export default function UploadButton({ title, state, setState }) {
         />
         <Text style={styles.uploadText}>Upload</Text>
       </Pressable>
+      <Text style={[styles.otherInfo, {color: state.valid ? colors.secondary : colors.danger, marginBottom: 20}]}>100MB Limit</Text>
     </View>
   );
 }
@@ -56,10 +57,10 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
 
-  fileName: {
+  otherInfo: {
     alignSelf: "center",
     textAlign: "center",
-    marginVertical: 20,
+    marginVertical: 5,
     fontSize: 14,
   },
 
@@ -68,11 +69,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
-    paddingHorizontal: 15,
-    paddingVertical: 15,
     borderRadius: 20,
     borderWidth: 1.5,
-    marginBottom: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
   },
 
   uploadText: {
