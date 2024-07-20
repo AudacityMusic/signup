@@ -33,7 +33,12 @@ class Question {
 }
 
 export default function VolunteerFormScreen() {
+  function emptyQuestionState(initial = null) {
+    return useState({ value: initial, y: null, valid: true });
+  }
+
   const [name, setName] = useState("");
+  const [fullName, setFullName] = emptyQuestionState();
 
   useEffect(() => {
     (async () => {
@@ -44,13 +49,18 @@ export default function VolunteerFormScreen() {
         console.error(error);
       }
     })();
-  });
+  }, []);
 
-  function emptyQuestionState(initial = null) {
-    return useState({ value: initial, y: null, valid: true });
+  if (name != null && name != undefined) {
+    console.log("Name: " + name);
+    useEffect(() => {
+      setFullName((prevState) => ({...prevState, value: name}));
+    }, []);
+    useEffect(() => {
+      console.log("CHANGED " + fullName.value);
+    }, [fullName]);
   }
 
-  const [fullName, setFullName] = emptyQuestionState("");
   const [city, setCity] = emptyQuestionState();
   const [phoneNumber, setPhoneNumber] = emptyQuestionState();
   const [age, setAge] = emptyQuestionState();

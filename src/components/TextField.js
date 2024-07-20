@@ -34,10 +34,10 @@ export default function TextField({
         onChangeText={(text) => {
           setState((prevState) => ({
             ...prevState,
-            value: text ? text : defaultText,
+            value: text,
           }));
         }}
-        value={state.value ? state.value : defaultText}
+        value={state.value}
         maxLength={maxLength}
         // @ts-ignore
         keyboardType={keyboardType}
