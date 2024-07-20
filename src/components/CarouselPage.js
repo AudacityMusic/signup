@@ -29,10 +29,7 @@ export default function CarouselPage({ navigation, data }) {
     );
   };
   return (
-    <View>
-      <Carousel width={400} height={375} data={data} renderItem={renderItem} />
-      <Text>Hi</Text>
-    </View>
+    <Carousel width={400} height={300} data={data} renderItem={renderItem} />
   );
 }
 
