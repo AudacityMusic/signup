@@ -37,30 +37,18 @@ export default function VolunteerFormScreen() {
     return useState({ value: initial, y: null, valid: true });
   }
 
-  const [name, setName] = useState("");
   const [fullName, setFullName] = emptyQuestionState();
 
   useEffect(() => {
     (async () => {
       try {
         const user = await getUser();
-        setName(user?.name);
         setFullName((prevState) => ({ ...prevState, value: user?.name }));
       } catch (error) {
         console.error(error);
       }
     })();
   }, []);
-
-  // if (name != null && name != undefined) {
-  //   useEffect(() => {
-  //     setFullName(name);
-  //   }, [])
-  // }
-
-  // useEffect(() => {
-  //   console.log("CHANGED " + fullName);
-  // }, [fullName])
 
   const [city, setCity] = emptyQuestionState();
   const [phoneNumber, setPhoneNumber] = emptyQuestionState();
