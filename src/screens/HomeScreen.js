@@ -3,6 +3,8 @@ import VolunteerOpportunity from "../components/VolunteerOpportunity";
 import OtherOpportunities from "../components/OtherOpportunities";
 import Heading from "../components/Heading";
 import Websites from "../components/Websites";
+import Carousel from "react-native-snap-carousel";
+import CarouselPage from "../components/CarouselPage";
 
 export default function HomeScreen({ navigation }) {
   console.log("Switched");
@@ -10,9 +12,10 @@ export default function HomeScreen({ navigation }) {
   return (
     <ScrollView style={styles.container}>
       <Heading>Volunteer Opportunities</Heading>
-      <VolunteerOpportunity navigation={navigation} />
-      <VolunteerOpportunity navigation={navigation} />
-      <VolunteerOpportunity navigation={navigation} />
+      <Carousel
+        layout={"default"}
+        renderItem={CarouselPage}
+      />
       <Heading>Other Opportunities</Heading>
       <OtherOpportunities />
       <Heading>Websites</Heading>
