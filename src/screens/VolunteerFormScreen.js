@@ -27,30 +27,29 @@ class Question {
     this.validate = () => !isVisible() || validate(component.props.state.value);
     this.isVisible = isVisible;
     this.state = component.props.state;
-    this.useState = component.props.useState;
+    this.setState = component.props.setState;
     this.y = component.props.state.y;
   }
 }
 
 export default function VolunteerFormScreen() {
-  const [name, setName] = useState("");
+  function emptyQuestionState(initial = null) {
+    return useState({ value: initial, y: null, valid: true });
+  }
+
+  const [fullName, setFullName] = emptyQuestionState();
 
   useEffect(() => {
     (async () => {
       try {
         const user = await getUser();
-        setName(user?.name);
+        setFullName((prevState) => ({ ...prevState, value: user?.name }));
       } catch (error) {
         console.error(error);
       }
     })();
-  });
+  }, []);
 
-  function emptyQuestionState(initial = null) {
-    return useState({ value: initial, y: null, valid: true });
-  }
-
-  const [fullName, setFullName] = emptyQuestionState("");
   const [city, setCity] = emptyQuestionState();
   const [phoneNumber, setPhoneNumber] = emptyQuestionState();
   const [age, setAge] = emptyQuestionState();
@@ -68,8 +67,6 @@ export default function VolunteerFormScreen() {
 
   const [scrollObject, setScrollObject] = useState(null);
   const [timeLimit, setTimeLimit] = useState(0);
-
-  console.log(fullName.value);
 
   const performanceOptions = {
     individual: { label: "Individual performance only", timeLimit: 8 },
@@ -98,8 +95,7 @@ export default function VolunteerFormScreen() {
           title="Performer's Full Name"
           key="fullName"
           state={fullName}
-          useState={setFullName}
-          defaultText={name}
+          setState={setFullName}
         />
       ),
       validate: isNotEmpty,
@@ -111,7 +107,7 @@ export default function VolunteerFormScreen() {
           title="City of Residence"
           key="city"
           state={city}
-          useState={setCity}
+          setState={setCity}
         />
       ),
       validate: isNotEmpty,
@@ -125,7 +121,7 @@ export default function VolunteerFormScreen() {
           maxLength={11}
           key="phoneNumber"
           state={phoneNumber}
-          useState={setPhoneNumber}
+          setState={setPhoneNumber}
         />
       ),
       validate: (value) => isAtLeast(value, 10),
@@ -138,7 +134,7 @@ export default function VolunteerFormScreen() {
           keyboardType="numeric"
           key="age"
           state={age}
-          useState={setAge}
+          setState={setAge}
         />
       ),
       validate(value) {
@@ -156,7 +152,7 @@ export default function VolunteerFormScreen() {
           title="Name of Music Piece"
           key="musicPiece"
           state={musicPiece}
-          useState={setMusicPiece}
+          setState={setMusicPiece}
         />
       ),
       validate: isNotEmpty,
@@ -168,7 +164,7 @@ export default function VolunteerFormScreen() {
           title="Name of Composer"
           key="composer"
           state={composer}
-          useState={setComposer}
+          setState={setComposer}
         />
       ),
       validate: isNotEmpty,
@@ -180,7 +176,7 @@ export default function VolunteerFormScreen() {
           title="Instrument Type"
           key="instrument"
           state={instrument}
-          useState={setInstrument}
+          setState={setInstrument}
         />
       ),
       validate: isNotEmpty,
@@ -200,7 +196,7 @@ export default function VolunteerFormScreen() {
           }}
           key="performanceType"
           state={performanceType}
-          useState={setPerformanceType}
+          setState={setPerformanceType}
         />
       ),
       validate: isNotEmpty,
@@ -214,7 +210,7 @@ export default function VolunteerFormScreen() {
           keyboardType="numeric"
           key="length"
           state={length}
-          useState={setLength}
+          setState={setLength}
         />
       ),
       validate(value) {
@@ -233,7 +229,7 @@ export default function VolunteerFormScreen() {
           keyboardType="url"
           key="recordingLink"
           state={recordingLink}
-          useState={setRecordingLink}
+          setState={setRecordingLink}
         />
       ),
       validate(value) {
@@ -252,7 +248,7 @@ export default function VolunteerFormScreen() {
           question="Do you give permission for Audacity Music Club to post recordings of your performance on public websites?"
           key="publicPermission"
           state={publicPermission}
-          useState={setPublicPermission}
+          setState={setPublicPermission}
         />
       ),
       validate: (value) => value != null,
@@ -264,7 +260,7 @@ export default function VolunteerFormScreen() {
           question="My parent has given their consent for my participation."
           key="parentalConsent"
           state={parentalConsent}
-          useState={setParentalConsent}
+          setState={setParentalConsent}
         />
       ),
       validate: (value) => value,
@@ -273,25 +269,16 @@ export default function VolunteerFormScreen() {
 
     new Question({
       component: (
-        <TextField
-          title="Other Information (optional)"
-          key="otherInfo"
-          state={otherInfo}
-          useState={setOtherInfo}
-        />
-      ),
-    }),
-
-    new Question({
-      component: (
         <UploadButton
-          title="Our volunteer piano accompanist can provide sight reading accompaniment for entry level players. To request this service, upload the main score AND accompaniment score in one PDF file. (100 MB file size limit)"
+          title="Our volunteer piano accompanist can provide sight reading accompaniment for entry level players. To request this service, upload the main score AND accompaniment score in one PDF file."
           key="pianoAccompaniment"
           state={pianoAccompaniment}
-          useState={setPianoAccompaniment}
+          setState={setPianoAccompaniment}
         />
       ),
-      // TODO: Validate that the file is a PDF and does not exceed 100 MB
+      // Only PDF files can be uploaded
+      validate: () =>
+        (pianoAccompaniment.value?.size ?? 1000000000) <= 104857600, // There are 104,857,600 bytes in 100 MB
     }),
 
     new Question({
@@ -300,12 +287,24 @@ export default function VolunteerFormScreen() {
           title="Upload your Library Band Ensemble profile as one PDF file."
           key="ensembleProfile"
           state={ensembleProfile}
-          useState={setEnsembleProfile}
+          setState={setEnsembleProfile}
         />
       ),
-      // TODO: Make this required if the user selected ensemble
-      // TODO: Validate that the file is a PDF and does not exceed 100 MB
+      // Only PDF files can be uploaded
       isVisible: () => performanceType.value == "ensemble",
+      validate: () =>
+        (pianoAccompaniment.value?.size ?? 1000000000) <= 104857600, // There are 104,857,600 bytes in 100 MB
+    }),
+
+    new Question({
+      component: (
+        <TextField
+          title="Other Information (optional)"
+          key="otherInfo"
+          state={otherInfo}
+          setState={setOtherInfo}
+        />
+      ),
     }),
   ];
 
@@ -315,12 +314,12 @@ export default function VolunteerFormScreen() {
 
     for (const question of questions) {
       const isValid = question.validate();
-      question.useState((prevState) => ({
+      question.setState((prevState) => ({
         ...prevState,
         valid: isValid,
       }));
 
-      if (!isValid) {
+      if (!isValid && question.isVisible) {
         allValid = false;
         if (question.y < minInvalidY) {
           minInvalidY = question.y;

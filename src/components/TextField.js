@@ -4,16 +4,15 @@ import colors from "../constants/colors";
 export default function TextField({
   title,
   subtitle = "",
-  defaultText = "",
   keyboardType = "default",
-  maxLength = 256,
+  maxLength = 32000, // Limit of chars on Google Forms
   state,
-  useState,
+  setState,
 }) {
   return (
     <View
       onLayout={(event) => {
-        useState((prevState) => ({
+        setState((prevState) => ({
           ...prevState,
           y: event.nativeEvent.layout.y,
         }));
@@ -29,15 +28,15 @@ export default function TextField({
       <TextInput
         style={[
           styles.inputField,
-          { borderColor: state.valid ? "black" : "red" },
+          { borderColor: state.valid ? "black" : colors.danger },
         ]}
         onChangeText={(text) => {
-          useState((prevState) => ({
+          setState((prevState) => ({
             ...prevState,
-            value: text ? text : defaultText,
+            value: text,
           }));
         }}
-        value={state.value ? state.value : defaultText}
+        value={state.value}
         maxLength={maxLength}
         // @ts-ignore
         keyboardType={keyboardType}

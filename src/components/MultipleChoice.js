@@ -1,24 +1,27 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
+import colors from "../constants/colors";
 
 export default function MultipleChoice({
   title,
   options,
   onSelect,
   state,
-  useState,
+  setState,
 }) {
   return (
     <View
       style={{ marginBottom: 20 }}
       onLayout={(event) => {
-        useState((prevState) => ({
+        setState((prevState) => ({
           ...prevState,
           y: event.nativeEvent.layout.y,
         }));
       }}
     >
       <Text style={styles.label}>
-        <Text style={{ color: state.valid ? "black" : "red" }}>{title}</Text>
+        <Text style={{ color: state.valid ? "black" : colors.danger }}>
+          {title}
+        </Text>
         <Text style={{ color: "red" }}> *</Text>
       </Text>
       {mapObject(options, (key) => (
