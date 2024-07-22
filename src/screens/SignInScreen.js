@@ -16,10 +16,8 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 GoogleSignin.configure({
-  webClientId:
-    "761199370622-3r5phtt6a1s6lm6554htodbk8u4k9p8f.apps.googleusercontent.com", // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
-  iosClientId:
-    "761199370622-qdq0afvq19r47p34rgjsso84leub5dlj.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+  webClientId: process.env.EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID, // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
+  iosClientId: process.env.EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID, // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
 });
 
 export async function getUser() {
@@ -54,14 +52,7 @@ export default function SignInScreen({ navigation }) {
               await GoogleSignin.hasPlayServices();
               const userInfo = await GoogleSignin.signIn();
               AsyncStorage.setItem("user", JSON.stringify(userInfo.user));
-              console.log(
-                "name: " +
-                  userInfo.user.name +
-                  "\nemail: " +
-                  userInfo.user.email +
-                  "\nPhoto: " +
-                  userInfo.user.photo,
-              );
+              console.log(userInfo);
               navigation.navigate("Home");
             } catch (error) {
               if (isErrorWithCode(error)) {

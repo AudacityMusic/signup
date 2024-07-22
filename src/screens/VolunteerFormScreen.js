@@ -10,7 +10,6 @@ import {
   Text,
   Dimensions,
   KeyboardAvoidingView,
-  ActivityIndicator,
 } from "react-native";
 
 import { getUser } from "./SignInScreen";

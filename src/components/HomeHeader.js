@@ -14,11 +14,9 @@ import { getUser } from "../screens/SignInScreen";
 export default function HomeHeader({ navigation }) {
   const [user, setUser] = useState(null);
 
-  console.log("Pre-Get-User");
   useEffect(() => {
     getUser().then(setUser);
   }, []);
-  console.log("Post-Get-User, result=" + JSON.stringify(user));
 
   return (
     <LinearGradient
