@@ -38,7 +38,6 @@ export default function UploadButton({ title, state, setState }) {
             ...prevState,
             value: file,
           }));
-          console.log(file?.size);
         }}
       >
         <Image

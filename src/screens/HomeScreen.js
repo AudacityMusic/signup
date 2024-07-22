@@ -5,8 +5,6 @@ import Heading from "../components/Heading";
 import Websites from "../components/Websites";
 
 export default function HomeScreen({ navigation }) {
-  console.log("Switched");
-
   return (
     <ScrollView style={styles.container}>
       <Heading>Volunteer Opportunities</Heading>
