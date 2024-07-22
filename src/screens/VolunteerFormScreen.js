@@ -97,7 +97,7 @@ export default function VolunteerFormScreen() {
           setState={setFullName}
         />
       ),
-      validate: isNotEmpty,
+      validate: (value) => value.trim().split(" ").length >= 2,
     }),
 
     new Question({
