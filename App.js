@@ -10,8 +10,6 @@ import colors from "./src/constants/colors";
 import HomeScreen from "./src/screens/HomeScreen";
 import AccountScreen from "./src/screens/AccountScreen";
 import SignInScreen from "./src/screens/SignInScreen";
-import DonateScreen from "./src/screens/DonateScreen";
-import WebsitesScreen from "./src/screens/WebsitesScreen";
 import VolunteerFormScreen from "./src/screens/VolunteerFormScreen";
 import VolunteerOpportunityScreen from "./src/screens/VolunteerOpportunityScreen";
 import HomeHeader from "./src/components/HomeHeader";
@@ -66,8 +64,6 @@ export default function App() {
           }}
         />
         <Stack.Screen name="Account" component={AccountScreen} />
-        <Stack.Screen name="Donate" component={DonateScreen} />
-        <Stack.Screen name="Websites" component={WebsitesScreen} />
         <Stack.Screen
           name="Volunteer Opportunity"
           component={VolunteerOpportunityScreen}
