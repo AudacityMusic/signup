@@ -12,7 +12,14 @@ export default function VolunteerOpportunity({
   return (
     <Pressable
       style={styles.container}
-      onPress={() => navigation.navigate("Volunteer Opportunity")}
+      onPress={() => navigation.navigate("Volunteer Opportunity", {
+        title: title,
+        location: location,
+        date: date,
+        image: image,
+        description: description,
+        tags: tags
+      })}
     >
       <Image
         style={styles.image}
