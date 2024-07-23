@@ -13,14 +13,14 @@ import Tag from "../components/Tag";
 import Heading from "../components/Heading";
 
 export default function VolunteerOpportunityScreen({ route, navigation }) {
-  const {title, location, date, image, description, tags} = route.params;
+  const { title, location, date, image, description, tags } = route.params;
   const tagsIcons = tags.map((text) => <Tag key={text} text={text} />);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.banner}>
         <ImageBackground
-          source={{width: 0, height: 0, uri: image}}
+          source={{ width: 0, height: 0, uri: image }}
           style={styles.backgroundImage}
         >
           <LinearGradient
@@ -67,7 +67,8 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
         </View>
         <Pressable
           style={styles.signUpButton}
-          onPress={() => navigation.navigate("Volunteer Form")}>
+          onPress={() => navigation.navigate("Volunteer Form")}
+        >
           <SignUpButton />
         </Pressable>
       </View>

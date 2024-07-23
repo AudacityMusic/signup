@@ -7,24 +7,26 @@ export default function VolunteerOpportunity({
   date,
   image,
   description,
-  tags
+  tags,
 }) {
   return (
     <Pressable
       style={styles.container}
-      onPress={() => navigation.navigate("Volunteer Opportunity", {
-        title: title,
-        location: location,
-        date: date,
-        image: image,
-        description: description,
-        tags: tags
-      })}
+      onPress={() =>
+        navigation.navigate("Volunteer Opportunity", {
+          title: title,
+          location: location,
+          date: date,
+          image: image,
+          description: description,
+          tags: tags,
+        })
+      }
     >
       <Image
         style={styles.image}
         // source={require("./../assets/warm-springs-bart.png")}
-        source={{width: 0, height: 0, uri: image}}
+        source={{ width: 0, height: 0, uri: image }}
       />
       <View>
         <Text style={styles.title}>{title}</Text>
@@ -33,14 +35,16 @@ export default function VolunteerOpportunity({
             style={styles.icon}
             source={require("./../assets/clock.png")}
           />
-          {"\t"}{date}
+          {"\t"}
+          {date}
         </Text>
         <Text style={styles.info}>
           <Image
             style={styles.icon}
             source={require("./../assets/location.png")}
           />
-          {"\t"}{location}
+          {"\t"}
+          {location}
         </Text>
       </View>
       <Image
