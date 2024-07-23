@@ -23,7 +23,6 @@
     "expo-constants": "^16.0.2",
     "expo-linear-gradient": "^13.0.2",
     "expo-status-bar": "~1.12.1",
-    "https": "^1.0.0",
     "react": "18.2.0",
     "react-native": "0.74.3",
     "react-native-document-picker": "^9.3.0",
