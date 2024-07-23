@@ -5,7 +5,9 @@ export default function VolunteerOpportunity({
   title,
   location,
   date,
-  // image,
+  image,
+  description,
+  tags
 }) {
   return (
     <Pressable
@@ -14,8 +16,8 @@ export default function VolunteerOpportunity({
     >
       <Image
         style={styles.image}
-        source={require("./../assets/warm-springs-bart.png")}
-        // source={{width: 0, height: 0, uri: image}}
+        // source={require("./../assets/warm-springs-bart.png")}
+        source={{width: 0, height: 0, uri: image}}
       />
       <View>
         <Text style={styles.title}>{title}</Text>
