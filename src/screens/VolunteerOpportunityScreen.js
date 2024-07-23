@@ -12,14 +12,15 @@ import SignUpButton from "../components/SignUpButton";
 import Tag from "../components/Tag";
 import Heading from "../components/Heading";
 
-export default function VolunteerOpportunityScreen({ navigation }) {
-  const tagTexts = ["Electric Piano", "Indoors", "Presentation Equipment"];
-  const tags = tagTexts.map((text) => <Tag key={text} text={text} />);
+export default function VolunteerOpportunityScreen({ route, navigation }) {
+  const { title, location, date, image, description, tags } = route.params;
+  const tagsIcons = tags.map((text) => <Tag key={text} text={text} />);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.banner}>
         <ImageBackground
-          source={require("./../assets/warm-springs-bart.png")}
+          source={{ width: 0, height: 0, uri: image }}
           style={styles.backgroundImage}
         >
           <LinearGradient
@@ -36,7 +37,7 @@ export default function VolunteerOpportunityScreen({ navigation }) {
             },
           ]}
         >
-          <Text style={styles.headerText}>Music By The Tracks</Text>
+          <Text style={styles.headerText}>{title}</Text>
         </View>
       </View>
       <View style={styles.subcontainer}>
@@ -46,32 +47,23 @@ export default function VolunteerOpportunityScreen({ navigation }) {
               source={require("./../assets/clock.png")}
               style={{ height: 18, width: 18 }}
             ></Image>
-            <Text style={styles.detailsText}>
-              Saturday, July 27, 2024 4:00 PM
-            </Text>
+            <Text style={styles.detailsText}>{date}</Text>
           </View>
           <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
             <Image
               source={require("./../assets/location.png")}
               style={{ height: 18, width: 18 }}
             ></Image>
-            <Text style={styles.detailsText}>Warm Springs BART Station</Text>
+            <Text style={styles.detailsText}>{location}</Text>
           </View>
         </View>
         <View style={styles.about}>
           <Heading>About</Heading>
-          <Text style={{ fontSize: 14 }}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In sit amet
-            nibh nulla. Vestibulum ante ipsum primis in faucibus orci luctus et
-            ultrices posuere cubilia curae; Aenean vitae orci in mi ultricies
-            varius et at tellus. Maecenas posuere vestibulum tortor, euismod
-            aliquam odio ullamcorper eget. Phasellus quam mi, bibendum id
-            elementum eget, semper id risus.
-          </Text>
+          <Text style={{ fontSize: 14 }}>{description}</Text>
         </View>
         <View style={styles.tagsContainer}>
           <Heading>Tags</Heading>
-          <View style={styles.tags}>{tags}</View>
+          <View style={styles.tags}>{tagsIcons}</View>
         </View>
         <Pressable
           style={styles.signUpButton}
