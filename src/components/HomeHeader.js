@@ -8,8 +8,9 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+
 import colors from "../constants/colors";
-import { getUser } from "../screens/SignInScreen";
+import { getUser } from "../utils";
 
 export default function HomeHeader({ navigation }) {
   const [user, setUser] = useState(null);

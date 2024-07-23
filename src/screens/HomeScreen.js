@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { StyleSheet, ScrollView } from "react-native";
+
 import OtherOpportunities from "../components/OtherOpportunities";
 import Heading from "../components/Heading";
 import Websites from "../components/Websites";
 import CarouselPage from "../components/CarouselPage";
-import { PublicGoogleSheetsParser } from "../components/PublicGoogleSheetsParser";
+
+import { PublicGoogleSheetsParser } from "../utils/PublicGoogleSheetsParser";
 
 export default function HomeScreen({ navigation }) {
-  console.log("Switched");
-
   function formatData(data) {
     let formattedArray = [];
     let tempArray = [];

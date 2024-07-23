@@ -20,18 +20,6 @@ GoogleSignin.configure({
   iosClientId: process.env.EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID, // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
 });
 
-export async function getUser() {
-  try {
-    const userString = await AsyncStorage.getItem("user");
-    if (userString === null) {
-      throw "EMPTY User";
-    }
-    return JSON.parse(userString);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 export default function SignInScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>

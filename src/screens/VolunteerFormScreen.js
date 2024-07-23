@@ -12,7 +12,7 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 
-import { getUser } from "./SignInScreen";
+import { getUser } from "../utils";
 
 import TextField from "../components/TextField";
 import CheckBoxQuery from "../components/CheckBoxQuery";
