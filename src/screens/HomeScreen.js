@@ -13,19 +13,29 @@ export default function HomeScreen({ navigation }) {
     let formattedArray = [];
     let tempArray = [];
 
-    for (let i = 0; i < data.length; i++) {
-      tempArray.push(data[i]);
+    for (const component of data) {
+      const [year, month, day, hour, minute, second] = component.Date.slice(5, -1).split(',').map(Number);
+      const date = new Date(year, month, day, hour, minute, second);
 
-      if (tempArray.length === 3) {
-        formattedArray.push(tempArray);
-        tempArray = [];
-      }
+      if (new Date() < date) {
+        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const months = ["January", "February", "March", "April", "May", "June", 
+                        "July", "August", "September", "October", "November", "December"];
+        component.Date = days[date.getDay()] + ", " + months[month] + " " + day + ", " + year + " " + (hour % 12 == 0 ? 12 : hour % 12) + ":" + (minute < 10 ? "0" : "") + minute + " " + (hour >= 12 ? "PM" : "AM");
+        tempArray.push(component);
+
+        if (tempArray.length === 3) {
+          formattedArray.push(tempArray);
+          tempArray = [];
+        }
+      } 
     }
 
     if (tempArray.length > 0) {
       formattedArray.push(tempArray);
     }
 
+    console.log(formattedArray);
     return formattedArray;
   }
 
@@ -34,7 +44,7 @@ export default function HomeScreen({ navigation }) {
   useEffect(() => {
     const parser = new PublicGoogleSheetsParser(
       process.env.EXPO_PUBLIC_SHEET_ID,
-      { sheetName: process.env.EXPO_PUBLIC_SHEET_NAME, useFormat: true },
+      { sheetName: process.env.EXPO_PUBLIC_SHEET_NAME },
     );
     parser.parse().then((data) => {
       setData(data);
