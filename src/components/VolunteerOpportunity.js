@@ -4,7 +4,8 @@ export default function VolunteerOpportunity({
   navigation,
   title,
   location,
-  time,
+  date,
+  // image,
 }) {
   return (
     <Pressable
@@ -14,23 +15,24 @@ export default function VolunteerOpportunity({
       <Image
         style={styles.image}
         source={require("./../assets/warm-springs-bart.png")}
+        // source={{width: 0, height: 0, uri: image}}
       />
       <View>
         <Text style={styles.title}>{title}</Text>
-        <View style={styles.info}>
+        <Text style={styles.info}>
           <Image
             style={styles.icon}
             source={require("./../assets/clock.png")}
           />
-          <Text>{time}</Text>
-        </View>
-        <View style={styles.info}>
+          {"\t"}{date}
+        </Text>
+        <Text style={styles.info}>
           <Image
             style={styles.icon}
             source={require("./../assets/location.png")}
           />
-          <Text>{location}</Text>
-        </View>
+          {"\t"}{location}
+        </Text>
       </View>
       <Image
         style={styles.caret}
