@@ -4,16 +4,29 @@ export default function VolunteerOpportunity({
   navigation,
   title,
   location,
-  time,
+  date,
+  image,
+  description,
+  tags,
 }) {
   return (
     <Pressable
       style={styles.container}
-      onPress={() => navigation.navigate("Volunteer Opportunity")}
+      onPress={() =>
+        navigation.navigate("Volunteer Opportunity", {
+          title: title,
+          location: location,
+          date: date,
+          image: image,
+          description: description,
+          tags: tags,
+        })
+      }
     >
       <Image
         style={styles.image}
-        source={require("./../assets/warm-springs-bart.png")}
+        // source={require("./../assets/warm-springs-bart.png")}
+        source={{ width: 0, height: 0, uri: image }}
       />
       <View>
         <Text style={styles.title}>{title}</Text>

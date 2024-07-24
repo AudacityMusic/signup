@@ -1,34 +1,40 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Checkbox } from "expo-checkbox";
+import colors from "../constants/colors";
 
-export default function CheckBoxQuery({ question, state, useState }) {
+export default function CheckBoxQuery({ question, state, setState }) {
   return (
     <View
       style={styles.container}
       onLayout={(event) => {
-        useState((prevState) => ({
+        setState((prevState) => ({
           ...prevState,
           y: event.nativeEvent.layout.y,
         }));
       }}
     >
-      <Text style={[styles.header, { color: state.valid ? "black" : "red" }]}>
+      <Text style={styles.header}>
         {question}
-        <Text style={styles.red}>{" *"}</Text>
+        <Text style={{ color: "red" }}>{" *"}</Text>
       </Text>
       <View style={styles.checkBoxContainer}>
         <Checkbox
           color={"#0d79ff"}
           value={state.value == true}
           onValueChange={() => {
-            useState((prevState) => ({
+            setState((prevState) => ({
               ...prevState,
               value: true,
             }));
           }}
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
         />
-        <Text style={[styles.text, { color: state.valid ? "black" : "red" }]}>
+        <Text
+          style={[
+            styles.text,
+            { color: state.valid ? "black" : colors.danger },
+          ]}
+        >
           Yes
         </Text>
         <Text> </Text>
@@ -36,14 +42,19 @@ export default function CheckBoxQuery({ question, state, useState }) {
           color={"#0d79ff"}
           value={state.value == false}
           onValueChange={() => {
-            useState((prevState) => ({
+            setState((prevState) => ({
               ...prevState,
               value: false,
             }));
           }}
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
         />
-        <Text style={[styles.text, { color: state.valid ? "black" : "red" }]}>
+        <Text
+          style={[
+            styles.text,
+            { color: state.valid ? "black" : colors.danger },
+          ]}
+        >
           No
         </Text>
       </View>
@@ -52,9 +63,6 @@ export default function CheckBoxQuery({ question, state, useState }) {
 }
 
 const styles = StyleSheet.create({
-  red: {
-    color: "red",
-  },
   container: {
     flexGrow: 1,
     marginBottom: 25,
@@ -75,5 +83,6 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 18,
     fontWeight: "600",
+    color: "black",
   },
 });

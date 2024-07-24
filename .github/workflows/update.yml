@@ -29,3 +29,5 @@ jobs:
 
       - name: Publish update
         run: eas update --auto
+        env:
+          EXPO_PUBLIC_GOOGLE_OAUTH_IOS_SCHEME: ${{ secrets.EXPO_PUBLIC_GOOGLE_OAUTH_IOS_SCHEME }}

@@ -1,23 +1,25 @@
-import { StyleSheet, Text, View, Image } from "react-native";
-import colors from "../constants/colors";
-import VolunteerOpportunity from "./VolunteerOpportunity";
-import { useSharedValue } from "react-native-reanimated";
-import Carousel from "react-native-reanimated-carousel";
-import AnimatedDotsCarousel from "react-native-animated-dots-carousel";
 import { useState } from "react";
+import { StyleSheet, View } from "react-native";
+import AnimatedDotsCarousel from "react-native-animated-dots-carousel";
+import VolunteerOpportunity from "./VolunteerOpportunity";
+import Carousel from "react-native-reanimated-carousel";
 
 export default function CarouselPage({ navigation, data }) {
   const [dotIndex, setDotIndex] = useState(0);
   const renderItem = ({ item }) => {
     return (
       <View>
-        {item.map((thing) => {
+        {item.map((component, index) => {
           return (
             <VolunteerOpportunity
               navigation={navigation}
-              title={thing.title}
-              location={thing.location}
-              time={thing.time}
+              title={component.Title}
+              location={component.Location}
+              date={component.Date}
+              image={component.Image}
+              description={component.Description}
+              tags={component.Tags.split(", ")}
+              key={index}
             />
           );
         })}

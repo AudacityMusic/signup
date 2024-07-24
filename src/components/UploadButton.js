@@ -1,18 +1,62 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { useState } from "react";
+import { StyleSheet, Text, View, Image, Pressable } from "react-native";
+import DocumentPicker from "react-native-document-picker";
 
-export default function UploadButton({ title, state, useState }) {
+import colors from "../constants/colors";
+
+const uploadFile = async () => {
+  try {
+    const file = await DocumentPicker.pickSingle({
+      type: [DocumentPicker.types.pdf],
+    });
+    return file;
+  } catch (error) {
+    if (DocumentPicker.isCancel(error)) {
+      console.log(error);
+      throw "CANCELLED";
+    } else {
+      throw error;
+    }
+  }
+};
+
+export default function UploadButton({ title, state, setState }) {
+  const [fileName, setFileName] = useState(null);
+
   return (
     <View>
-      <Text style={styles.label}>
-        <Text style={{ color: state.valid ? "black" : "red" }}>{title}</Text>
-      </Text>
-      <View style={styles.upload}>
+      <Text style={styles.label}>{title}</Text>
+      {fileName == null ? null : (
+        <Text style={styles.otherInfo}>{fileName}</Text>
+      )}
+      <Pressable
+        style={styles.upload}
+        onPress={async () => {
+          const file = await uploadFile();
+          setFileName(file?.name);
+          setState((prevState) => ({
+            ...prevState,
+            value: file,
+          }));
+        }}
+      >
         <Image
           source={require("./../assets/upload.png")}
           style={{ height: 25, width: 25 }}
         />
         <Text style={styles.uploadText}>Upload</Text>
-      </View>
+      </Pressable>
+      <Text
+        style={[
+          styles.otherInfo,
+          {
+            color: state.valid ? colors.secondary : colors.danger,
+            marginBottom: 20,
+          },
+        ]}
+      >
+        100MB Limit
+      </Text>
     </View>
   );
 }
@@ -23,16 +67,23 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     paddingBottom: 10,
   },
+
+  otherInfo: {
+    alignSelf: "center",
+    textAlign: "center",
+    marginVertical: 5,
+    fontSize: 14,
+  },
+
   upload: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
-    paddingHorizontal: 15,
-    paddingVertical: 15,
     borderRadius: 20,
     borderWidth: 1.5,
-    marginBottom: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
   },
 
   uploadText: {

@@ -15,14 +15,10 @@ export default function OtherOpportunities() {
         />
       </Pressable>
       <View style={styles.divider} />
-      <Pressable style={[styles.card, styles.last]}>
+      <View style={[styles.card, styles.last]}>
         <Image style={styles.icon} source={require("./../assets/gift.png")} />
-        <Text style={styles.text}>Make a Donation</Text>
-        <Image
-          style={styles.arrow}
-          source={require("./../assets/caret-left.png")}
-        />
-      </Pressable>
+        <Text style={styles.text}>Donate to admin@funyouth.us on Zelle</Text>
+      </View>
     </View>
   );
 }

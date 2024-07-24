@@ -40,3 +40,7 @@ yarn-error.*
 
 # Ignore Gradle build output directory
 build
+
+# Native folders
+ios/
+android/

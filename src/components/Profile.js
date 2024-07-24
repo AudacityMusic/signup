@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, ActivityIndicator } from "react-native";
-import { getUser } from "../screens/SignInScreen";
+
+import { getUser } from "../utils";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
