@@ -14,21 +14,60 @@ export default function HomeScreen({ navigation }) {
     let tempArray = [];
 
     for (const component of data) {
-      const [year, month, day, hour, minute, second] = component.Date.slice(5, -1).split(',').map(Number);
+      const [year, month, day, hour, minute, second] = component.Date.slice(
+        5,
+        -1,
+      )
+        .split(",")
+        .map(Number);
       const date = new Date(year, month, day, hour, minute, second);
 
       if (new Date() < date) {
-        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        const months = ["January", "February", "March", "April", "May", "June", 
-                        "July", "August", "September", "October", "November", "December"];
-        component.Date = days[date.getDay()] + ", " + months[month] + " " + day + ", " + year + " " + (hour % 12 == 0 ? 12 : hour % 12) + ":" + (minute < 10 ? "0" : "") + minute + " " + (hour >= 12 ? "PM" : "AM");
+        const days = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+        const months = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+        component.Date =
+          days[date.getDay()] +
+          ", " +
+          months[month] +
+          " " +
+          day +
+          ", " +
+          year +
+          " " +
+          (hour % 12 == 0 ? 12 : hour % 12) +
+          ":" +
+          (minute < 10 ? "0" : "") +
+          minute +
+          " " +
+          (hour >= 12 ? "PM" : "AM");
         tempArray.push(component);
 
         if (tempArray.length === 3) {
           formattedArray.push(tempArray);
           tempArray = [];
         }
-      } 
+      }
     }
 
     if (tempArray.length > 0) {
