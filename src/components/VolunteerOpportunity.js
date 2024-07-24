@@ -23,29 +23,33 @@ export default function VolunteerOpportunity({
         })
       }
     >
-      <Image
-        style={styles.image}
-        // source={require("./../assets/warm-springs-bart.png")}
-        source={{ width: 0, height: 0, uri: image }}
-      />
-      <View>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.info}>
-          <Image
-            style={styles.icon}
-            source={require("./../assets/clock.png")}
-          />
-          {"  "}
-          {date}
-        </Text>
-        <Text style={styles.info}>
-          <Image
-            style={styles.icon}
-            source={require("./../assets/location.png")}
-          />
-          {"  "}
-          {location}
-        </Text>
+      <View style={{ flexDirection: "row" }}>
+        <Image
+          style={styles.image}
+          // source={require("./../assets/warm-springs-bart.png")}
+          source={{ width: 0, height: 0, uri: image }}
+        />
+        <View style={{ flexDirection: "column", alignSelf: "center" }}>
+          <Text style={styles.title}>
+            {title.length <= 22 ? title : title.slice(0, 22) + "..."}
+          </Text>
+          <Text style={styles.info}>
+            <Image
+              style={styles.icon}
+              source={require("./../assets/clock.png")}
+            />
+            {"  "}
+            {date}
+          </Text>
+          <Text style={styles.info}>
+            <Image
+              style={styles.icon}
+              source={require("./../assets/location.png")}
+            />
+            {"  "}
+            {location}
+          </Text>
+        </View>
       </View>
       <Image
         style={styles.caret}
@@ -59,6 +63,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     backgroundColor: "#f5f5f5",
     borderTopRightRadius: 50,
     borderBottomRightRadius: 50,
@@ -95,7 +100,7 @@ const styles = StyleSheet.create({
   caret: {
     width: 20,
     height: 50,
-    marginLeft: 30,
+    marginRight: 30,
     transform: [{ rotateZ: "180deg" }],
   },
 });
