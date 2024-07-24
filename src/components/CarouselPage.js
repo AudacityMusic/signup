@@ -6,6 +6,7 @@ import Carousel from "react-native-reanimated-carousel";
 
 export default function CarouselPage({ navigation, data }) {
   const [dotIndex, setDotIndex] = useState(0);
+
   const renderItem = ({ item }) => {
     return (
       <View>
@@ -16,9 +17,9 @@ export default function CarouselPage({ navigation, data }) {
               title={component.Title}
               location={component.Location}
               date={component.Date}
-              image={component.Image}
-              description={component.Description}
-              tags={component.Tags.split(",").map(str => str.trim()).filter(str => str.length > 0)}
+              image={component.Image == undefined ? "https://placehold.co/600x400" : component.Image}
+              description={component.Description == undefined ? "" : component.Description}
+              tags={component.Tags == undefined ? [] : component.Tags.split(",").map(str => str.trim()).filter(str => str.length > 0)}
               key={index}
             />
           );

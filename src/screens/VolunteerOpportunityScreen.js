@@ -57,14 +57,20 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
             <Text style={styles.detailsText}>{location}</Text>
           </View>
         </View>
-        <View style={styles.about}>
-          <Heading>About</Heading>
-          <Text style={{ fontSize: 14 }}>{description}</Text>
-        </View>
-        <View style={styles.tagsContainer}>
-          <Heading>Tags</Heading>
-          <View style={styles.tags}>{tagsIcons}</View>
-        </View>
+        { description != "" ?
+          <View style={styles.about}>
+            <Heading>About</Heading>
+            <Text style={{ fontSize: 14 }}>{description}</Text>
+          </View>
+          : null
+        }
+        { tags.length > 0 ?
+          <View style={styles.tagsContainer}>
+            <Heading>Tags</Heading>
+            <View style={styles.tags}>{tagsIcons}</View>
+          </View>
+          : null
+        }
         <Pressable
           style={styles.signUpButton}
           onPress={() => navigation.navigate("Volunteer Form")}
