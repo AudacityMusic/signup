@@ -35,7 +35,7 @@ export default function VolunteerOpportunity({
             style={styles.icon}
             source={require("./../assets/clock.png")}
           />
-          {time}
+          {date}
         </Text>
         <Text style={styles.info}>
           <Image
