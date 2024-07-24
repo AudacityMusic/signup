@@ -24,7 +24,14 @@ export default function UploadButton({ title, state, setState }) {
   const [fileName, setFileName] = useState(null);
 
   return (
-    <View>
+    <View
+      onLayout={(event) => {
+        setState((prevState) => ({
+          ...prevState,
+          y: event.nativeEvent.layout.y,
+        }));
+      }}
+    >
       <Text style={styles.label}>{title}</Text>
       {fileName == null ? null : (
         <Text style={styles.otherInfo}>{fileName}</Text>

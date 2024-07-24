@@ -6,7 +6,7 @@ import Profile from "../components/Profile.js";
 export default function AccountScreen({ navigation }) {
   return (
     <View style={{ height: "100%" }}>
-      <Profile />
+      <Profile></Profile>
       <LogOutButton navigation={navigation} />
     </View>
   );

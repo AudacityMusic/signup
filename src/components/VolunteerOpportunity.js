@@ -35,6 +35,7 @@ export default function VolunteerOpportunity({
             style={styles.icon}
             source={require("./../assets/clock.png")}
           />
+          {"  "}
           {date}
         </Text>
         <Text style={styles.info}>
@@ -42,6 +43,7 @@ export default function VolunteerOpportunity({
             style={styles.icon}
             source={require("./../assets/location.png")}
           />
+          {"  "}
           {location}
         </Text>
       </View>
