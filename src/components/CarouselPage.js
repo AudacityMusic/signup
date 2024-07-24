@@ -18,7 +18,7 @@ export default function CarouselPage({ navigation, data }) {
               date={component.Date}
               image={component.Image}
               description={component.Description}
-              tags={component.Tags.split(", ")}
+              tags={component.Tags.split(",").filter(str => str.length > 0)}
               key={index}
             />
           );
