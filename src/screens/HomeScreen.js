@@ -17,6 +17,9 @@ export default function HomeScreen({ navigation }) {
         tempArray = [];
       }
     }
+    if (tempArray.length > 0) {
+      formattedArray.push(tempArray);
+    }
     return formattedArray;
   }
   const testData = [
@@ -70,6 +73,12 @@ export default function HomeScreen({ navigation }) {
     },
     {
       title: "Library Music Hour9",
+      location: "Fremont Main Libary",
+      time: "Saturday, August 10, 2024 2:30 PM",
+      imagePath: "./../assets/warm-springs-bart.png",
+    },
+    {
+      title: "Library Music Hour10",
       location: "Fremont Main Libary",
       time: "Saturday, August 10, 2024 2:30 PM",
       imagePath: "./../assets/warm-springs-bart.png",
