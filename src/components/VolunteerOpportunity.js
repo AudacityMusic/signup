@@ -23,14 +23,16 @@ export default function VolunteerOpportunity({
         })
       }
     >
-      <View style={{flexDirection: "row"}}>
+      <View style={{ flexDirection: "row" }}>
         <Image
           style={styles.image}
           // source={require("./../assets/warm-springs-bart.png")}
           source={{ width: 0, height: 0, uri: image }}
         />
         <View style={{ flexDirection: "column", alignSelf: "center" }}>
-          <Text style={styles.title}>{title.length <= 22 ? title : title.slice(0, 22) + "..."}</Text>
+          <Text style={styles.title}>
+            {title.length <= 22 ? title : title.slice(0, 22) + "..."}
+          </Text>
           <Text style={styles.info}>
             <Image
               style={styles.icon}
