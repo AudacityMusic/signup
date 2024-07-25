@@ -12,7 +12,8 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 
-import { getUser } from "../utils";
+import forms from "../constants/forms";
+import { getUser, submitForm } from "../utils";
 
 import TextField from "../components/TextField";
 import CheckBoxQuery from "../components/CheckBoxQuery";
@@ -31,7 +32,9 @@ class Question {
   }
 }
 
-export default function VolunteerFormScreen() {
+export default function VolunteerFormScreen({ route }) {
+  const { title, location, date } = route.params;
+
   function emptyQuestionState(initial = null) {
     return useState({ value: initial, y: null, valid: true });
   }
@@ -68,20 +71,11 @@ export default function VolunteerFormScreen() {
   const [timeLimit, setTimeLimit] = useState(0);
 
   const performanceOptions = {
-    individual: { label: "Individual performance only", timeLimit: 8 },
-    individualPresentation: {
-      label: "Individual performance and music instrument presentation",
-      timeLimit: 12,
-    },
-    group: { label: "Group performance only", timeLimit: 15 },
-    groupPresentation: {
-      label: "Group performance and music instrument presentation",
-      timeLimit: 20,
-    },
-    ensemble: {
-      label: "Library Band Ensemble\n(Band, Orchestra, or Choir)",
-      timeLimit: 60,
-    },
+    "Individual performance only": 8,
+    "Individual performance and music instrument presentation": 12,
+    "Group performance only": 15,
+    "Group performance and music instrument presentation": 20,
+    "Library Band Ensemble (Band, Orchestra, or Choir)": 60,
   };
 
   const isAtLeast = (value, len) => value?.trim().length >= len;
@@ -186,12 +180,12 @@ export default function VolunteerFormScreen() {
         <MultipleChoice
           title="Performance Type"
           options={performanceOptions}
-          onSelect={(text) => {
+          onSelect={(option) => {
             setPerformanceType((prevState) => ({
               ...prevState,
-              value: text,
+              value: option,
             }));
-            setTimeLimit(performanceOptions[text].timeLimit);
+            setTimeLimit(performanceOptions[option]);
           }}
           key="performanceType"
           state={performanceType}
@@ -289,7 +283,7 @@ export default function VolunteerFormScreen() {
         />
       ),
 
-      isVisible: () => performanceType.value == "ensemble",
+      isVisible: () => performanceType.value?.includes("Ensemble"),
 
       // Only PDF files can be uploaded
       validate: () => (ensembleProfile.value?.size ?? 1000000000) <= 104857600, // There are 104,857,600 bytes in 100 MB
@@ -307,7 +301,7 @@ export default function VolunteerFormScreen() {
     }),
   ];
 
-  function validate() {
+  function submit() {
     let allValid = true;
     let minInvalidY = Infinity;
 
@@ -326,16 +320,64 @@ export default function VolunteerFormScreen() {
       }
     }
 
-    if (allValid) {
-      Alert.alert("All good!");
+    if (!allValid) {
+      scrollObject.scrollTo({
+        x: 0,
+        y: minInvalidY,
+        animated: true,
+      });
       return;
     }
 
-    scrollObject.scrollTo({
-      x: 0,
-      y: minInvalidY,
-      animated: true,
-    });
+    if (!forms.hasOwnProperty(title)) {
+      Alert.alert(`Form "${title}" is not implemented`);
+      return;
+    }
+
+    const form = forms[title];
+    const formData = new FormData();
+
+    if (title == "Library Music Hour") {
+      formData.append(`entry.${form.location}`, location);
+      formData.append(`entry.${form.date}`, date);
+      formData.append(`entry.${form.fullName}`, fullName.value);
+      formData.append(`entry.${form.city}`, city.value);
+      formData.append(`entry.${form.phoneNumber}`, phoneNumber.value);
+      formData.append(`entry.${form.age}`, age.value);
+      formData.append(`entry.${form.musicPiece}`, musicPiece.value);
+      formData.append(`entry.${form.composer}`, composer.value);
+      formData.append(`entry.${form.instrument}`, instrument.value);
+      formData.append(`entry.${form.length}`, length.value);
+      formData.append(`entry.${form.recordingLink}`, recordingLink.value);
+      formData.append(`entry.${form.performanceType}`, performanceType.value);
+      formData.append(
+        `entry.${form.publicPermission}`,
+        publicPermission.value ? "Yes" : "No",
+      );
+      formData.append(
+        `entry.${form.parentalConsent}`,
+        parentalConsent.value == null
+          ? ""
+          : parentalConsent.value
+            ? "Yes"
+            : "No",
+      );
+      formData.append(
+        `entry.${form.pianoAccompaniment}`,
+        pianoAccompaniment.value ?? "",
+      );
+      formData.append(
+        `entry.${form.ensembleProfile}`,
+        ensembleProfile.value ?? "",
+      );
+      formData.append(`entry.${form.otherInfo}`, otherInfo.value ?? "");
+    }
+
+    if (submitForm(form.id, formData)) {
+      Alert.alert(`Form "${title}" submitted!`);
+    } else {
+      Alert.alert("Error: Check console");
+    }
   }
 
   return (
@@ -367,7 +409,7 @@ export default function VolunteerFormScreen() {
                 .filter((question) => question.isVisible())
                 .map((question) => question.component)}
             </View>
-            <Pressable style={styles.nextButton} onPress={() => validate()}>
+            <Pressable style={styles.nextButton} onPress={() => submit()}>
               <NextButton />
             </Pressable>
           </View>

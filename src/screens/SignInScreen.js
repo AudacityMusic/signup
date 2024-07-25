@@ -47,7 +47,7 @@ export default function SignInScreen({ navigation }) {
                 switch (error.code) {
                   case statusCodes.SIGN_IN_CANCELLED:
                     // user cancelled the login flow
-                    console.error("Cancelled");
+                    console.log("Cancelled");
                     break;
                   case statusCodes.IN_PROGRESS:
                     // operation (eg. sign in) already in progress

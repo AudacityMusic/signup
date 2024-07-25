@@ -71,7 +71,9 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
         ) : null}
         <Pressable
           style={styles.signUpButton}
-          onPress={() => navigation.navigate("Volunteer Form")}
+          onPress={() =>
+            navigation.navigate("Volunteer Form", { title, location, date })
+          }
         >
           <SignUpButton />
         </Pressable>

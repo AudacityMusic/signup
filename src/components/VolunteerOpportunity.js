@@ -14,12 +14,12 @@ export default function VolunteerOpportunity({
       style={styles.container}
       onPress={() =>
         navigation.navigate("Volunteer Opportunity", {
-          title: title,
-          location: location,
-          date: date,
-          image: image,
-          description: description,
-          tags: tags,
+          title,
+          location,
+          date,
+          image,
+          description,
+          tags,
         })
       }
     >
