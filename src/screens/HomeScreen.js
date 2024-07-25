@@ -74,7 +74,6 @@ export default function HomeScreen({ navigation }) {
       formattedArray.push(tempArray);
     }
 
-    console.log(formattedArray);
     return formattedArray;
   }
 
@@ -89,8 +88,6 @@ export default function HomeScreen({ navigation }) {
       setData(data);
     });
   }, []);
-
-  console.log(JSON.stringify(data));
 
   return (
     <ScrollView style={styles.container}>

@@ -11,10 +11,7 @@ const uploadFile = async () => {
     });
     return file;
   } catch (error) {
-    if (DocumentPicker.isCancel(error)) {
-      console.log(error);
-      throw "CANCELLED";
-    } else {
+    if (!DocumentPicker.isCancel(error)) {
       throw error;
     }
   }

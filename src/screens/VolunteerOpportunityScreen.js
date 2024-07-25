@@ -74,7 +74,7 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
           style={styles.signUpButton}
           onPress={() =>
             formURL == null
-              ? navigation.navigate("Volunteer Form")
+              ? navigation.navigate("Volunteer Form", { title, location, date })
               : navigation.navigate("Google Forms", { formURL })
           }
         >

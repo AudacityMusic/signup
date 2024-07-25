@@ -39,7 +39,7 @@ export default function MultipleChoice({
               state.value === key && styles.selectedText,
             ]}
           >
-            {options[key].label}
+            {key}
           </Text>
         </Pressable>
       ))}
