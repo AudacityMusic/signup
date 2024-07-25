@@ -13,9 +13,10 @@ import Tag from "../components/Tag";
 import Heading from "../components/Heading";
 
 export default function VolunteerOpportunityScreen({ route, navigation }) {
-  const { title, location, date, image, description, tags } = route.params;
+  const { title, location, date, image, description, tags, formURL } =
+    route.params;
   const tagsIcons = tags.map((text) => <Tag key={text} text={text} />);
-
+  console.log(formURL);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.banner}>
@@ -72,7 +73,9 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
         <Pressable
           style={styles.signUpButton}
           onPress={() =>
-            navigation.navigate("Volunteer Form", { title, location, date })
+            formURL == null
+              ? navigation.navigate("Volunteer Form", { title, location, date })
+              : navigation.navigate("Google Forms", { formURL })
           }
         >
           <SignUpButton />
