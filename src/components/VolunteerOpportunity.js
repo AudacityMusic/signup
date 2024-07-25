@@ -8,6 +8,7 @@ export default function VolunteerOpportunity({
   image,
   description,
   tags,
+  formURL,
 }) {
   return (
     <Pressable
@@ -20,6 +21,7 @@ export default function VolunteerOpportunity({
           image: image,
           description: description,
           tags: tags,
+          formURL: formURL
         })
       }
     >

@@ -32,6 +32,7 @@ export default function CarouselPage({ navigation, data }) {
                       .map((str) => str.trim())
                       .filter((str) => str.length > 0)
               }
+              formURL={component["Form Link"] == undefined ? null : component["Form Link"]}
               key={index}
             />
           );

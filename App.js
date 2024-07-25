@@ -11,6 +11,7 @@ import HomeScreen from "./src/screens/HomeScreen";
 import AccountScreen from "./src/screens/AccountScreen";
 import SignInScreen from "./src/screens/SignInScreen";
 import VolunteerFormScreen from "./src/screens/VolunteerFormScreen";
+import EmbeddedFormScreen from "./src/screens/EmbeddedFormScreen";
 import VolunteerOpportunityScreen from "./src/screens/VolunteerOpportunityScreen";
 import HomeHeader from "./src/components/HomeHeader";
 
@@ -75,6 +76,7 @@ export default function App() {
           }}
         />
         <Stack.Screen name="Volunteer Form" component={VolunteerFormScreen} />
+        <Stack.Screen name="Google Forms" component={EmbeddedFormScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
