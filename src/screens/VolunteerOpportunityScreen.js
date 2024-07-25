@@ -13,7 +13,8 @@ import Tag from "../components/Tag";
 import Heading from "../components/Heading";
 
 export default function VolunteerOpportunityScreen({ route, navigation }) {
-  const { title, location, date, image, description, tags, formURL } = route.params;
+  const { title, location, date, image, description, tags, formURL } =
+    route.params;
   const tagsIcons = tags.map((text) => <Tag key={text} text={text} />);
   console.log(formURL);
   return (
@@ -71,7 +72,11 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
         ) : null}
         <Pressable
           style={styles.signUpButton}
-          onPress={() => formURL == null ? navigation.navigate("Volunteer Form") : navigation.navigate("Google Forms", {formURL})}
+          onPress={() =>
+            formURL == null
+              ? navigation.navigate("Volunteer Form")
+              : navigation.navigate("Google Forms", { formURL })
+          }
         >
           <SignUpButton />
         </Pressable>
