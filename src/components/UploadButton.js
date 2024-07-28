@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import DocumentPicker from "react-native-document-picker";
-
+import * as fs from "react-native-fs";
+import { GDrive, MimeTypes } from "@robinbobin/react-native-google-drive-api-wrapper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../constants/colors";
 
 const uploadFile = async () => {
@@ -16,6 +18,19 @@ const uploadFile = async () => {
     }
   }
 };
+
+async function getAccessTokens() {
+  try {
+    const accessToken = await AsyncStorage.getItem("access-token");
+    console.log(accessToken);
+    if (accessToken === null) {
+      throw "EMPTY access token";
+    }
+    return accessToken;
+  } catch (error) {
+    throw error;
+  }
+}
 
 export default function UploadButton({ title, state, setState }) {
   const [fileName, setFileName] = useState(null);
@@ -36,11 +51,34 @@ export default function UploadButton({ title, state, setState }) {
       <Pressable
         style={styles.upload}
         onPress={async () => {
+          console.log("PRESSED");
+          const [accessToken, setAccessToken] = useState(null);
+
+          useEffect(() => {
+            console.log('INSIDE');
+            getAccessTokens().then(setAccessToken);
+            console.log('~OUTSIDE');
+          }, []);
+
+          const googleDrive = new GDrive();
+          googleDrive.accessToken = accessToken;
+          console.log(`AccessToken: ${accessToken}`);
+
           const file = await uploadFile();
+
+          const id = (await googleDrive.files.newMultipartUploader()
+                      .setData(await fs.readFile(file.uri), MimeTypes.PDF)
+                      .setRequestBody({
+                        name: "multipart_bin"
+                      })
+                      .execute()).id;
+
+          console.log(id);
           setFileName(file?.name);
+
           setState((prevState) => ({
             ...prevState,
-            value: file,
+            value: `https://drive.google.com/open?id=${id}`,
           }));
         }}
       >

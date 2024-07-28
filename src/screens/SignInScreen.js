@@ -40,7 +40,8 @@ export default function SignInScreen({ navigation }) {
               await GoogleSignin.hasPlayServices();
               const userInfo = await GoogleSignin.signIn();
               AsyncStorage.setItem("user", JSON.stringify(userInfo.user));
-              console.log(userInfo);
+              AsyncStorage.setItem("access-token", (await GoogleSignin.getTokens()).accessToken)
+              console.log((await GoogleSignin.getTokens()).accessToken);
               navigation.navigate("Home");
             } catch (error) {
               if (isErrorWithCode(error)) {
