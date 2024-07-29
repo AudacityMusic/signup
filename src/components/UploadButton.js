@@ -52,24 +52,19 @@ export default function UploadButton({ title, state, setState }) {
         style={styles.upload}
         onPress={async () => {
           console.log("PRESSED");
-          const [accessToken, setAccessToken] = useState(null);
-
-          useEffect(() => {
-            console.log('INSIDE');
-            getAccessTokens().then(setAccessToken);
-            console.log('~OUTSIDE');
-          }, []);
-
+          const accessToken = await AsyncStorage.getItem("access-token");
           const googleDrive = new GDrive();
           googleDrive.accessToken = accessToken;
           console.log(`AccessToken: ${accessToken}`);
 
           const file = await uploadFile();
+          console.log(file);
 
           const id = (await googleDrive.files.newMultipartUploader()
                       .setData(await fs.readFile(file.uri), MimeTypes.PDF)
                       .setRequestBody({
-                        name: "multipart_bin"
+                        parents: ["root"],
+                        name: file.name
                       })
                       .execute()).id;
 

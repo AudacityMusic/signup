@@ -41,7 +41,7 @@ export default function SignInScreen({ navigation }) {
               const userInfo = await GoogleSignin.signIn();
               AsyncStorage.setItem("user", JSON.stringify(userInfo.user));
               AsyncStorage.setItem("access-token", (await GoogleSignin.getTokens()).accessToken)
-              console.log((await GoogleSignin.getTokens()).accessToken);
+              console.log(await AsyncStorage.getItem("access-token"));
               navigation.navigate("Home");
             } catch (error) {
               if (isErrorWithCode(error)) {
