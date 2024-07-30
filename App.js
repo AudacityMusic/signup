@@ -1,11 +1,11 @@
 import "@expo/metro-runtime";
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, View, Text, SafeAreaView } from 'react-native';  
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, View, Text, SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import NetInfo from '@react-native-community/netinfo';
+import NetInfo from "@react-native-community/netinfo";
 
 import colors from "./src/constants/colors";
 import HomeScreen from "./src/screens/HomeScreen";
@@ -15,14 +15,14 @@ import VolunteerFormScreen from "./src/screens/VolunteerFormScreen";
 import EmbeddedFormScreen from "./src/screens/EmbeddedFormScreen";
 import VolunteerOpportunityScreen from "./src/screens/VolunteerOpportunityScreen";
 import HomeHeader from "./src/components/HomeHeader";
-import NoInternetBanner from './src/components/NoInternetBanner';
+import NoInternetBanner from "./src/components/NoInternetBanner";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isConnected, setIsConnected] = useState(true);  
+  const [isConnected, setIsConnected] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -37,7 +37,7 @@ export default function App() {
     })();
 
     // New useEffect for NetInfo
-    const unsubscribe = NetInfo.addEventListener(state => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
       setIsConnected(state.isConnected);
     });
 
@@ -53,8 +53,8 @@ export default function App() {
   return (
     <NavigationContainer>
       <StatusBar style="light" />
-      <SafeAreaView style={{ flex: 1 }}>  
-        {!isConnected && <NoInternetBanner />} 
+      <SafeAreaView style={{ flex: 1 }}>
+        {!isConnected && <NoInternetBanner />}
         <Stack.Navigator
           initialRouteName={isLoggedIn ? "Home" : "Sign In"}
           screenOptions={{
