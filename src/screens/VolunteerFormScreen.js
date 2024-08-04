@@ -20,6 +20,7 @@ import CheckBoxQuery from "../components/CheckBoxQuery";
 import UploadButton from "../components/UploadButton";
 import NextButton from "../components/NextButton";
 import MultipleChoice from "../components/MultipleChoice";
+import EndScreen from "./EndScreen";
 
 class Question {
   constructor({ component, validate = (_) => true, isVisible = () => true }) {
@@ -374,9 +375,9 @@ export default function VolunteerFormScreen({ route }) {
     }
 
     if (submitForm(form.id, formData)) {
-      Alert.alert(`Form "${title}" submitted!`);
+      return <EndScreen success={true} />;
     } else {
-      Alert.alert("Error: Check console");
+      return <EndScreen success={false} />;
     }
   }
 
