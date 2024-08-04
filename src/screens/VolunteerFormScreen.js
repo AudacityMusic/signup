@@ -20,6 +20,7 @@ import CheckBoxQuery from "../components/CheckBoxQuery";
 import UploadButton from "../components/UploadButton";
 import NextButton from "../components/NextButton";
 import MultipleChoice from "../components/MultipleChoice";
+
 import EndScreen from "./EndScreen";
 
 class Question {
@@ -33,7 +34,7 @@ class Question {
   }
 }
 
-export default function VolunteerFormScreen({ route }) {
+export default function VolunteerFormScreen({ navigation, route }) {
   const { title, location, date } = route.params;
 
   function emptyQuestionState(initial = null) {
@@ -375,9 +376,9 @@ export default function VolunteerFormScreen({ route }) {
     }
 
     if (submitForm(form.id, formData)) {
-      return <EndScreen success={true} />;
+      navigation.navigate("End", { isSuccess: true });
     } else {
-      return <EndScreen success={false} />;
+      navigation.navigate("End", { isSuccess: false });
     }
   }
 

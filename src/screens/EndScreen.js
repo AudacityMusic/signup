@@ -1,28 +1,39 @@
-import { View, Image, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-export default function AccountScreen({ navigation, success }) {
+export default function EndScreen({ route }) {
+  const { isSuccess } = route.params;
+
   return (
-    <View
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        flex: 1,
-      }}
-    >
+    <View style={styles.container}>
       <Ionicons
-        name={success ? "checkmark-circle" : "close-circle"}
+        name={isSuccess ? "checkmark-circle" : "close-circle"}
         size={144}
-        color={success ? "green" : "red"}
-        style={{ marginBottom: "15%" }}
+        color={isSuccess ? "green" : "red"}
+        style={styles.icon}
       />
-      <Text style={{ justifyContent: "center", fontSize: 24 }}>
-        {success
+      <Text style={styles.message}>
+        {isSuccess
           ? "Form submitted successfully"
-          : "Error: Form submission was unsuccessful, try again later."}
+          : "Error: Form submission was unsuccessful. Please contact the IT team for assistance."}
       </Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 0.9,
+  },
+  icon: {
+    marginBottom: "5%",
+  },
+  message: {
+    justifyContent: "center",
+    fontSize: 24,
+  },
+});
