@@ -79,7 +79,7 @@ export default function HomeScreen({ navigation }) {
 
   const [data, setData] = useState([]);
 
-  useEffect(() => {
+  const onRefreshPress = () => {
     const parser = new PublicGoogleSheetsParser(
       process.env.EXPO_PUBLIC_SHEET_ID,
       { sheetName: process.env.EXPO_PUBLIC_SHEET_NAME },
@@ -87,12 +87,18 @@ export default function HomeScreen({ navigation }) {
     parser.parse().then((data) => {
       setData(data);
     });
+  };
+  useEffect(() => {
+    onRefreshPress();
   }, []);
 
   return (
     <ScrollView style={styles.container}>
-      <Heading>Volunteer Opportunities</Heading>
-      <CarouselPage navigation={navigation} data={formatData(data)} />
+      <CarouselPage
+        navigation={navigation}
+        data={formatData(data)}
+        onRefreshPress={onRefreshPress}
+      />
       <Heading>Other Opportunities</Heading>
       <OtherOpportunities />
       <Heading>Websites</Heading>

@@ -1,7 +1,7 @@
 import { View, Image, Text } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-export default function AccountScreen({ navigation, success }) {
+export default function AccountScreen({ success }) {
   return (
     <View
       style={{

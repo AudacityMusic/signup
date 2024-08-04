@@ -14,6 +14,7 @@ import VolunteerFormScreen from "./src/screens/VolunteerFormScreen";
 import EmbeddedFormScreen from "./src/screens/EmbeddedFormScreen";
 import VolunteerOpportunityScreen from "./src/screens/VolunteerOpportunityScreen";
 import HomeHeader from "./src/components/HomeHeader";
+import EndScreen from "./src/screens/EndScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,7 +43,7 @@ export default function App() {
     <NavigationContainer>
       <StatusBar style="light" />
       <Stack.Navigator
-        initialRouteName={isLoggedIn ? "Home" : "Sign In"}
+        initialRouteName={isLoggedIn ? "Home" : "Sign Up"}
         screenOptions={{
           headerStyle: {
             backgroundColor: colors.primary,
@@ -77,6 +78,7 @@ export default function App() {
         />
         <Stack.Screen name="Volunteer Form" component={VolunteerFormScreen} />
         <Stack.Screen name="Google Forms" component={EmbeddedFormScreen} />
+        <Stack.Screen name="Form End" component={EndScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
