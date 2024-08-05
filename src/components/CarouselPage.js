@@ -1,10 +1,5 @@
 import { useState } from "react";
-import {
-  Alert,
-  Pressable,
-  StyleSheet,
-  View,
-} from "react-native";
+import { Alert, Pressable, StyleSheet, View } from "react-native";
 import AnimatedDotsCarousel from "react-native-animated-dots-carousel";
 import VolunteerOpportunity from "./VolunteerOpportunity";
 import Carousel from "react-native-reanimated-carousel";
