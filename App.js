@@ -13,8 +13,8 @@ import SignInScreen from "./src/screens/SignInScreen";
 import VolunteerFormScreen from "./src/screens/VolunteerFormScreen";
 import EmbeddedFormScreen from "./src/screens/EmbeddedFormScreen";
 import VolunteerOpportunityScreen from "./src/screens/VolunteerOpportunityScreen";
-import HomeHeader from "./src/components/HomeHeader";
 import EndScreen from "./src/screens/EndScreen";
+import HomeHeader from "./src/components/HomeHeader";
 
 const Stack = createNativeStackNavigator();
 
@@ -78,7 +78,14 @@ export default function App() {
         />
         <Stack.Screen name="Volunteer Form" component={VolunteerFormScreen} />
         <Stack.Screen name="Google Forms" component={EmbeddedFormScreen} />
-        <Stack.Screen name="Form End" component={EndScreen} />
+        <Stack.Screen
+          name="End"
+          component={EndScreen}
+          options={{
+            title: null,
+            headerBackVisible: false,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
