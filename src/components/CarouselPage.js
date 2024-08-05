@@ -1,8 +1,6 @@
 import { useState } from "react";
 import {
   Alert,
-  Animated,
-  Easing,
   Pressable,
   StyleSheet,
   View,
