@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, ScrollView, Alert } from "react-native";
 
 import OtherOpportunities from "../components/OtherOpportunities";
 import Heading from "../components/Heading";
@@ -79,7 +79,7 @@ export default function HomeScreen({ navigation }) {
 
   const [data, setData] = useState([]);
 
-  useEffect(() => {
+  const onRefresh = () => {
     const parser = new PublicGoogleSheetsParser(
       process.env.EXPO_PUBLIC_SHEET_ID,
       { sheetName: process.env.EXPO_PUBLIC_SHEET_NAME },
@@ -87,12 +87,17 @@ export default function HomeScreen({ navigation }) {
     parser.parse().then((data) => {
       setData(data);
     });
+  };
+  useEffect(() => {
+    onRefresh();
   }, []);
-
   return (
     <ScrollView style={styles.container}>
-      <Heading>Volunteer Opportunities</Heading>
-      <CarouselPage navigation={navigation} data={formatData(data)} />
+      <CarouselPage
+        navigation={navigation}
+        data={formatData(data)}
+        onRefresh={onRefresh}
+      />
       <Heading>Other Opportunities</Heading>
       <OtherOpportunities />
       <Heading>Websites</Heading>

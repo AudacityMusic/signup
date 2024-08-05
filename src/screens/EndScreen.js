@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-export default function EndScreen({ route }) {
+export default function EndScreen({ route, navigation }) {
   const { isSuccess } = route.params;
 
   return (
@@ -17,6 +17,22 @@ export default function EndScreen({ route }) {
           ? "Form submitted successfully"
           : "Error: Form submission was unsuccessful. Please contact the IT team for assistance."}
       </Text>
+      <Pressable
+        onPress={() => {
+          navigation.navigate("Home");
+        }}
+      >
+        <Text
+          style={{
+            paddingTop: "2%",
+            textDecorationLine: "underline",
+            fontSize: 22,
+            fontWeight: "bold",
+          }}
+        >
+          Return to Home
+        </Text>
+      </Pressable>
     </View>
   );
 }
