@@ -21,6 +21,8 @@ import UploadButton from "../components/UploadButton";
 import NextButton from "../components/NextButton";
 import MultipleChoice from "../components/MultipleChoice";
 
+import EndScreen from "./EndScreen";
+
 class Question {
   constructor({ component, validate = (_) => true, isVisible = () => true }) {
     this.component = component;
@@ -32,7 +34,7 @@ class Question {
   }
 }
 
-export default function VolunteerFormScreen({ route }) {
+export default function VolunteerFormScreen({ navigation, route }) {
   const { title, location, date } = route.params;
 
   function emptyQuestionState(initial = null) {
@@ -374,9 +376,9 @@ export default function VolunteerFormScreen({ route }) {
     }
 
     if (submitForm(form.id, formData)) {
-      Alert.alert(`Form "${title}" submitted!`);
+      navigation.navigate("End", { isSuccess: true });
     } else {
-      Alert.alert("Error: Check console");
+      navigation.navigate("End", { isSuccess: false });
     }
   }
 
