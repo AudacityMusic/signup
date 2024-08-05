@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function EndScreen({ route, navigation }) {
-  const isSuccess = true;
+  const { isSuccess } = route.params;
   return (
     <View style={styles.container}>
       <Ionicons
