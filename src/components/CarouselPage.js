@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import {
+  Alert,
+  Animated,
+  Easing,
+  Pressable,
+  StyleSheet,
+  View,
+} from "react-native";
 import AnimatedDotsCarousel from "react-native-animated-dots-carousel";
 import VolunteerOpportunity from "./VolunteerOpportunity";
 import Carousel from "react-native-reanimated-carousel";
@@ -8,7 +15,6 @@ import RefreshButton from "./RefreshButton";
 
 export default function CarouselPage({ navigation, data, onRefresh }) {
   const [dotIndex, setDotIndex] = useState(0);
-  const [highlight, setHighlight] = useState(false);
   const renderItem = ({ item }) => {
     return (
       <View>
@@ -48,12 +54,7 @@ export default function CarouselPage({ navigation, data, onRefresh }) {
   };
   const onPress = () => {
     onRefresh();
-  };
-  const onPressIn = () => {
-    setHighlight(!highlight);
-  };
-  const onPressOut = () => {
-    setHighlight(!highlight);
+    Alert.alert("Refreshed!");
   };
 
   return (
@@ -65,17 +66,7 @@ export default function CarouselPage({ navigation, data, onRefresh }) {
         }}
       >
         <Heading>Volunteer Opportunities</Heading>
-        <Pressable
-          onPress={onRefresh}
-          style={({ pressed }) => [
-            {
-              backgroundColor: pressed ? "#D3D3D3" : "rgba(0,0,0,0)",
-              borderRadius: 40,
-              justifyContent: "center",
-              height: 24,
-            },
-          ]}
-        >
+        <Pressable onPress={onPress}>
           <RefreshButton />
         </Pressable>
       </View>

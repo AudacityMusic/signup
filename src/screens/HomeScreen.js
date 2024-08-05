@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, ScrollView, Alert } from "react-native";
 
 import OtherOpportunities from "../components/OtherOpportunities";
 import Heading from "../components/Heading";
