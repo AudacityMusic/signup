@@ -21,6 +21,7 @@ export default function VolunteerOpportunity({
           image,
           description,
           tags,
+          formURL,
         })
       }
     >
