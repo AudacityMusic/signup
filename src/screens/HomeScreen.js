@@ -93,7 +93,6 @@ export default function HomeScreen({ navigation }) {
   }, []);
   return (
     <ScrollView style={styles.container}>
-      <Heading>Volunteer Opportunities</Heading>
       <CarouselPage
         navigation={navigation}
         data={formatData(data)}
