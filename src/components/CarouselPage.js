@@ -46,17 +46,15 @@ export default function CarouselPage({ navigation, data, onRefresh }) {
       </View>
     );
   };
-  const onPress =()=> {
+  const onPress = () => {
     onRefresh();
-
-  }
-  const onPressIn =()=> {
+  };
+  const onPressIn = () => {
     setHighlight(!highlight);
-  }
-  const onPressOut =()=> {
+  };
+  const onPressOut = () => {
     setHighlight(!highlight);
-  }
-
+  };
 
   return (
     <View>
@@ -67,15 +65,17 @@ export default function CarouselPage({ navigation, data, onRefresh }) {
         }}
       >
         <Heading>Volunteer Opportunities</Heading>
-        <Pressable onPress={onRefresh} style={({pressed}) => [
-          {
-            backgroundColor: pressed ? "#D3D3D3" : "rgba(0,0,0,0)",
-            borderRadius: 40,
-            justifyContent: "center",
-            height:24
-          }
-
-        ]}>
+        <Pressable
+          onPress={onRefresh}
+          style={({ pressed }) => [
+            {
+              backgroundColor: pressed ? "#D3D3D3" : "rgba(0,0,0,0)",
+              borderRadius: 40,
+              justifyContent: "center",
+              height: 24,
+            },
+          ]}
+        >
           <RefreshButton />
         </Pressable>
       </View>
