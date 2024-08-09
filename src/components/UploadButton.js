@@ -51,7 +51,7 @@ export default function UploadButton({ title, state, setState }) {
       <Pressable
         style={styles.upload}
         onPress={async () => {
-          console.log("PRESSED");
+          console.log("PRESSEDDDDDDDDDDDDDD");
           const accessToken = await AsyncStorage.getItem("access-token");
           const googleDrive = new GDrive();
           googleDrive.accessToken = accessToken;
@@ -68,7 +68,7 @@ export default function UploadButton({ title, state, setState }) {
                       })
                       .execute()).id;
 
-          console.log(id);
+          console.log("IDDDDDDDDDD" + id);
           setFileName(file?.name);
 
           setState((prevState) => ({
