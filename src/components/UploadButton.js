@@ -9,7 +9,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../constants/colors";
 
-const uploadFile = async () => {
+const selectFile = async () => {
   try {
     const file = await DocumentPicker.pickSingle({
       type: [DocumentPicker.types.pdf],
@@ -44,17 +44,18 @@ export default function UploadButton({ title, state, setState }) {
           const accessToken = await AsyncStorage.getItem("access-token");
           const googleDrive = new GDrive();
           googleDrive.accessToken = accessToken;
-          googleDrive.fetchTimeout = 3000;
+          googleDrive.fetchTimeout = 5000; // 5 seconds
 
-          const file = await uploadFile();
+          const file = await selectFile();
           console.log(`FILE: ${file.uri}`);
 
-          const fileData = await fs.readFile(file.uri);
+          const fileData = await fs.readFile(file.uri, "base64");
           console.log("FILE DATA");
 
           let id = "";
 
           try {
+            setFileName(`Uploading ${file.name}...`);
             const googleFile = await googleDrive.files
               .newMultipartUploader()
               .setData(fileData, MimeTypes.PDF)
@@ -63,15 +64,19 @@ export default function UploadButton({ title, state, setState }) {
                 name: file.name,
               })
               .execute();
-            console.log(`GOOGLE FILE: ${googleFile}`);
-
             id = googleFile.id;
           } catch (error) {
-            console.error("Error uploading file:", error);
+            if (error.name == "AbortError") {
+              console.error(
+                "File upload aborted. Use a more stable Internet connection or increase fetchTimeout.",
+              );
+            } else {
+              console.error("Error uploading file:", error);
+            }
           }
 
           console.log(`ID: https://drive.google.com/open?id=${id}`);
-          setFileName(file?.name);
+          setFileName(file.name);
 
           setState((prevState) => ({
             ...prevState,
