@@ -19,7 +19,7 @@ const uploadFile = async () => {
   }
 };
 
-async function getAccessTokens() {
+async function getAccessToken() {
   try {
     const accessToken = await AsyncStorage.getItem("access-token");
     console.log(accessToken);
@@ -52,21 +52,25 @@ export default function UploadButton({ title, state, setState }) {
         style={styles.upload}
         onPress={async () => {
           console.log("PRESSEDDDDDDDDDDDDDD");
-          const accessToken = await AsyncStorage.getItem("access-token");
+          const accessToken = await getAccessToken();
           const googleDrive = new GDrive();
           googleDrive.accessToken = accessToken;
           console.log(`AccessToken: ${accessToken}`);
 
           const file = await uploadFile();
+          console.log(await fs.readFile(file.uri, "base64"));
           console.log(file);
 
           const id = (await googleDrive.files.newMultipartUploader()
-                      .setData(await fs.readFile(file.uri), MimeTypes.PDF)
+                      .setIsBase64(true)
+                      .setData(await fs.readFile(file.uri, "base64"), MimeTypes.PDF)
                       .setRequestBody({
                         parents: ["root"],
                         name: file.name
                       })
                       .execute()).id;
+
+          // googleDrive.permissions.create(id, undefined, {type: "anyone", role: "commenter", allowFileDiscovery: false});
 
           console.log("IDDDDDDDDDD" + id);
           setFileName(file?.name);
