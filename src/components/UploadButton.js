@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import DocumentPicker from "react-native-document-picker";
 import * as fs from "react-native-fs";
-import { GDrive, MimeTypes } from "@robinbobin/react-native-google-drive-api-wrapper";
+import {
+  GDrive,
+  MimeTypes,
+} from "@robinbobin/react-native-google-drive-api-wrapper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../constants/colors";
 
@@ -18,19 +21,6 @@ const uploadFile = async () => {
     }
   }
 };
-
-async function getAccessTokens() {
-  try {
-    const accessToken = await AsyncStorage.getItem("access-token");
-    console.log(accessToken);
-    if (accessToken === null) {
-      throw "EMPTY access token";
-    }
-    return accessToken;
-  } catch (error) {
-    throw error;
-  }
-}
 
 export default function UploadButton({ title, state, setState }) {
   const [fileName, setFileName] = useState(null);
@@ -51,24 +41,36 @@ export default function UploadButton({ title, state, setState }) {
       <Pressable
         style={styles.upload}
         onPress={async () => {
-          console.log("PRESSEDDDDDDDDDDDDDD");
           const accessToken = await AsyncStorage.getItem("access-token");
           const googleDrive = new GDrive();
           googleDrive.accessToken = accessToken;
-          console.log(`AccessToken: ${accessToken}`);
+          googleDrive.fetchTimeout = 3000;
 
           const file = await uploadFile();
-          console.log(file);
+          console.log(`FILE: ${file.uri}`);
 
-          const id = (await googleDrive.files.newMultipartUploader()
-                      .setData(await fs.readFile(file.uri), MimeTypes.PDF)
-                      .setRequestBody({
-                        parents: ["root"],
-                        name: file.name
-                      })
-                      .execute()).id;
+          const fileData = await fs.readFile(file.uri);
+          console.log("FILE DATA");
 
-          console.log("IDDDDDDDDDD" + id);
+          let id = "";
+
+          try {
+            const googleFile = await googleDrive.files
+              .newMultipartUploader()
+              .setData(fileData, MimeTypes.PDF)
+              .setRequestBody({
+                parents: ["root"],
+                name: file.name,
+              })
+              .execute();
+            console.log(`GOOGLE FILE: ${googleFile}`);
+
+            id = googleFile.id;
+          } catch (error) {
+            console.error("Error uploading file:", error);
+          }
+
+          console.log(`ID: https://drive.google.com/open?id=${id}`);
           setFileName(file?.name);
 
           setState((prevState) => ({
