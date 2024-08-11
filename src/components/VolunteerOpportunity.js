@@ -103,6 +103,6 @@ const styles = StyleSheet.create({
     width: 20,
     height: 50,
     transform: [{ rotateZ: "180deg" }],
-    marginRight: 80
+    marginRight: 80,
   },
 });
