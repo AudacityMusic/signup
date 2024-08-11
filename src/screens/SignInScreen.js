@@ -18,7 +18,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 GoogleSignin.configure({
   webClientId: process.env.EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID, // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
   iosClientId: process.env.EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID, // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
-  scopes: ["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/drive", "openid", "profile", "email"]
+  scopes: ["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/drive", "openid", "profile", "email"],
+  offlineAccess: true,
 });
 
 export default function SignInScreen({ navigation }) {

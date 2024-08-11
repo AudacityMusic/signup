@@ -272,7 +272,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
         />
       ),
       // Only PDF files can be uploaded
-      validate: () => (pianoAccompaniment.value?.size ?? 0) <= 104857600, // There are 104,857,600 bytes in 100 MB
+      validate: () => (pianoAccompaniment.value[1] ?? Infinity) <= 104857600, // There are 104,857,600 bytes in 100 MB
     }),
 
     new Question({
@@ -288,7 +288,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
       isVisible: () => performanceType.value?.includes("Ensemble"),
 
       // Only PDF files can be uploaded
-      validate: () => (ensembleProfile.value?.size ?? 1000000000) <= 104857600, // There are 104,857,600 bytes in 100 MB
+      validate: () => (ensembleProfile.value[1] ?? Infinity) <= 104857600, // There are 104,857,600 bytes in 100 MB
     }),
 
     new Question({
@@ -366,11 +366,11 @@ export default function VolunteerFormScreen({ navigation, route }) {
       );
       formData.append(
         `entry.${form.pianoAccompaniment}`,
-        pianoAccompaniment.value ?? "",
+        pianoAccompaniment.value[0] ?? "",
       );
       formData.append(
         `entry.${form.ensembleProfile}`,
-        ensembleProfile.value ?? "",
+        ensembleProfile.value[0] ?? "",
       );
       formData.append(`entry.${form.otherInfo}`, otherInfo.value ?? "");
     }

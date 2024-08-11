@@ -95,7 +95,7 @@ export default function UploadButton({ title, state, setState }) {
 
           setState((prevState) => ({
             ...prevState,
-            value: `https://drive.google.com/open?id=${id}`,
+            value: [`https://drive.google.com/open?id=${id}`, file.size],
           }));
         }}
       >
