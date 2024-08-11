@@ -80,6 +80,12 @@ export default function UploadButton({ title, state, setState }) {
               })
               .execute();
             id = googleFile.id;
+            console.log(`ID Fetching Successful: id=${id}`);
+            await googleDrive.permissions.create(id, {}, {
+              role: "reader",
+              type: "anyone",
+            });
+            console.log("Permissions: everyone (with the link) can view");
           } catch (error) {
             if (error.name == "AbortError") {
               console.error(
