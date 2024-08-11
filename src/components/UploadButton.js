@@ -31,7 +31,7 @@ async function getAccessToken() {
     }
     return accessToken;
   } catch (error) {
-    throw error;
+    console.error(error);
   }
 }
 

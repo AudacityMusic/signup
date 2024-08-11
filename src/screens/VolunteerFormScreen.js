@@ -366,11 +366,11 @@ export default function VolunteerFormScreen({ navigation, route }) {
       );
       formData.append(
         `entry.${form.pianoAccompaniment}`,
-        pianoAccompaniment.value[0] ?? "",
+        pianoAccompaniment.value ? pianoAccompaniment.value[0] : "",
       );
       formData.append(
         `entry.${form.ensembleProfile}`,
-        ensembleProfile.value[0] ?? "",
+        ensembleProfile.value ? ensembleProfile.value[0] : "",
       );
       formData.append(`entry.${form.otherInfo}`, otherInfo.value ?? "");
     }
