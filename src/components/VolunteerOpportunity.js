@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   caret: {
     width: 20,
     height: 50,
-    marginRight: 30,
     transform: [{ rotateZ: "180deg" }],
+    marginRight: 80
   },
 });
