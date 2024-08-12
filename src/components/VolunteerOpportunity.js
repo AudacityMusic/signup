@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 
 export default function VolunteerOpportunity({
@@ -10,6 +12,17 @@ export default function VolunteerOpportunity({
   tags,
   formURL,
 }) {
+  const [isFormSubmitted, setSubmitted] = useState(false);
+  async function getSubmitted() {
+    let submittedForms = JSON.parse(await AsyncStorage.getItem("submittedForms"));
+    for(const item in submittedForms) {
+      if((item[0] === (title+location+date)) && (item[1])) {
+        setSubmitted(!isFormSubmitted);
+      }
+    }
+  }
+  getSubmitted();
+  console.log(isFormSubmitted);
   return (
     <Pressable
       style={styles.container}
@@ -21,7 +34,6 @@ export default function VolunteerOpportunity({
           image,
           description,
           tags,
-          formURL,
         })
       }
     >
@@ -56,6 +68,7 @@ export default function VolunteerOpportunity({
       <Image
         style={styles.caret}
         source={require("./../assets/caret-left.png")}
+        //source={isFormSubmitted ? require("./../assets/checkmark.png") : require("./../assets/caret-left.png")}
       />
     </Pressable>
   );

@@ -22,6 +22,7 @@ import NextButton from "../components/NextButton";
 import MultipleChoice from "../components/MultipleChoice";
 
 import EndScreen from "./EndScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class Question {
   constructor({ component, validate = (_) => true, isVisible = () => true }) {
@@ -374,8 +375,37 @@ export default function VolunteerFormScreen({ navigation, route }) {
       );
       formData.append(`entry.${form.otherInfo}`, otherInfo.value ?? "");
     }
-
+    async function _storeData() {
+      try {
+        let submittedForms = await _retrieveData();
+        submittedForms.append([title+location+date,true])
+        await AsyncStorage.setItem("submittedForms",JSON.stringify(submittedForms));
+      } catch (err) {
+        console.log("Cant set item in submittedForms");
+      }
+    }
+    async function _retrieveData() {
+      try {
+        let data = await AsyncStorage.getItem("submittedForms");
+        return JSON.parse(data);
+      } catch (err) {
+        console.log("Cant get item in submittedForms");
+      }
+    }
+    async function _createNew() {
+      try {
+        let submittedForms = [[title+location+date,true]];
+        await AsyncStorage.setItem("submittedForms",JSON.stringify(submittedForms));
+      } catch(err) {
+        console.log("oh no")
+      }
+    }
     if (submitForm(form.id, formData)) {
+      try {
+        _storeData();
+      } catch(err) {
+        _createNew();
+      }
       navigation.navigate("End", { isSuccess: true });
     } else {
       navigation.navigate("End", { isSuccess: false });
