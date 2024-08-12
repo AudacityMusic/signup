@@ -35,7 +35,12 @@ async function getAccessToken() {
   }
 }
 
-export default function UploadButton({ title, state, setState }) {
+export default function UploadButton({
+  title,
+  state,
+  setState,
+  required = false,
+}) {
   const [fileName, setFileName] = useState(null);
 
   return (
@@ -47,7 +52,10 @@ export default function UploadButton({ title, state, setState }) {
         }));
       }}
     >
-      <Text style={styles.label}>{title}</Text>
+      <Text style={styles.label}>
+        {title}
+        {required ? <Text style={{ color: "red" }}> *</Text> : null}
+      </Text>
       {fileName == null ? null : (
         <Text style={styles.otherInfo}>{fileName}</Text>
       )}
