@@ -33,7 +33,7 @@ export default function VolunteerOpportunity({
         />
         <View style={{ flexDirection: "column", alignSelf: "center" }}>
           <Text style={styles.title}>
-            {title.length <= 19 ? title : title.slice(0, 19) + "..."}
+            {title.length <= 19 ? title : title.slice(0, 16) + "..."}
           </Text>
           <Text style={styles.info}>
             <Image
