@@ -70,7 +70,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
   const [otherInfo, setOtherInfo] = emptyQuestionState();
 
   const [scrollObject, setScrollObject] = useState(null);
-  const [timeLimit, setTimeLimit] = useState(0);
+  const [timeLimit, setTimeLimit] = useState(title == "Library Music Hour" ? 0 : 10);
 
   const performanceOptions = {
     "Individual performance only": 8,
@@ -177,7 +177,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
       validate: isNotEmpty,
     }),
 
-    new Question({
+    ((title == "Library Music Hour") ? new Question({
       component: (
         <MultipleChoice
           title="Performance Type"
@@ -195,7 +195,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
         />
       ),
       validate: isNotEmpty,
-    }),
+    }) : null),
 
     new Question({
       component: (
@@ -273,11 +273,11 @@ export default function VolunteerFormScreen({ navigation, route }) {
       ),
       // Only PDF files can be uploaded
       validate: () =>
-        (pianoAccompaniment.value ? pianoAccompaniment[1] : Infinity) <=
+        (pianoAccompaniment.value ? pianoAccompaniment.value[1] : Infinity) <=
         104857600, // There are 104,857,600 bytes in 100 MB
     }),
 
-    new Question({
+    (title == "Library Music Hour" ? new Question({
       component: (
         <UploadButton
           title="Upload your Library Band Ensemble profile as one PDF file."
@@ -293,7 +293,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
       validate: () =>
         (ensembleProfile.value ? ensembleProfile.value[1] : Infinity) <=
         104857600, // There are 104,857,600 bytes in 100 MB
-    }),
+    }) : null),
 
     new Question({
       component: (
@@ -310,8 +310,12 @@ export default function VolunteerFormScreen({ navigation, route }) {
   function submit() {
     let allValid = true;
     let minInvalidY = Infinity;
-
+    console.log(pianoAccompaniment.value);
     for (const question of questions) {
+      if (question === null) {
+        continue;
+      }
+
       const isValid = question.validate();
       question.setState((prevState) => ({
         ...prevState,
@@ -412,7 +416,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
             </View>
             <View style={styles.form}>
               {questions
-                .filter((question) => question.isVisible())
+                .filter((question) => question !== null && question.isVisible())
                 .map((question) => question.component)}
             </View>
             <Pressable style={styles.nextButton} onPress={() => submit()}>
