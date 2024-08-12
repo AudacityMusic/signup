@@ -33,7 +33,7 @@ export default function VolunteerOpportunity({
         />
         <View style={{ flexDirection: "column", alignSelf: "center" }}>
           <Text style={styles.title}>
-            {title.length <= 22 ? title : title.slice(0, 22) + "..."}
+            {title.length <= 19 ? title : title.slice(0, 19) + "..."}
           </Text>
           <Text style={styles.info}>
             <Image
@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
     borderColor: "#e0e0e0",
     borderWidth: 1,
     marginBottom: 10,
+    marginRight: 10,
   },
   image: {
     width: 80,
@@ -100,9 +101,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   caret: {
-    width: 20,
-    height: 50,
     transform: [{ rotateZ: "180deg" }],
-    marginRight: 80,
+    marginRight: 10,
   },
 });
