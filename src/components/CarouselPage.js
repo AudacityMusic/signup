@@ -38,6 +38,7 @@ export default function CarouselPage({ navigation, data, onRefresh }) {
                   ? null
                   : component["Form Link"]
               }
+              isSubmitted={component.isSubmitted}
               key={index}
             />
           );

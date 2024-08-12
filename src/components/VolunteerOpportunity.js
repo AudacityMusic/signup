@@ -9,6 +9,7 @@ export default function VolunteerOpportunity({
   description,
   tags,
   formURL,
+  isSubmitted,
 }) {
   return (
     <Pressable
@@ -22,6 +23,7 @@ export default function VolunteerOpportunity({
           description,
           tags,
           formURL,
+          isSubmitted,
         })
       }
     >
@@ -54,8 +56,13 @@ export default function VolunteerOpportunity({
         </View>
       </View>
       <Image
-        style={styles.caret}
-        source={require("./../assets/caret-left.png")}
+        style={isSubmitted ? styles.checkmark : styles.caret}
+        //source={require("./../assets/caret-left.png")}
+        source={
+          isSubmitted
+            ? require("./../assets/checkmark.png")
+            : require("./../assets/caret-left.png")
+        }
       />
     </Pressable>
   );
@@ -103,5 +110,11 @@ const styles = StyleSheet.create({
   caret: {
     transform: [{ rotateZ: "180deg" }],
     marginRight: 10,
+  },
+  checkmark: {
+    marginRight: 20,
+    width: 25,
+    height: 25,
+    tintColor: "black",
   },
 });

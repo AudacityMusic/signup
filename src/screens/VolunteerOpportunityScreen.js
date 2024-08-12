@@ -12,9 +12,19 @@ import SignUpButton from "../components/SignUpButton";
 import Tag from "../components/Tag";
 import Heading from "../components/Heading";
 
+import colors from "../constants/colors";
+
 export default function VolunteerOpportunityScreen({ route, navigation }) {
-  const { title, location, date, image, description, tags, formURL } =
-    route.params;
+  const {
+    title,
+    location,
+    date,
+    image,
+    description,
+    tags,
+    formURL,
+    isSubmitted,
+  } = route.params;
   const tagsIcons = tags.map((text) => <Tag key={text} text={text} />);
   console.log(formURL);
   return (
@@ -70,16 +80,26 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
             <View style={styles.tags}>{tagsIcons}</View>
           </View>
         ) : null}
-        <Pressable
-          style={styles.signUpButton}
-          onPress={() =>
-            formURL == null
-              ? navigation.navigate("Volunteer Form", { title, location, date })
-              : navigation.navigate("Google Forms", { formURL })
-          }
-        >
-          <SignUpButton />
-        </Pressable>
+        <View style={styles.lowerRight}>
+          {isSubmitted ? (
+            <Text style={styles.alreadySubmitted}>
+              Warning: You have already submitted this form.
+            </Text>
+          ) : null}
+          <Pressable
+            onPress={() =>
+              formURL == null
+                ? navigation.navigate("Volunteer Form", {
+                    title,
+                    location,
+                    date,
+                  })
+                : navigation.navigate("Google Forms", { formURL })
+            }
+          >
+            <SignUpButton />
+          </Pressable>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -115,7 +135,11 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: 5,
   },
-  signUpButton: {
+  alreadySubmitted: {
+    color: colors.danger,
+    marginBottom: 10,
+  },
+  lowerRight: {
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "flex-end",
