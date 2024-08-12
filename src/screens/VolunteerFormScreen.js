@@ -381,7 +381,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
         submittedForms.append([title+location+date,true])
         await AsyncStorage.setItem("submittedForms",JSON.stringify(submittedForms));
       } catch (err) {
-        console.log("Cant set item in submittedForms");
+        _createNew();
       }
     }
     async function _retrieveData() {
@@ -401,11 +401,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
       }
     }
     if (submitForm(form.id, formData)) {
-      try {
-        _storeData();
-      } catch(err) {
-        _createNew();
-      }
+      _storeData();
       navigation.navigate("End", { isSuccess: true });
     } else {
       navigation.navigate("End", { isSuccess: false });
