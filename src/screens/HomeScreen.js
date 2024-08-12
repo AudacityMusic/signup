@@ -10,7 +10,7 @@ import CarouselPage from "../components/CarouselPage";
 import { PublicGoogleSheetsParser } from "../utils/PublicGoogleSheetsParser";
 import { hashForm } from "../utils";
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, route }) {
   function formatData(data) {
     let formattedArray = [];
     let tempArray = [];
@@ -71,7 +71,7 @@ export default function HomeScreen({ navigation }) {
       "December",
     ];
     const h = hour % 12 == 0 ? 12 : hour % 12;
-    const m = minute < 10 ? "0" : "";
+    const m = (minute < 10 ? "0" : "") + minute;
     const period = hour >= 12 ? "PM" : "AM";
     return `${days[date.getDay()]}, ${months[month]} ${day}, ${year} ${h}:${m} ${period}`;
   }
@@ -110,6 +110,10 @@ export default function HomeScreen({ navigation }) {
   useEffect(() => {
     onRefresh();
   }, []);
+
+  if (route?.params?.shouldRefresh) {
+    onRefresh();
+  }
 
   return (
     <ScrollView style={styles.container}>
