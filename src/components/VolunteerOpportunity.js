@@ -1,7 +1,4 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
-import { hashForm } from "../utils";
 
 export default function VolunteerOpportunity({
   navigation,
@@ -12,26 +9,8 @@ export default function VolunteerOpportunity({
   description,
   tags,
   formURL,
+  isSubmitted,
 }) {
-  const [isFormSubmitted, setSubmitted] = useState(false);
-
-  async function getSubmitted() {
-    try {
-      const submittedForms = await AsyncStorage.getItem("submittedForms");
-      if (submittedForms != null) {
-        const formArray = JSON.parse(submittedForms);
-        const hash = hashForm(title, location, date);
-        setSubmitted(formArray.includes(hash));
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  useEffect(() => {
-    getSubmitted();
-  }, []);
-
   return (
     <Pressable
       style={styles.container}
@@ -43,6 +22,7 @@ export default function VolunteerOpportunity({
           image,
           description,
           tags,
+          formURL,
         })
       }
     >
@@ -75,10 +55,10 @@ export default function VolunteerOpportunity({
         </View>
       </View>
       <Image
-        style={isFormSubmitted ? styles.checkmark : styles.caret}
+        style={isSubmitted ? styles.checkmark : styles.caret}
         //source={require("./../assets/caret-left.png")}
         source={
-          isFormSubmitted
+          isSubmitted
             ? require("./../assets/checkmark.png")
             : require("./../assets/caret-left.png")
         }
