@@ -12,6 +12,10 @@ export async function getUser() {
   }
 }
 
+export function hashForm(title, location, date) {
+  return title + location + date;
+}
+
 export class FormString {
   constructor() {
     this.string = "";

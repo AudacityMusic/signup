@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import { hashForm } from "../utils";
 
 export default function VolunteerOpportunity({
   navigation,
@@ -16,20 +17,21 @@ export default function VolunteerOpportunity({
 
   async function getSubmitted() {
     try {
-      let submittedForms = JSON.parse(
-        await AsyncStorage.getItem("submittedForms"),
-      );
-      submittedForms.forEach((item) => {
-        let combined = title.concat(location, date);
-        if (item[0] === combined && item[1]) {
-          setSubmitted(true);
-        }
-      });
-    } catch (err) {}
+      const submittedForms = await AsyncStorage.getItem("submittedForms");
+      if (submittedForms != null) {
+        const formArray = JSON.parse(submittedForms);
+        const hash = hashForm(title, location, date);
+        setSubmitted(formArray.includes(hash));
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
+
   useEffect(() => {
     getSubmitted();
-  });
+  }, []);
+
   return (
     <Pressable
       style={styles.container}

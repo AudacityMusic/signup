@@ -13,7 +13,7 @@ import {
 } from "react-native";
 
 import forms from "../constants/forms";
-import { getUser, FormString, submitForm } from "../utils";
+import { getUser, FormString, submitForm, hashForm } from "../utils";
 
 import TextField from "../components/TextField";
 import CheckBoxQuery from "../components/CheckBoxQuery";
@@ -21,7 +21,6 @@ import UploadButton from "../components/UploadButton";
 import NextButton from "../components/NextButton";
 import MultipleChoice from "../components/MultipleChoice";
 
-import EndScreen from "./EndScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class Question {
@@ -381,49 +380,27 @@ export default function VolunteerFormScreen({ navigation, route }) {
       );
       formData.append(form.otherInfo, otherInfo.value ?? "");
     }
-    async function _storeData() {
-      try {
-        let submittedForms = JSON.parse(
-          await AsyncStorage.getItem("submittedForms"),
-        );
-        submittedForms.push([title + location + date, true]);
-        await AsyncStorage.setItem(
-          "submittedForms",
-          JSON.stringify(submittedForms),
-        );
-      } catch (err) {
-        _createNew();
-      }
-    }
-    async function _createNew() {
-      console.log("created new ");
-      try {
-        let submittedForms = JSON.parse(
-          await AsyncStorage.getItem("submittedForms"),
-        );
-        if (submittedForms.length === 0) {
-          let newthing = [[title + location + date, true]];
-          await AsyncStorage.setItem(
-            "submittedForms",
-            JSON.stringify(newthing),
-          );
-        } else {
-          submittedForms.push([title + location + date, true]);
-          await AsyncStorage.setItem(
-            "submittedForms",
-            JSON.stringify(submittedForms),
-          );
-        }
-      } catch (err) {
-        console.log("oh no");
-      }
-    }
-    if (submitForm(form.id, formData)) {
-      _storeData();
-      navigation.navigate("End", { isSuccess: true });
-    } else {
+
+    if (!submitForm(form.id, formData)) {
       navigation.navigate("End", { isSuccess: false });
+      return;
     }
+
+    try {
+      const submittedForms = await AsyncStorage.getItem("submittedForms");
+      const hash = hashForm(title, location, date);
+      if (submittedForms == null) {
+        await AsyncStorage.setItem("submittedForms", JSON.stringify([hash]));
+      } else {
+        const newForms = JSON.parse(submittedForms);
+        newForms.push(hash);
+        await AsyncStorage.setItem("submittedForms", JSON.stringify(newForms));
+      }
+    } catch (error) {
+      console.error(`Unable to get/save submittedForms: ${error}`);
+    }
+
+    navigation.navigate("End", { isSuccess: true });
   }
 
   return (
