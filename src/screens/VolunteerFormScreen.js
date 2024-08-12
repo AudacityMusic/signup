@@ -273,7 +273,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
       ),
       // Only PDF files can be uploaded
       validate: () =>
-        (pianoAccompaniment.value ? pianoAccompaniment[1] : Infinity) <=
+        (pianoAccompaniment.value ? pianoAccompaniment.value[1] : Infinity) <=
         104857600, // There are 104,857,600 bytes in 100 MB
     }),
 
