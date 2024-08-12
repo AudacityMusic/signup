@@ -12,13 +12,32 @@ export async function getUser() {
   }
 }
 
+export class FormString {
+  constructor() {
+    this.string = "";
+  }
+
+  append(key, value) {
+    if (this.string.length > 0) {
+      this.string += "&";
+    }
+
+    this.string += `entry.${key}=${encodeURIComponent(value)}`;
+  }
+
+  toString() {
+    return this.string;
+  }
+}
+
 export async function submitForm(formId, formData) {
   const formUrl = `https://docs.google.com/forms/d/e/${formId}/formResponse`;
+  console.log("Form Data: " + formData);
   try {
     console.log(formData);
     const response = await fetch(formUrl, {
       method: "POST",
-      body: formData,
+      body: formData.toString(),
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },

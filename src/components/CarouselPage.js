@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert, Pressable, StyleSheet, View } from "react-native";
+import { Alert, Pressable, StyleSheet, View, Dimensions } from "react-native";
 import AnimatedDotsCarousel from "react-native-animated-dots-carousel";
 import VolunteerOpportunity from "./VolunteerOpportunity";
 import Carousel from "react-native-reanimated-carousel";
@@ -64,7 +64,7 @@ export default function CarouselPage({ navigation, data, onRefresh }) {
         </Pressable>
       </View>
       <Carousel
-        width={400}
+        width={Dimensions.get("window").width - 30}
         height={280}
         data={data}
         renderItem={renderItem}
