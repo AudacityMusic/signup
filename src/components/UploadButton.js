@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import DocumentPicker from "react-native-document-picker";
-
+import * as fs from "react-native-fs";
+import {
+  GDrive,
+  MimeTypes,
+} from "@robinbobin/react-native-google-drive-api-wrapper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../constants/colors";
 
-const uploadFile = async () => {
+const selectFile = async () => {
   try {
     const file = await DocumentPicker.pickSingle({
       type: [DocumentPicker.types.pdf],
@@ -16,6 +21,19 @@ const uploadFile = async () => {
     }
   }
 };
+
+async function getAccessToken() {
+  try {
+    const accessToken = await AsyncStorage.getItem("access-token");
+    console.log(accessToken);
+    if (accessToken === null) {
+      throw "EMPTY access token";
+    }
+    return accessToken;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 export default function UploadButton({ title, state, setState }) {
   const [fileName, setFileName] = useState(null);
@@ -36,11 +54,58 @@ export default function UploadButton({ title, state, setState }) {
       <Pressable
         style={styles.upload}
         onPress={async () => {
-          const file = await uploadFile();
-          setFileName(file?.name);
+          console.log("PRESSEDDDDDDDDDDDDDD");
+          const accessToken = await getAccessToken();
+          const googleDrive = new GDrive();
+          googleDrive.accessToken = accessToken;
+          googleDrive.fetchTimeout = 5000; // 5 seconds
+
+          const file = await selectFile();
+          console.log(`FILE: ${file.uri}`);
+
+          const fileData = await fs.readFile(file.uri, "base64");
+          console.log("FILE DATA");
+
+          let id = "";
+
+          try {
+            setFileName(`Uploading ${file.name}...`);
+            const googleFile = await googleDrive.files
+              .newMultipartUploader()
+              .setIsBase64(true)
+              .setData(fileData, MimeTypes.PDF)
+              .setRequestBody({
+                parents: ["root"],
+                name: file.name,
+              })
+              .execute();
+            id = googleFile.id;
+            console.log(`ID Fetching Successful: id=${id}`);
+            await googleDrive.permissions.create(
+              id,
+              {},
+              {
+                role: "reader",
+                type: "anyone",
+              },
+            );
+            console.log("Permissions: everyone (with the link) can view");
+          } catch (error) {
+            if (error.name == "AbortError") {
+              console.error(
+                "File upload aborted. Use a more stable Internet connection or increase fetchTimeout.",
+              );
+            } else {
+              console.error("Error uploading file:", error);
+            }
+          }
+
+          console.log(`ID: https://drive.google.com/open?id=${id}`);
+          setFileName(file.name);
+
           setState((prevState) => ({
             ...prevState,
-            value: file,
+            value: [`https://drive.google.com/open?id=${id}`, file.size],
           }));
         }}
       >

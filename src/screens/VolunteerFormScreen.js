@@ -13,7 +13,7 @@ import {
 } from "react-native";
 
 import forms from "../constants/forms";
-import { getUser, submitForm } from "../utils";
+import { getUser, FormString, submitForm } from "../utils";
 
 import TextField from "../components/TextField";
 import CheckBoxQuery from "../components/CheckBoxQuery";
@@ -273,7 +273,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
         />
       ),
       // Only PDF files can be uploaded
-      validate: () => (pianoAccompaniment.value?.size ?? 0) <= 104857600, // There are 104,857,600 bytes in 100 MB
+      validate: () => (pianoAccompaniment.value[1] ?? Infinity) <= 104857600, // There are 104,857,600 bytes in 100 MB
     }),
 
     new Question({
@@ -289,7 +289,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
       isVisible: () => performanceType.value?.includes("Ensemble"),
 
       // Only PDF files can be uploaded
-      validate: () => (ensembleProfile.value?.size ?? 1000000000) <= 104857600, // There are 104,857,600 bytes in 100 MB
+      validate: () => (ensembleProfile.value[1] ?? Infinity) <= 104857600, // There are 104,857,600 bytes in 100 MB
     }),
 
     new Question({
@@ -338,27 +338,27 @@ export default function VolunteerFormScreen({ navigation, route }) {
     }
 
     const form = forms[title];
-    const formData = new FormData();
+    const formData = new FormString();
 
     if (title == "Library Music Hour") {
-      formData.append(`entry.${form.location}`, location);
-      formData.append(`entry.${form.date}`, date);
-      formData.append(`entry.${form.fullName}`, fullName.value);
-      formData.append(`entry.${form.city}`, city.value);
-      formData.append(`entry.${form.phoneNumber}`, phoneNumber.value);
-      formData.append(`entry.${form.age}`, age.value);
-      formData.append(`entry.${form.musicPiece}`, musicPiece.value);
-      formData.append(`entry.${form.composer}`, composer.value);
-      formData.append(`entry.${form.instrument}`, instrument.value);
-      formData.append(`entry.${form.length}`, length.value);
-      formData.append(`entry.${form.recordingLink}`, recordingLink.value);
-      formData.append(`entry.${form.performanceType}`, performanceType.value);
+      formData.append(form.location, location);
+      formData.append(form.date, date);
+      formData.append(form.fullName, fullName.value);
+      formData.append(form.city, city.value);
+      formData.append(form.phoneNumber, phoneNumber.value);
+      formData.append(form.age, age.value);
+      formData.append(form.musicPiece, musicPiece.value);
+      formData.append(form.composer, composer.value);
+      formData.append(form.instrument, instrument.value);
+      formData.append(form.length, length.value);
+      formData.append(form.recordingLink, recordingLink.value);
+      formData.append(form.performanceType, performanceType.value);
       formData.append(
-        `entry.${form.publicPermission}`,
+        form.publicPermission,
         publicPermission.value ? "Yes" : "No",
       );
       formData.append(
-        `entry.${form.parentalConsent}`,
+        form.parentalConsent,
         parentalConsent.value == null
           ? ""
           : parentalConsent.value
@@ -366,14 +366,14 @@ export default function VolunteerFormScreen({ navigation, route }) {
             : "No",
       );
       formData.append(
-        `entry.${form.pianoAccompaniment}`,
-        pianoAccompaniment.value ?? "",
+        form.pianoAccompaniment,
+        pianoAccompaniment.value ? pianoAccompaniment.value[0] : "",
       );
       formData.append(
-        `entry.${form.ensembleProfile}`,
-        ensembleProfile.value ?? "",
+        form.ensembleProfile,
+        ensembleProfile.value ? ensembleProfile.value[0] : "",
       );
-      formData.append(`entry.${form.otherInfo}`, otherInfo.value ?? "");
+      formData.append(form.otherInfo, otherInfo.value ?? "");
     }
     async function _storeData() {
       try {
