@@ -23,6 +23,7 @@ export default function VolunteerOpportunity({
           description,
           tags,
           formURL,
+          isSubmitted,
         })
       }
     >
