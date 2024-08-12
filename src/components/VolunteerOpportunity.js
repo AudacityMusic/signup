@@ -13,16 +13,23 @@ export default function VolunteerOpportunity({
   formURL,
 }) {
   const [isFormSubmitted, setSubmitted] = useState(false);
+
   async function getSubmitted() {
-    let submittedForms = JSON.parse(await AsyncStorage.getItem("submittedForms"));
-    for(const item in submittedForms) {
-      if((item[0] === (title+location+date)) && (item[1])) {
-        setSubmitted(!isFormSubmitted);
-      }
-    }
+    try {
+      let submittedForms = JSON.parse(
+        await AsyncStorage.getItem("submittedForms"),
+      );
+      submittedForms.forEach((item) => {
+        let combined = title.concat(location, date);
+        if (item[0] === combined && item[1]) {
+          setSubmitted(true);
+        }
+      });
+    } catch (err) {}
   }
-  getSubmitted();
-  console.log(isFormSubmitted);
+  useEffect(() => {
+    getSubmitted();
+  });
   return (
     <Pressable
       style={styles.container}
@@ -66,9 +73,13 @@ export default function VolunteerOpportunity({
         </View>
       </View>
       <Image
-        style={styles.caret}
-        source={require("./../assets/caret-left.png")}
-        //source={isFormSubmitted ? require("./../assets/checkmark.png") : require("./../assets/caret-left.png")}
+        style={isFormSubmitted ? styles.checkmark : styles.caret}
+        //source={require("./../assets/caret-left.png")}
+        source={
+          isFormSubmitted
+            ? require("./../assets/checkmark.png")
+            : require("./../assets/caret-left.png")
+        }
       />
     </Pressable>
   );
@@ -116,5 +127,11 @@ const styles = StyleSheet.create({
   caret: {
     transform: [{ rotateZ: "180deg" }],
     marginRight: 10,
+  },
+  checkmark: {
+    marginRight: 20,
+    width: 25,
+    height: 25,
+    tintColor: "black",
   },
 });

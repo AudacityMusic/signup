@@ -304,7 +304,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
     }),
   ];
 
-  function submit() {
+  async function submit() {
     let allValid = true;
     let minInvalidY = Infinity;
 
@@ -377,27 +377,39 @@ export default function VolunteerFormScreen({ navigation, route }) {
     }
     async function _storeData() {
       try {
-        let submittedForms = await _retrieveData();
-        submittedForms.append([title+location+date,true])
-        await AsyncStorage.setItem("submittedForms",JSON.stringify(submittedForms));
+        let submittedForms = JSON.parse(
+          await AsyncStorage.getItem("submittedForms"),
+        );
+        submittedForms.push([title + location + date, true]);
+        await AsyncStorage.setItem(
+          "submittedForms",
+          JSON.stringify(submittedForms),
+        );
       } catch (err) {
         _createNew();
       }
     }
-    async function _retrieveData() {
-      try {
-        let data = await AsyncStorage.getItem("submittedForms");
-        return JSON.parse(data);
-      } catch (err) {
-        console.log("Cant get item in submittedForms");
-      }
-    }
     async function _createNew() {
+      console.log("created new ");
       try {
-        let submittedForms = [[title+location+date,true]];
-        await AsyncStorage.setItem("submittedForms",JSON.stringify(submittedForms));
-      } catch(err) {
-        console.log("oh no")
+        let submittedForms = JSON.parse(
+          await AsyncStorage.getItem("submittedForms"),
+        );
+        if (submittedForms.length === 0) {
+          let newthing = [[title + location + date, true]];
+          await AsyncStorage.setItem(
+            "submittedForms",
+            JSON.stringify(newthing),
+          );
+        } else {
+          submittedForms.push([title + location + date, true]);
+          await AsyncStorage.setItem(
+            "submittedForms",
+            JSON.stringify(submittedForms),
+          );
+        }
+      } catch (err) {
+        console.log("oh no");
       }
     }
     if (submitForm(form.id, formData)) {
