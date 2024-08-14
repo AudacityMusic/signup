@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Image, Pressable } from "react-native";
+import { useState } from "react";
+import { StyleSheet, Text, View, Image, Pressable, Alert } from "react-native";
 import DocumentPicker from "react-native-document-picker";
 import * as fs from "react-native-fs";
 import {
@@ -39,6 +39,7 @@ export default function UploadButton({
   title,
   state,
   setState,
+  navigation,
   required = false,
 }) {
   const [fileName, setFileName] = useState(null);
@@ -62,7 +63,6 @@ export default function UploadButton({
       <Pressable
         style={styles.upload}
         onPress={async () => {
-          console.log("PRESSEDDDDDDDDDDDDDD");
           const accessToken = await getAccessToken();
           const googleDrive = new GDrive();
           googleDrive.accessToken = accessToken;
@@ -103,9 +103,28 @@ export default function UploadButton({
               console.error(
                 "File upload aborted. Use a more stable Internet connection or increase fetchTimeout.",
               );
+            } else if (error.__response?.status == 403) {
+              Alert.alert(
+                "Permission Denied",
+                'Audacity Music Club does not have permission to share files associated with your Google account.\n\nTo enable this feature, please go to your profile, clear your data, and reauthenticate your Google account. When prompted to select what the app can access, tap on the checkbox to "see, edit, create, and delete Google files in this app."',
+                [
+                  {
+                    text: "Cancel",
+                  },
+                  {
+                    text: "Go to Profile",
+                    isPreferred: true,
+                    onPress: () => {
+                      navigation.navigate("Account");
+                    },
+                  },
+                ],
+              );
             } else {
               console.error("Error uploading file:", error);
             }
+            setFileName("Upload failed");
+            return;
           }
 
           console.log(`ID: https://drive.google.com/open?id=${id}`);

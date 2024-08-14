@@ -273,6 +273,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
           key="pianoAccompaniment"
           state={pianoAccompaniment}
           setState={setPianoAccompaniment}
+          navigation={navigation}
         />
       ),
       // Only PDF files can be uploaded
@@ -290,6 +291,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
               key="ensembleProfile"
               state={ensembleProfile}
               setState={setEnsembleProfile}
+              navigation={navigation}
               required={true}
             />
           ),
