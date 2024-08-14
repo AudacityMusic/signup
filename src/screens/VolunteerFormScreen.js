@@ -13,7 +13,7 @@ import {
 } from "react-native";
 
 import forms from "../constants/forms";
-import { getUser, FormString, submitForm } from "../utils";
+import { getUser, FormString, submitForm, hashForm } from "../utils";
 
 import TextField from "../components/TextField";
 import CheckBoxQuery from "../components/CheckBoxQuery";
@@ -21,7 +21,7 @@ import UploadButton from "../components/UploadButton";
 import NextButton from "../components/NextButton";
 import MultipleChoice from "../components/MultipleChoice";
 
-import EndScreen from "./EndScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class Question {
   constructor({ component, validate = (_) => true, isVisible = () => true }) {
@@ -272,9 +272,10 @@ export default function VolunteerFormScreen({ navigation, route }) {
         />
       ),
       // Only PDF files can be uploaded
+      // Optional
       validate: () =>
-        (pianoAccompaniment.value ? pianoAccompaniment.value[1] : Infinity) <=
-        104857600, // There are 104,857,600 bytes in 100 MB
+        pianoAccompaniment.value == null ||
+        pianoAccompaniment.value[1] <= 104857600, // There are 104,857,600 bytes in 100 MB
     }),
 
     (title == "Library Music Hour" ? new Question({
@@ -284,15 +285,16 @@ export default function VolunteerFormScreen({ navigation, route }) {
           key="ensembleProfile"
           state={ensembleProfile}
           setState={setEnsembleProfile}
+          required={true}
         />
       ),
 
       isVisible: () => performanceType.value?.includes("Ensemble"),
 
       // Only PDF files can be uploaded
+      // Required only if visible (selected ensemble option)
       validate: () =>
-        (ensembleProfile.value ? ensembleProfile.value[1] : Infinity) <=
-        104857600, // There are 104,857,600 bytes in 100 MB
+        ensembleProfile.value != null && ensembleProfile.value[1] <= 104857600, // There are 104,857,600 bytes in 100 MB
     }) : null),
 
     new Question({
@@ -307,7 +309,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
     }),
   ];
 
-  function submit() {
+  async function submit() {
     let allValid = true;
     let minInvalidY = Infinity;
     console.log(pianoAccompaniment.value);
@@ -322,7 +324,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
         valid: isValid,
       }));
 
-      if (!isValid && question.isVisible) {
+      if (!isValid) {
         allValid = false;
         if (question.y < minInvalidY) {
           minInvalidY = question.y;
@@ -383,11 +385,26 @@ export default function VolunteerFormScreen({ navigation, route }) {
       formData.append(form.otherInfo, otherInfo.value ?? "");
     }
 
-    if (submitForm(form.id, formData)) {
-      navigation.navigate("End", { isSuccess: true });
-    } else {
+    if (!submitForm(form.id, formData)) {
       navigation.navigate("End", { isSuccess: false });
+      return;
     }
+
+    try {
+      const submittedForms = await AsyncStorage.getItem("submittedForms");
+      const hash = hashForm(title, location, date);
+      if (submittedForms == null) {
+        await AsyncStorage.setItem("submittedForms", JSON.stringify([hash]));
+      } else {
+        const newForms = JSON.parse(submittedForms);
+        newForms.push(hash);
+        await AsyncStorage.setItem("submittedForms", JSON.stringify(newForms));
+      }
+    } catch (error) {
+      console.error(`Unable to get/save submittedForms: ${error}`);
+    }
+
+    navigation.navigate("End", { isSuccess: true });
   }
 
   return (
