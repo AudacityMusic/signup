@@ -30,9 +30,10 @@ export default function AccountScreen({ navigation }) {
                 onPress: async () => {
                   try {
                     await GoogleSignin.signOut();
+                    await GoogleSignin.revokeAccess();
                   } catch (error) {
                     console.error(
-                      `Unable to log out while clearing data: ${error}`,
+                      `Unable to log out and remove Google account while clearing data: ${error}`,
                     );
                   }
                   try {
