@@ -70,7 +70,9 @@ export default function VolunteerFormScreen({ navigation, route }) {
   const [otherInfo, setOtherInfo] = emptyQuestionState();
 
   const [scrollObject, setScrollObject] = useState(null);
-  const [timeLimit, setTimeLimit] = useState(0);
+  const [timeLimit, setTimeLimit] = useState(
+    title == "Library Music Hour" ? 0 : 10,
+  );
 
   const performanceOptions = {
     "Individual performance only": 8,
@@ -83,7 +85,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
   const isAtLeast = (value, len) => value?.trim().length >= len;
   const isNotEmpty = (value) => isAtLeast(value, 1);
 
-  const questions = [
+  let questions = [
     new Question({
       component: (
         <TextField
@@ -177,25 +179,27 @@ export default function VolunteerFormScreen({ navigation, route }) {
       validate: isNotEmpty,
     }),
 
-    new Question({
-      component: (
-        <MultipleChoice
-          title="Performance Type"
-          options={performanceOptions}
-          onSelect={(option) => {
-            setPerformanceType((prevState) => ({
-              ...prevState,
-              value: option,
-            }));
-            setTimeLimit(performanceOptions[option]);
-          }}
-          key="performanceType"
-          state={performanceType}
-          setState={setPerformanceType}
-        />
-      ),
-      validate: isNotEmpty,
-    }),
+    title == "Library Music Hour"
+      ? new Question({
+          component: (
+            <MultipleChoice
+              title="Performance Type"
+              options={performanceOptions}
+              onSelect={(option) => {
+                setPerformanceType((prevState) => ({
+                  ...prevState,
+                  value: option,
+                }));
+                setTimeLimit(performanceOptions[option]);
+              }}
+              key="performanceType"
+              state={performanceType}
+              setState={setPerformanceType}
+            />
+          ),
+          validate: isNotEmpty,
+        })
+      : null,
 
     new Question({
       component: (
@@ -278,24 +282,27 @@ export default function VolunteerFormScreen({ navigation, route }) {
         pianoAccompaniment.value[1] <= 104857600, // There are 104,857,600 bytes in 100 MB
     }),
 
-    new Question({
-      component: (
-        <UploadButton
-          title="Upload your Library Band Ensemble profile as one PDF file."
-          key="ensembleProfile"
-          state={ensembleProfile}
-          setState={setEnsembleProfile}
-          required={true}
-        />
-      ),
+    title == "Library Music Hour"
+      ? new Question({
+          component: (
+            <UploadButton
+              title="Upload your Library Band Ensemble profile as one PDF file."
+              key="ensembleProfile"
+              state={ensembleProfile}
+              setState={setEnsembleProfile}
+              required={true}
+            />
+          ),
 
-      isVisible: () => performanceType.value?.includes("Ensemble"),
+          isVisible: () => performanceType.value?.includes("Ensemble"),
 
-      // Only PDF files can be uploaded
-      // Required only if visible (selected ensemble option)
-      validate: () =>
-        ensembleProfile.value != null && ensembleProfile.value[1] <= 104857600, // There are 104,857,600 bytes in 100 MB
-    }),
+          // Only PDF files can be uploaded
+          // Required only if visible (selected ensemble option)
+          validate: () =>
+            ensembleProfile.value != null &&
+            ensembleProfile.value[1] <= 104857600, // There are 104,857,600 bytes in 100 MB
+        })
+      : null,
 
     new Question({
       component: (
@@ -309,6 +316,8 @@ export default function VolunteerFormScreen({ navigation, route }) {
     }),
   ];
 
+  questions = questions.filter((q) => q != null);
+
   async function submit() {
     let allValid = true;
     let minInvalidY = Infinity;
@@ -320,7 +329,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
         valid: isValid,
       }));
 
-      if (!isValid && question.isVisible) {
+      if (!isValid) {
         allValid = false;
         if (question.y < minInvalidY) {
           minInvalidY = question.y;
@@ -345,7 +354,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
     const form = forms[title];
     const formData = new FormString();
 
-    if (title == "Library Music Hour") {
+    if (title == "Library Music Hour" || title == "Music by the Tracks") {
       formData.append(form.location, location);
       formData.append(form.date, date);
       formData.append(form.fullName, fullName.value);
@@ -357,7 +366,9 @@ export default function VolunteerFormScreen({ navigation, route }) {
       formData.append(form.instrument, instrument.value);
       formData.append(form.length, length.value);
       formData.append(form.recordingLink, recordingLink.value);
-      formData.append(form.performanceType, performanceType.value);
+      if (title == "Library Music Hour") {
+        formData.append(form.performanceType, performanceType.value);
+      }
       formData.append(
         form.publicPermission,
         publicPermission.value ? "Yes" : "No",
@@ -374,10 +385,12 @@ export default function VolunteerFormScreen({ navigation, route }) {
         form.pianoAccompaniment,
         pianoAccompaniment.value ? pianoAccompaniment.value[0] : "",
       );
-      formData.append(
-        form.ensembleProfile,
-        ensembleProfile.value ? ensembleProfile.value[0] : "",
-      );
+      if (title == "Library Music Hour") {
+        formData.append(
+          form.ensembleProfile,
+          ensembleProfile.value ? ensembleProfile.value[0] : "",
+        );
+      }
       formData.append(form.otherInfo, otherInfo.value ?? "");
     }
 
@@ -429,7 +442,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
             </View>
             <View style={styles.form}>
               {questions
-                .filter((question) => question.isVisible())
+                .filter((question) => question?.isVisible())
                 .map((question) => question.component)}
             </View>
             <Pressable style={styles.nextButton} onPress={() => submit()}>
