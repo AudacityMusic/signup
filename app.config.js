@@ -25,6 +25,7 @@ export default {
     favicon: "./src/assets/audacity-music-club.png",
   },
   extra: {
+    email: "it@eternityband.org",
     eas: {
       projectId: "56bb99cb-9cbe-423d-9a88-3f82a0cf3aa0",
     },

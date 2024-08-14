@@ -51,9 +51,7 @@ export default function SignInScreen({ navigation }) {
                 "access-token",
                 (await GoogleSignin.getTokens()).accessToken,
               );
-              console.log(await AsyncStorage.getItem("access-token"));
-              console.log(userInfo.scopes);
-              navigation.navigate("Home");
+              navigation.navigate("Home", { shouldRefresh: true });
             } catch (error) {
               if (isErrorWithCode(error)) {
                 switch (error.code) {
