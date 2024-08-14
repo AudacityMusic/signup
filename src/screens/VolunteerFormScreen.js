@@ -70,7 +70,9 @@ export default function VolunteerFormScreen({ navigation, route }) {
   const [otherInfo, setOtherInfo] = emptyQuestionState();
 
   const [scrollObject, setScrollObject] = useState(null);
-  const [timeLimit, setTimeLimit] = useState(title == "Library Music Hour" ? 0 : 10);
+  const [timeLimit, setTimeLimit] = useState(
+    title == "Library Music Hour" ? 0 : 10,
+  );
 
   const performanceOptions = {
     "Individual performance only": 8,
@@ -177,25 +179,27 @@ export default function VolunteerFormScreen({ navigation, route }) {
       validate: isNotEmpty,
     }),
 
-    ((title == "Library Music Hour") ? new Question({
-      component: (
-        <MultipleChoice
-          title="Performance Type"
-          options={performanceOptions}
-          onSelect={(option) => {
-            setPerformanceType((prevState) => ({
-              ...prevState,
-              value: option,
-            }));
-            setTimeLimit(performanceOptions[option]);
-          }}
-          key="performanceType"
-          state={performanceType}
-          setState={setPerformanceType}
-        />
-      ),
-      validate: isNotEmpty,
-    }) : null),
+    title == "Library Music Hour"
+      ? new Question({
+          component: (
+            <MultipleChoice
+              title="Performance Type"
+              options={performanceOptions}
+              onSelect={(option) => {
+                setPerformanceType((prevState) => ({
+                  ...prevState,
+                  value: option,
+                }));
+                setTimeLimit(performanceOptions[option]);
+              }}
+              key="performanceType"
+              state={performanceType}
+              setState={setPerformanceType}
+            />
+          ),
+          validate: isNotEmpty,
+        })
+      : null,
 
     new Question({
       component: (
@@ -278,24 +282,27 @@ export default function VolunteerFormScreen({ navigation, route }) {
         pianoAccompaniment.value[1] <= 104857600, // There are 104,857,600 bytes in 100 MB
     }),
 
-    (title == "Library Music Hour" ? new Question({
-      component: (
-        <UploadButton
-          title="Upload your Library Band Ensemble profile as one PDF file."
-          key="ensembleProfile"
-          state={ensembleProfile}
-          setState={setEnsembleProfile}
-          required={true}
-        />
-      ),
+    title == "Library Music Hour"
+      ? new Question({
+          component: (
+            <UploadButton
+              title="Upload your Library Band Ensemble profile as one PDF file."
+              key="ensembleProfile"
+              state={ensembleProfile}
+              setState={setEnsembleProfile}
+              required={true}
+            />
+          ),
 
-      isVisible: () => performanceType.value?.includes("Ensemble"),
+          isVisible: () => performanceType.value?.includes("Ensemble"),
 
-      // Only PDF files can be uploaded
-      // Required only if visible (selected ensemble option)
-      validate: () =>
-        ensembleProfile.value != null && ensembleProfile.value[1] <= 104857600, // There are 104,857,600 bytes in 100 MB
-    }) : null),
+          // Only PDF files can be uploaded
+          // Required only if visible (selected ensemble option)
+          validate: () =>
+            ensembleProfile.value != null &&
+            ensembleProfile.value[1] <= 104857600, // There are 104,857,600 bytes in 100 MB
+        })
+      : null,
 
     new Question({
       component: (
