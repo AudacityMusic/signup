@@ -85,7 +85,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
   const isAtLeast = (value, len) => value?.trim().length >= len;
   const isNotEmpty = (value) => isAtLeast(value, 1);
 
-  const questions = [
+  let questions = [
     new Question({
       component: (
         <TextField
@@ -316,15 +316,13 @@ export default function VolunteerFormScreen({ navigation, route }) {
     }),
   ];
 
+  questions = questions.filter((q) => q != null);
+
   async function submit() {
     let allValid = true;
     let minInvalidY = Infinity;
-    console.log(pianoAccompaniment.value);
-    for (const question of questions) {
-      if (question === null) {
-        continue;
-      }
 
+    for (const question of questions) {
       const isValid = question.validate();
       question.setState((prevState) => ({
         ...prevState,
@@ -356,7 +354,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
     const form = forms[title];
     const formData = new FormString();
 
-    if (title == "Library Music Hour") {
+    if (title == "Library Music Hour" || title == "Music by the Tracks") {
       formData.append(form.location, location);
       formData.append(form.date, date);
       formData.append(form.fullName, fullName.value);
@@ -368,7 +366,9 @@ export default function VolunteerFormScreen({ navigation, route }) {
       formData.append(form.instrument, instrument.value);
       formData.append(form.length, length.value);
       formData.append(form.recordingLink, recordingLink.value);
-      formData.append(form.performanceType, performanceType.value);
+      if (title == "Library Music Hour") {
+        formData.append(form.performanceType, performanceType.value);
+      }
       formData.append(
         form.publicPermission,
         publicPermission.value ? "Yes" : "No",
@@ -385,10 +385,12 @@ export default function VolunteerFormScreen({ navigation, route }) {
         form.pianoAccompaniment,
         pianoAccompaniment.value ? pianoAccompaniment.value[0] : "",
       );
-      formData.append(
-        form.ensembleProfile,
-        ensembleProfile.value ? ensembleProfile.value[0] : "",
-      );
+      if (title == "Library Music Hour") {
+        formData.append(
+          form.ensembleProfile,
+          ensembleProfile.value ? ensembleProfile.value[0] : "",
+        );
+      }
       formData.append(form.otherInfo, otherInfo.value ?? "");
     }
 
@@ -440,7 +442,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
             </View>
             <View style={styles.form}>
               {questions
-                .filter((question) => question !== null && question.isVisible())
+                .filter((question) => question?.isVisible())
                 .map((question) => question.component)}
             </View>
             <Pressable style={styles.nextButton} onPress={() => submit()}>
