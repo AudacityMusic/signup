@@ -3,10 +3,10 @@ export default {
   slug: "audacity-music-club",
   version: "1.0.0",
   orientation: "portrait",
-  icon: "./src/assets/audacity-music-club.png",
+  icon: "./src/assets/eternity-band.png",
   userInterfaceStyle: "light",
   splash: {
-    image: "./src/assets/audacity-music-club.png",
+    image: "./src/assets/eternity-band.png",
     resizeMode: "contain",
     backgroundColor: "#ffffff",
   },
@@ -16,13 +16,13 @@ export default {
   },
   android: {
     adaptiveIcon: {
-      foregroundImage: "./src/assets/audacity-music-club.png",
+      foregroundImage: "./src/assets/eternity-band.png",
       backgroundColor: "#ffffff",
     },
     package: "org.eternityband.signup",
   },
   web: {
-    favicon: "./src/assets/audacity-music-club.png",
+    favicon: "./src/assets/eternity-band.png",
   },
   extra: {
     email: "it@eternityband.org",
