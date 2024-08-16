@@ -26,7 +26,6 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
     isSubmitted,
   } = route.params;
   const tagsIcons = tags.map((text) => <Tag key={text} text={text} />);
-  console.log(formURL);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.banner}>
