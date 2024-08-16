@@ -1,9 +1,16 @@
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import { View, Text, StyleSheet, Image, Pressable, Alert } from "react-native";
 
 export default function OtherOpportunities() {
   return (
     <View style={styles.cardContainer}>
-      <Pressable style={[styles.card, styles.first]}>
+      <Pressable
+        style={[styles.card, styles.first]}
+        onPress={() =>
+          Alert.alert(
+            "Request a Concert is not available yet. Please check back soon for more updates!",
+          )
+        }
+      >
         <Image
           style={styles.icon}
           source={require("./../assets/music-note.png")}
