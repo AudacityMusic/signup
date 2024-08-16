@@ -38,7 +38,6 @@ export async function submitForm(formId, formData) {
   const formUrl = `https://docs.google.com/forms/d/e/${formId}/formResponse`;
   console.log("Form Data: " + formData);
   try {
-    console.log(formData);
     const response = await fetch(formUrl, {
       method: "POST",
       body: formData.toString(),

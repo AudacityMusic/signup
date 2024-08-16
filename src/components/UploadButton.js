@@ -25,7 +25,6 @@ const selectFile = async () => {
 async function getAccessToken() {
   try {
     const accessToken = await AsyncStorage.getItem("access-token");
-    console.log(accessToken);
     if (accessToken === null) {
       throw "EMPTY access token";
     }
@@ -72,7 +71,6 @@ export default function UploadButton({
           console.log(`FILE: ${file.uri}`);
 
           const fileData = await fs.readFile(file.uri, "base64");
-          console.log("FILE DATA");
 
           let id = "";
 
@@ -97,7 +95,6 @@ export default function UploadButton({
                 type: "anyone",
               },
             );
-            console.log("Permissions: everyone (with the link) can view");
           } catch (error) {
             if (error.name == "AbortError") {
               console.error(

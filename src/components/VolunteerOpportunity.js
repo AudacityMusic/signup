@@ -30,7 +30,6 @@ export default function VolunteerOpportunity({
       <View style={{ flexDirection: "row" }}>
         <Image
           style={styles.image}
-          // source={require("./../assets/warm-springs-bart.png")}
           source={{ width: 0, height: 0, uri: image }}
         />
         <View style={{ flexDirection: "column", alignSelf: "center" }}>
