@@ -100,11 +100,11 @@ export function Select({list, setList, index, added, start, setStart, open, setO
         <DatePicker
             modal
             open={open}
-            date={new Date()}
+            date={start ? new Date() : new Date(now.getFullYear(), now.getMonth(), now.getDate(), list[index].start.getHours(), list[index].start.getMinutes())}
             mode={start ? "datetime" : "time"}
-            title = {start ? "Select Start Time" : "Select End Time"}
-            minimumDate={start ? new Date() : new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0)}
-            maximumDate={start ? new Date(now.getFullYear() + 1, now.getMonth(), now.getDate(), 23, 59) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59)}
+            title={start ? "Select Start Time" : "Select End Time"}
+            minimumDate={start ? new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 10, 30) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), list[index].start.getHours(), list[index].start.getMinutes())}
+            maximumDate={start ? new Date(now.getFullYear(), now.getMonth() + 3, now.getDate(), 23, 59) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), 18, 0)}
             onConfirm={(date) => {
                 if (start) {
                     setList((previous) => {let next = previous; next[index].start = date; return next});
