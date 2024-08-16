@@ -40,7 +40,11 @@ export default {
     [
       "@react-native-google-signin/google-signin",
       {
-        iosUrlScheme: process.env.EXPO_PUBLIC_GOOGLE_OAUTH_IOS_SCHEME,
+        iosUrlScheme:
+          process.env.EXPO_PUBLIC_GOOGLE_OAUTH_IOS_SCHEME ??
+          console.error(
+            "Error: Undefined EXPO_PUBLIC_GOOGLE_OAUTH_IOS_SCHEME env variable",
+          ),
       },
     ],
   ],

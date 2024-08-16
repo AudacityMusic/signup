@@ -80,8 +80,13 @@ export default function HomeScreen({ navigation, route }) {
 
   async function onRefresh() {
     const parser = new PublicGoogleSheetsParser(
-      process.env.EXPO_PUBLIC_SHEET_ID,
-      { sheetName: process.env.EXPO_PUBLIC_SHEET_NAME },
+      process.env.EXPO_PUBLIC_SHEET_ID ??
+        alertError("Undefined EXPO_PUBLIC_SHEET_ID env variable"),
+      {
+        sheetName:
+          process.env.EXPO_PUBLIC_SHEET_NAME ??
+          alertError("Undefined EXPO_PUBLIC_SHEET_NAME env variable"),
+      },
     );
 
     const submittedForms = [];
