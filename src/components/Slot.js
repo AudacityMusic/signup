@@ -49,7 +49,7 @@ export class TimeSlot {
         }
     }
 
-    render(list, setList, index, setIndex, setOpen, setAdded, setStart) {
+    render(state, setState, index, setIndex, setOpen, setAdded, setStart) {
         return (
             <View key={index * 10} style={{flexDirection: "row", justifyContent: "space-between"}}>
                 <View key={index * 10 + 1} style={{flexDirection: "row"}}>
@@ -61,29 +61,29 @@ export class TimeSlot {
                         <Text key={index * 10 + 6} style={{fontSize: 20, textDecorationLine: "underline"}}>{timeFormatter(this.end)}</Text>
                     </Pressable>
                 </View>
-                <RemoveButton list={list} setList={setList} index={index} />
+                <RemoveButton state={state} setState={setState} index={index} />
             </View>
         );
     }
 }
 
-function RemoveButton({list, setList, index}) {
+function RemoveButton({state, setState, index}) {
     return (
-        <Pressable key={index * 10 + 7} style={styles.button} onPress={() => {setList(previous => {return previous.slice(0, index).concat(previous.slice(index + 1, list.length))})}}>
+        <Pressable key={index * 10 + 7} style={styles.button} onPress={() => {setState(previous => {return {...previous, value: previous.value.slice(0, index).concat(previous.value.slice(index + 1, state.length))}})}}>
             <Ionicons key={index * 10 + 8} name="remove-circle-sharp" size={23} color="#FF3B30" />
             <Text key={index * 10 + 9} style={{color: "#FF3B30", fontSize: 20}}>  Delete</Text>
         </Pressable>
     );
 }
 
-function AddButton({list, setList, setIndex, setAdded, setOpen, setStart}) {
+function AddButton({state, setState, setIndex, setAdded, setOpen, setStart}) {
     return (
         <Pressable style={styles.button} onPress={() => {
             setAdded(true); 
             setStart(true);
-            let length = list.length;
+            let length = state.length;
             setIndex(length);
-            setList((previous) => previous.concat([new TimeSlot()]));
+            setState((previous) => {return {...previous, value: previous.value.concat([new TimeSlot()])}});
             setOpen(true);
         }}>
             <Ionicons name="add-circle-sharp" size={28} color="#006AFF" />
@@ -92,22 +92,23 @@ function AddButton({list, setList, setIndex, setAdded, setOpen, setStart}) {
     );
 }
 
-export function Select({list, setList, index, added, start, setStart, open, setOpen}) {
+export function Select({state, setState, index, added, start, setStart, open, setOpen}) {
     const now = new Date();
-    console.log(list);
+    console.log(state);
+    console.log(index);
 
     return (
         <DatePicker
             modal
             open={open}
-            date={start ? new Date() : new Date(now.getFullYear(), now.getMonth(), now.getDate(), list[index].start.getHours(), list[index].start.getMinutes())}
+            date={(start && added) ? new Date() : ((start || added) ? new Date(now.getFullYear(), now.getMonth(), now.getDate(), state[index].start.getHours(), state[index].start.getMinutes()) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), state[index].end.getHours(), state[index].end.getMinutes()))}
             mode={start ? "datetime" : "time"}
             title={start ? "Select Start Time" : "Select End Time"}
-            minimumDate={start ? new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 10, 30) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), list[index].start.getHours(), list[index].start.getMinutes())}
-            maximumDate={start ? new Date(now.getFullYear(), now.getMonth() + 3, now.getDate(), 23, 59) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), 18, 0)}
+            minimumDate={start ? new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 10, 30) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), state[index].start.getHours(), state[index].start.getMinutes())}
+            maximumDate={start ? new Date(now.getFullYear() + 1, now.getMonth(), now.getDate(), 23, 59) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), 18, 0)}
             onConfirm={(date) => {
                 if (start) {
-                    setList((previous) => {let next = previous; next[index].start = date; return next});
+                    setState((previous) => {let next = previous.value; next[index].start = date; return {...previous, value: next}});
                     setStart(false);
 
                     setOpen(false);
@@ -118,14 +119,14 @@ export function Select({list, setList, index, added, start, setStart, open, setO
                 }
 
                 else {
-                    setList((previous) => {let next = previous; next[index].end = date; return next})
+                    setState((previous) => {let next = previous.value; next[index].end = date; return {...previous, value: next}})
                     setOpen(false);
                 }
             }}
 
             onCancel={() => {
                 if (added && start) {
-                    setList((previous) => {return previous.slice(0, index - 1)});
+                    setState((previous) => {return {...previous, value: previous.value.slice(0, index - 1)}});
                 }
                 
                 setOpen(false)
@@ -143,8 +144,8 @@ export default function SlotList({slots, setSlots}) {
     return (
       <View style={styles.container}>
         {slots.map((slot, index) => (slot == null) || (((index == slots.length - 1) && open && added)) ? null : slot.render(slots, setSlots, index, setIndex, setOpen, setAdded, setStart))}
-        <AddButton list={slots} setList={setSlots} setIndex={setIndex} setAdded={setAdded} setOpen={setOpen} setStart={setStart} />
-        <Select list={slots} setList={setSlots} index={index} added={added} start={start} setStart={setStart} open={open} setOpen={setOpen} />
+        <AddButton state={slots} setState={setSlots} setIndex={setIndex} setAdded={setAdded} setOpen={setOpen} setStart={setStart} />
+        {open ? <Select state={slots} setState={setSlots} index={index} added={added} start={start} setStart={setStart} open={open} setOpen={setOpen} /> : null}
       </View>
     );
 }
