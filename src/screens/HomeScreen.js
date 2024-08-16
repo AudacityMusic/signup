@@ -8,7 +8,7 @@ import Websites from "../components/Websites";
 import CarouselPage from "../components/CarouselPage";
 
 import { PublicGoogleSheetsParser } from "../utils/PublicGoogleSheetsParser";
-import { hashForm } from "../utils";
+import { alertError, hashForm } from "../utils";
 
 export default function HomeScreen({ navigation, route }) {
   function formatData(data) {
@@ -91,7 +91,7 @@ export default function HomeScreen({ navigation, route }) {
         submittedForms.push(...JSON.parse(storedForms));
       }
     } catch (error) {
-      console.error(error);
+      alertError("In onRefresh: " + error);
     }
 
     parser.parse().then((data) => {

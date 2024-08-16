@@ -1,14 +1,25 @@
+import { Alert, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import Constants from "expo-constants";
+
+export function alertError(error) {
+  console.error(error);
+  Alert.alert(
+    "Error",
+    `Your request was not processed successfully due to an unexpected error. We apologize for the inconvenience. To help us identify and fix this error, please take a screenshot of this alert and send a bug report to ${Constants.expoConfig.extra.email}. Thank you!\n\nPlatform: ${Platform.OS} with v${Platform.Version}\n\n${error}`,
+  );
+}
 
 export async function getUser() {
   try {
     const userString = await AsyncStorage.getItem("user");
     if (userString === null) {
-      throw "EMPTY User";
+      alertError("Undefined user in getUser");
     }
     return JSON.parse(userString);
   } catch (error) {
-    console.error(error);
+    alertError(`In getUser: ${error}`);
   }
 }
 
@@ -49,10 +60,10 @@ export async function submitForm(formId, formData) {
     if (response.ok) {
       return true;
     }
-    console.error(response);
+    alertError(`Failure response in submitForm: ${response}`);
     return false;
   } catch (error) {
-    console.error(error);
+    alertError(`In submitForm: ${error}`);
     return false;
   }
 }

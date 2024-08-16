@@ -14,6 +14,7 @@ import {
 } from "@react-native-google-signin/google-signin";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { alertError } from "../utils";
 
 GoogleSignin.configure({
   webClientId: process.env.EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID, // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
@@ -53,30 +54,13 @@ export default function SignInScreen({ navigation }) {
               );
               navigation.navigate("Home", { shouldRefresh: true });
             } catch (error) {
-              if (isErrorWithCode(error)) {
-                switch (error.code) {
-                  case statusCodes.SIGN_IN_CANCELLED:
-                    // user cancelled the login flow
-                    console.log("Cancelled");
-                    break;
-                  case statusCodes.IN_PROGRESS:
-                    // operation (eg. sign in) already in progress
-                    console.error("In progress");
-                    break;
-                  case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-                    // play services not available or outdated
-                    console.error("Play services not available or outdated");
-                    break;
-                  case statusCodes.SIGN_IN_REQUIRED:
-                    console.error("Sign in required");
-                    break;
-                  default:
-                    console.error(error);
-                    break;
-                }
+              if (
+                isErrorWithCode(error) &&
+                error.code != statusCodes.SIGN_IN_CANCELLED
+              ) {
+                alertError(`While signing in: (${error.code}) ${error}`);
               } else {
-                console.error("No error code for: " + error);
-                // an error that's not related to google sign in occurred
+                alertError(`While signing in: (no error code) ${error}`);
               }
             }
           }}

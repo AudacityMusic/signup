@@ -8,6 +8,7 @@ import {
 } from "@robinbobin/react-native-google-drive-api-wrapper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../constants/colors";
+import { alertError } from "../utils";
 
 const selectFile = async () => {
   try {
@@ -17,7 +18,7 @@ const selectFile = async () => {
     return file;
   } catch (error) {
     if (!DocumentPicker.isCancel(error)) {
-      throw error;
+      alertError(`In selectFile: ${error}`);
     }
   }
 };
@@ -26,11 +27,11 @@ async function getAccessToken() {
   try {
     const accessToken = await AsyncStorage.getItem("access-token");
     if (accessToken === null) {
-      throw "EMPTY access token";
+      alertError("Undefined access token in getAccessToken");
     }
     return accessToken;
   } catch (error) {
-    console.error(error);
+    alertError(`In getAccessToken: ${error}`);
   }
 }
 
@@ -97,7 +98,7 @@ export default function UploadButton({
             );
           } catch (error) {
             if (error.name == "AbortError") {
-              console.error(
+              alertError(
                 "File upload aborted. Use a more stable Internet connection or increase fetchTimeout.",
               );
             } else if (error.__response?.status == 403) {
@@ -118,7 +119,7 @@ export default function UploadButton({
                 ],
               );
             } else {
-              console.error("Error uploading file:", error);
+              alertError("Error uploading file: " + error);
             }
             setFileName("Upload failed");
             return;

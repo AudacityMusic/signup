@@ -13,7 +13,13 @@ import {
 } from "react-native";
 
 import forms from "../constants/forms";
-import { getUser, FormString, submitForm, hashForm } from "../utils";
+import {
+  getUser,
+  FormString,
+  submitForm,
+  hashForm,
+  alertError,
+} from "../utils";
 
 import TextField from "../components/TextField";
 import CheckBoxQuery from "../components/CheckBoxQuery";
@@ -49,7 +55,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
         const user = await getUser();
         setFullName((prevState) => ({ ...prevState, value: user?.name }));
       } catch (error) {
-        console.error(error);
+        alertError(`While getting user in volunteer form screen: ${error}`);
       }
     })();
   }, []);
@@ -412,7 +418,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
         await AsyncStorage.setItem("submittedForms", JSON.stringify(newForms));
       }
     } catch (error) {
-      console.error(`Unable to get/save submittedForms: ${error}`);
+      alertError(`Unable to get/save submittedForms: ${error}`);
     }
 
     navigation.navigate("End", { isSuccess: true });
