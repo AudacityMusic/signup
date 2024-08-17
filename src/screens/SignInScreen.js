@@ -58,10 +58,10 @@ export default function SignInScreen({ navigation }) {
               );
               navigation.navigate("Home", { shouldRefresh: true });
             } catch (error) {
-              if (
-                isErrorWithCode(error) &&
-                error.code != statusCodes.SIGN_IN_CANCELLED
-              ) {
+              if (isErrorWithCode(error)) {
+                if (error.code == statusCodes.SIGN_IN_CANCELLED) {
+                  return;
+                }
                 alertError(`While signing in: (${error.code}) ${error}`);
               } else {
                 alertError(`While signing in: (no error code) ${error}`);
