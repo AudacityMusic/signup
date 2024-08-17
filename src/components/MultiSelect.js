@@ -6,7 +6,14 @@ export default function MultiSelect({ state, setState, title, options }) {
     const [selected, setSelected] = useState(new Array(options.length).fill(false));
 
     return (
-        <View>
+        <View
+            onLayout={(event) => {
+                setState((prevState) => ({
+                ...prevState,
+                y: event.nativeEvent.layout.y,
+                }));
+            }}
+        >
             <Text style={[styles.label, {"color": state.valid ? "black" : "red"}]}>{title}</Text>
             {options.map((option, index) => (
                 <Pressable key={index * 4} onPress={() => {
