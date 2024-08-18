@@ -12,17 +12,8 @@ import { alertError, hashForm } from "../utils";
 
 export default function HomeScreen({ navigation, route }) {
   function formatData(data) {
-    for (var i = 0; i < data.length; i++) {
-      var minIndex = i;
-      for (var j = i + 1; j < data.length; j++) {
-        if (compareDate(data[j].Date, data[minIndex].Date)) {
-          minIndex = j;
-        }
-      }
-      var temp = data[i];
-      data[i] = data[minIndex];
-      data[minIndex] = temp;
-    }
+    data.sort((a,b)=> compareDate(a.Date,b.Date));
+    
 
     let formattedArray = [];
     let tempArray = [];
@@ -61,37 +52,39 @@ export default function HomeScreen({ navigation, route }) {
       .map(Number);
 
     if (year1 < year2) {
-      return true;
+      return -1;
     } else if (year1 === year2) {
       if (month1 < month2) {
-        return true;
+        return -1;
       } else if (month1 === month2) {
         if (day1 < day2) {
-          return true;
+          return -1;
         } else if (day1 === day2) {
           if (hour1 < hour2) {
-            return true;
+            return -1;
           } else if (hour1 === hour2) {
             if (minute1 < minute2) {
-              return true;
+              return -1;
             } else if (minute1 === minute2) {
-              if (second1 <= second2) {
-                return true;
+              if (second1 < second2) {
+                return -1;
+              } else if (second1 === second2) {
+                return 0;
               } else {
-                return false;
+                return 1;
               }
             }
           } else {
-            return false;
+            return 1;
           }
         } else {
-          return false;
+          return 1;
         }
       } else {
-        return false;
+        return 1;
       }
     } else {
-      return false;
+      return 1;
     }
   }
   function formatDate(dateString) {
