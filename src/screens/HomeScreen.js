@@ -38,27 +38,27 @@ export default function HomeScreen({ navigation, route }) {
   }
 
   function compareDate(dateString1, dateString2) {
-    const [year1, month1, day1, hour1, minute1, second1] = dateString1
+    const date1 = dateString1
       .slice(5, -1)
       .split(",")
       .map(Number);
-    const [year2, month2, day2, hour2, minute2, second2] = dateString2
+      
+    const date2 = dateString2
       .slice(5, -1)
       .split(",")
       .map(Number);
 
-    return year1 !== year2
-      ? year1 - year2
-      : month1 !== month2
-        ? month1 - month2
-        : day1 !== day2
-          ? day1 - day2
-          : hour1 !== hour2
-            ? hour1 - hour2
-            : minute1 !== minute2
-              ? minute1 - minute2
-              : second1 - second2;
+    for (let index = 0; index < 6; index++) {
+      if (date1[index] < date2[index]) {
+        return -1;
+      } else if (date1[index] > date2[index]) {
+        return 1;
+      }
+    }
+
+    return 0;
   }
+  
   function formatDate(dateString) {
     const [year, month, day, hour, minute, second] = dateString
       .slice(5, -1)
