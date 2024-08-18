@@ -12,11 +12,26 @@ import { alertError, hashForm } from "../utils";
 
 export default function HomeScreen({ navigation, route }) {
   function formatData(data) {
+    for (var i = 0; i < data.length; i++) {
+      var minIndex = i;
+      for (var j = i + 1; j < data.length; j++) {
+        if (compareDate(data[j].Date, data[minIndex].Date)) {
+          minIndex = j;
+        }
+      }
+      var temp = data[i];
+      data[i] = data[minIndex];
+      data[minIndex] = temp;
+    }
+
     let formattedArray = [];
     let tempArray = [];
 
     for (const opportunity of data) {
+      console.log(opportunity.Date);
       const formattedDate = formatDate(opportunity.Date);
+      console.log(formattedDate);
+      console.log("-----------------------------------------------------");
       if (formattedDate == null) {
         continue;
       }
@@ -35,6 +50,50 @@ export default function HomeScreen({ navigation, route }) {
     return formattedArray;
   }
 
+  function compareDate(dateString1, dateString2) {
+    const [year1, month1, day1, hour1, minute1, second1] = dateString1
+      .slice(5, -1)
+      .split(",")
+      .map(Number);
+    const [year2, month2, day2, hour2, minute2, second2] = dateString2
+      .slice(5, -1)
+      .split(",")
+      .map(Number);
+
+    if (year1 < year2) {
+      return true;
+    } else if (year1 === year2) {
+      if (month1 < month2) {
+        return true;
+      } else if (month1 === month2) {
+        if (day1 < day2) {
+          return true;
+        } else if (day1 === day2) {
+          if (hour1 < hour2) {
+            return true;
+          } else if (hour1 === hour2) {
+            if (minute1 < minute2) {
+              return true;
+            } else if (minute1 === minute2) {
+              if (second1 <= second2) {
+                return true;
+              } else {
+                return false;
+              }
+            }
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
   function formatDate(dateString) {
     const [year, month, day, hour, minute, second] = dateString
       .slice(5, -1)
