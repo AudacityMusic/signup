@@ -18,10 +18,7 @@ export default function HomeScreen({ navigation, route }) {
     let tempArray = [];
 
     for (const opportunity of data) {
-      console.log(opportunity.Date);
       const formattedDate = formatDate(opportunity.Date);
-      console.log(formattedDate);
-      console.log("-----------------------------------------------------");
       if (formattedDate == null) {
         continue;
       }
