@@ -3,7 +3,7 @@ import colors from "../constants/colors";
 
 export default function SignUpButton() {
   return (
-    <View style={styles.signUp}>
+    <View style={styles.container}>
       <Text>{"\n\n\n"}</Text>
       <Text style={styles.signUpText}>Sign Up</Text>
       <Image
@@ -15,7 +15,7 @@ export default function SignUpButton() {
 }
 
 const styles = StyleSheet.create({
-  signUp: {
+  container: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",

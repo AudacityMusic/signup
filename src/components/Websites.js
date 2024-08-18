@@ -15,7 +15,7 @@ export default function Websites() {
 
   return (
     <View>
-      <View style={styles.cardContainer}>
+      <View style={styles.container}>
         <Pressable
           style={[styles.card, styles.first]}
           onPress={() => openLink("https://eternityband.org/")}
@@ -81,7 +81,7 @@ export default function Websites() {
 }
 
 const styles = StyleSheet.create({
-  cardContainer: {
+  container: {
     backgroundColor: "#f5f5f5",
     borderRadius: 10,
   },

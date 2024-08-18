@@ -2,14 +2,14 @@ import { StyleSheet, Text, View, Image } from "react-native";
 
 export default function Tag(props) {
   return (
-    <View style={styles.back}>
+    <View style={styles.container}>
       <Text style={styles.tagText}>{props.text}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  back: {
+  container: {
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 15,

@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 
 export default function OtherOpportunities() {
   return (
-    <View style={styles.cardContainer}>
+    <View style={styles.container}>
       <Pressable style={[styles.card, styles.first]}>
         <Image
           style={styles.icon}
@@ -24,7 +24,7 @@ export default function OtherOpportunities() {
 }
 
 const styles = StyleSheet.create({
-  cardContainer: {
+  container: {
     backgroundColor: "#f5f5f5",
     borderRadius: 10,
     marginBottom: 10,

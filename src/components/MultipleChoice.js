@@ -18,7 +18,7 @@ export default function MultipleChoice({
         }));
       }}
     >
-      <Text style={styles.label}>
+      <Text style={styles.title}>
         <Text style={{ color: state.valid ? "black" : colors.danger }}>
           {title}
         </Text>
@@ -48,7 +48,7 @@ export default function MultipleChoice({
 }
 
 const styles = StyleSheet.create({
-  label: {
+  title: {
     fontSize: 18,
     fontWeight: "600",
     marginBottom: 10,

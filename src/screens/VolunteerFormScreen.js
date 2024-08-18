@@ -13,7 +13,7 @@ import {
 } from "react-native";
 
 import forms from "../constants/forms";
-import { getUser, FormString, submitForm, hashForm } from "../utils";
+import { getUser, Question, emptyQuestionState, FormString, submitForm, hashForm } from "../utils";
 
 import TextField from "../components/TextField";
 import CheckBoxQuery from "../components/CheckBoxQuery";
@@ -23,23 +23,8 @@ import MultipleChoice from "../components/MultipleChoice";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-class Question {
-  constructor({ component, validate = (_) => true, isVisible = () => true }) {
-    this.component = component;
-    this.validate = () => !isVisible() || validate(component.props.state.value);
-    this.isVisible = isVisible;
-    this.state = component.props.state;
-    this.setState = component.props.setState;
-    this.y = component.props.state.y;
-  }
-}
-
 export default function VolunteerFormScreen({ navigation, route }) {
   const { title, location, date } = route.params;
-
-  function emptyQuestionState(initial = null) {
-    return useState({ value: initial, y: null, valid: true });
-  }
 
   const [fullName, setFullName] = emptyQuestionState();
 

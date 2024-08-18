@@ -1,3 +1,4 @@
+import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export async function getUser() {
@@ -10,6 +11,21 @@ export async function getUser() {
   } catch (error) {
     console.error(error);
   }
+}
+
+export class Question {
+  constructor({ component, validate = (_) => true, isVisible = () => true }) {
+    this.component = component;
+    this.validate = () => !isVisible() || validate(component.props.state.value);
+    this.isVisible = isVisible;
+    this.state = component.props.state;
+    this.setState = component.props.setState;
+    this.y = component.props.state.y;
+  }
+}
+
+export function emptyQuestionState(initial = null) {
+  return useState({ value: initial, y: null, valid: true });
 }
 
 export function hashForm(title, location, date) {

@@ -14,7 +14,7 @@ export default function MultiSelect({ state, setState, title, options }) {
                 }));
             }}
         >
-            <Text style={[styles.label, {"color": state.valid ? "black" : "red"}]}>{title}</Text>
+            <Text style={[styles.title, {"color": state.valid ? "black" : "red"}]}>{title}</Text>
             {options.map((option, index) => (
                 <Pressable key={index * 4} onPress={() => {
                     setState(previous => {
@@ -41,7 +41,7 @@ export default function MultiSelect({ state, setState, title, options }) {
 }
 
 const styles = StyleSheet.create({
-    label: {
+    title: {
         fontSize: 18,
         fontWeight: "600",
         marginBottom: 10,
