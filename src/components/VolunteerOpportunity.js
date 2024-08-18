@@ -1,4 +1,7 @@
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function VolunteerOpportunity({
   navigation,
@@ -37,31 +40,32 @@ export default function VolunteerOpportunity({
             {title.length <= 19 ? title : title.slice(0, 16) + "..."}
           </Text>
           <Text style={styles.info}>
-            <Image
+            <MaterialCommunityIcons
+              name="clock-time-five-outline"
+              size={10}
+              color="black"
               style={styles.icon}
-              source={require("./../assets/clock.png")}
             />
             {"  "}
             {date}
           </Text>
           <Text style={styles.info}>
-            <Image
+            <SimpleLineIcons
+              name="location-pin"
+              size={10}
+              color="black"
               style={styles.icon}
-              source={require("./../assets/location.png")}
             />
             {"  "}
             {location}
           </Text>
         </View>
       </View>
-      <Image
+      <FontAwesome
+        name={isSubmitted ? "check" : "chevron-right"}
+        size={25}
+        color="black"
         style={isSubmitted ? styles.checkmark : styles.caret}
-        //source={require("./../assets/caret-left.png")}
-        source={
-          isSubmitted
-            ? require("./../assets/checkmark.png")
-            : require("./../assets/caret-left.png")
-        }
       />
     </Pressable>
   );
@@ -107,8 +111,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   caret: {
-    transform: [{ rotateZ: "180deg" }],
-    marginRight: 10,
+    marginRight: 20,
   },
   checkmark: {
     marginRight: 20,

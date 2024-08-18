@@ -11,7 +11,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import SignUpButton from "../components/SignUpButton";
 import Tag from "../components/Tag";
 import Heading from "../components/Heading";
-
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import colors from "../constants/colors";
 
 export default function VolunteerOpportunityScreen({ route, navigation }) {
@@ -53,17 +54,15 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
       <View style={styles.subcontainer}>
         <View style={styles.details}>
           <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
-            <Image
-              source={require("./../assets/clock.png")}
-              style={{ height: 18, width: 18 }}
-            ></Image>
+            <MaterialCommunityIcons
+              name="clock-time-five-outline"
+              size={18}
+              color="black"
+            />
             <Text style={styles.detailsText}>{date}</Text>
           </View>
           <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
-            <Image
-              source={require("./../assets/location.png")}
-              style={{ height: 18, width: 18 }}
-            ></Image>
+            <SimpleLineIcons name="location-pin" size={18} color="black" />
             <Text style={styles.detailsText}>{location}</Text>
           </View>
         </View>

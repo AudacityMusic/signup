@@ -9,6 +9,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../constants/colors";
 import { alertError } from "../utils";
+import Feather from '@expo/vector-icons/Feather';
 
 const selectFile = async () => {
   try {
@@ -134,10 +135,7 @@ export default function UploadButton({
           }));
         }}
       >
-        <Image
-          source={require("./../assets/upload.png")}
-          style={{ height: 25, width: 25 }}
-        />
+        <Feather name="upload" size={25} color="black" />
         <Text style={styles.uploadText}>Upload</Text>
       </Pressable>
       <Text
@@ -175,7 +173,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     borderRadius: 20,
-    borderWidth: 1.5,
+    borderWidth: 2,
     paddingVertical: 10,
     paddingHorizontal: 15,
   },
