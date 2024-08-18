@@ -38,15 +38,9 @@ export default function HomeScreen({ navigation, route }) {
   }
 
   function compareDate(dateString1, dateString2) {
-    const date1 = dateString1
-      .slice(5, -1)
-      .split(",")
-      .map(Number);
-      
-    const date2 = dateString2
-      .slice(5, -1)
-      .split(",")
-      .map(Number);
+    const date1 = dateString1.slice(5, -1).split(",").map(Number);
+
+    const date2 = dateString2.slice(5, -1).split(",").map(Number);
 
     for (let index = 0; index < 6; index++) {
       if (date1[index] < date2[index]) {
@@ -58,7 +52,7 @@ export default function HomeScreen({ navigation, route }) {
 
     return 0;
   }
-  
+
   function formatDate(dateString) {
     const [year, month, day, hour, minute, second] = dateString
       .slice(5, -1)
