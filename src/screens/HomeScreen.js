@@ -12,6 +12,8 @@ import { alertError, hashForm } from "../utils";
 
 export default function HomeScreen({ navigation, route }) {
   function formatData(data) {
+    data.sort((a, b) => compareDate(a.Date, b.Date));
+
     let formattedArray = [];
     let tempArray = [];
 
@@ -33,6 +35,22 @@ export default function HomeScreen({ navigation, route }) {
       formattedArray.push(tempArray);
     }
     return formattedArray;
+  }
+
+  function compareDate(dateString1, dateString2) {
+    const date1 = dateString1.slice(5, -1).split(",").map(Number);
+
+    const date2 = dateString2.slice(5, -1).split(",").map(Number);
+
+    for (let index = 0; index < 6; index++) {
+      if (date1[index] < date2[index]) {
+        return -1;
+      } else if (date1[index] > date2[index]) {
+        return 1;
+      }
+    }
+
+    return 0;
   }
 
   function formatDate(dateString) {
