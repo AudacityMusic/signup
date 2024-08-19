@@ -1,4 +1,7 @@
 import { View, Text, StyleSheet, Image, Pressable, Alert } from "react-native";
+import Entypo from "@expo/vector-icons/Entypo";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function OtherOpportunities() {
   return (
@@ -11,19 +14,23 @@ export default function OtherOpportunities() {
           )
         }
       >
-        <Image
+        <Entypo
+          name="beamed-note"
+          size={18}
+          color="black"
           style={styles.icon}
-          source={require("./../assets/music-note.png")}
         />
         <Text style={styles.text}>Request a Concert</Text>
-        <Image
+        <FontAwesome
+          name="chevron-right"
+          size={20}
+          color="black"
           style={styles.arrow}
-          source={require("./../assets/caret-left.png")}
         />
       </Pressable>
       <View style={styles.divider} />
       <View style={[styles.card, styles.last]}>
-        <Image style={styles.icon} source={require("./../assets/gift.png")} />
+        <Ionicons name="gift" size={18} color="black" style={styles.icon} />
         <Text style={styles.text}>Donate to admin@funyouth.us on Zelle</Text>
       </View>
     </View>
@@ -52,8 +59,8 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 10,
   },
   icon: {
-    width: 15,
-    height: 15,
+    width: 18,
+    height: 18,
     marginRight: 10,
   },
   text: {
@@ -64,7 +71,6 @@ const styles = StyleSheet.create({
   arrow: {
     width: 20,
     height: 20,
-    transform: [{ rotateZ: "180deg" }],
   },
   divider: {
     height: 0.1,
