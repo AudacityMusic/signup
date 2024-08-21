@@ -1,6 +1,13 @@
 import "@expo/metro-runtime";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, View, Text, StyleSheet, StatusBar, Platform } from "react-native"; // Import StatusBar from 'react-native'
+import {
+  ActivityIndicator,
+  View,
+  Text,
+  StyleSheet,
+  StatusBar,
+  Platform,
+} from "react-native"; // Import StatusBar from 'react-native'
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -104,7 +111,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0, 
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   centeredContainer: {
     flex: 1,

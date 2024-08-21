@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     zIndex: 1000,
     justifyContent: "center",
     alignItems: "center",
-    elevation: 2, 
+    elevation: 2,
   },
   text: {
     color: "white",
