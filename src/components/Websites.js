@@ -1,4 +1,5 @@
 import React from "react";
+import Feather from "@expo/vector-icons/Feather";
 import {
   View,
   Text,
@@ -25,9 +26,11 @@ export default function Websites() {
             source={require("./../assets/eternity-band.png")}
           />
           <Text style={styles.text}>Eternity Band</Text>
-          <Image
+          <Feather
+            name="external-link"
+            size={21}
+            color="black"
             style={styles.arrow}
-            source={require("./../assets/external-link.png")}
           />
         </Pressable>
         <View style={styles.divider} />
@@ -40,9 +43,11 @@ export default function Websites() {
             source={require("./../assets/audacity-workshop.png")}
           />
           <Text style={styles.text}>Audacity Workshop</Text>
-          <Image
+          <Feather
+            name="external-link"
+            size={21}
+            color="black"
             style={styles.arrow}
-            source={require("./../assets/external-link.png")}
           />
         </Pressable>
         <View style={styles.divider} />
@@ -55,9 +60,11 @@ export default function Websites() {
             source={require("./../assets/colorvision.png")}
           />
           <Text style={styles.text}>ColorVision</Text>
-          <Image
+          <Feather
+            name="external-link"
+            size={21}
+            color="black"
             style={styles.arrow}
-            source={require("./../assets/external-link.png")}
           />
         </Pressable>
         <View style={styles.divider} />
@@ -70,9 +77,11 @@ export default function Websites() {
             source={require("./../assets/fun-youth.png")}
           />
           <Text style={styles.text}>FUN Youth</Text>
-          <Image
+          <Feather
+            name="external-link"
+            size={21}
+            color="black"
             style={styles.arrow}
-            source={require("./../assets/external-link.png")}
           />
         </Pressable>
       </View>
@@ -111,8 +120,8 @@ const styles = StyleSheet.create({
     color: "#555",
   },
   arrow: {
-    width: 20,
-    height: 20,
+    width: 21,
+    height: 21,
   },
   divider: {
     height: 1,

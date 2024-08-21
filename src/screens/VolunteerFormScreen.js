@@ -13,13 +13,21 @@ import {
 } from "react-native";
 
 import forms from "../constants/forms";
-import { getUser, submitForm } from "../utils";
+import {
+  getUser,
+  FormString,
+  submitForm,
+  hashForm,
+  alertError,
+} from "../utils";
 
 import TextField from "../components/TextField";
 import CheckBoxQuery from "../components/CheckBoxQuery";
 import UploadButton from "../components/UploadButton";
 import NextButton from "../components/NextButton";
 import MultipleChoice from "../components/MultipleChoice";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class Question {
   constructor({ component, validate = (_) => true, isVisible = () => true }) {
@@ -32,7 +40,7 @@ class Question {
   }
 }
 
-export default function VolunteerFormScreen({ route }) {
+export default function VolunteerFormScreen({ navigation, route }) {
   const { title, location, date } = route.params;
 
   function emptyQuestionState(initial = null) {
@@ -47,7 +55,7 @@ export default function VolunteerFormScreen({ route }) {
         const user = await getUser();
         setFullName((prevState) => ({ ...prevState, value: user?.name }));
       } catch (error) {
-        console.error(error);
+        alertError(`While getting user in volunteer form screen: ${error}`);
       }
     })();
   }, []);
@@ -68,7 +76,9 @@ export default function VolunteerFormScreen({ route }) {
   const [otherInfo, setOtherInfo] = emptyQuestionState();
 
   const [scrollObject, setScrollObject] = useState(null);
-  const [timeLimit, setTimeLimit] = useState(0);
+  const [timeLimit, setTimeLimit] = useState(
+    title == "Library Music Hour" ? 0 : 10,
+  );
 
   const performanceOptions = {
     "Individual performance only": 8,
@@ -81,7 +91,7 @@ export default function VolunteerFormScreen({ route }) {
   const isAtLeast = (value, len) => value?.trim().length >= len;
   const isNotEmpty = (value) => isAtLeast(value, 1);
 
-  const questions = [
+  let questions = [
     new Question({
       component: (
         <TextField
@@ -175,25 +185,27 @@ export default function VolunteerFormScreen({ route }) {
       validate: isNotEmpty,
     }),
 
-    new Question({
-      component: (
-        <MultipleChoice
-          title="Performance Type"
-          options={performanceOptions}
-          onSelect={(option) => {
-            setPerformanceType((prevState) => ({
-              ...prevState,
-              value: option,
-            }));
-            setTimeLimit(performanceOptions[option]);
-          }}
-          key="performanceType"
-          state={performanceType}
-          setState={setPerformanceType}
-        />
-      ),
-      validate: isNotEmpty,
-    }),
+    title == "Library Music Hour"
+      ? new Question({
+          component: (
+            <MultipleChoice
+              title="Performance Type"
+              options={performanceOptions}
+              onSelect={(option) => {
+                setPerformanceType((prevState) => ({
+                  ...prevState,
+                  value: option,
+                }));
+                setTimeLimit(performanceOptions[option]);
+              }}
+              key="performanceType"
+              state={performanceType}
+              setState={setPerformanceType}
+            />
+          ),
+          validate: isNotEmpty,
+        })
+      : null,
 
     new Question({
       component: (
@@ -267,27 +279,38 @@ export default function VolunteerFormScreen({ route }) {
           key="pianoAccompaniment"
           state={pianoAccompaniment}
           setState={setPianoAccompaniment}
+          navigation={navigation}
         />
       ),
       // Only PDF files can be uploaded
-      validate: () => (pianoAccompaniment.value?.size ?? 0) <= 104857600, // There are 104,857,600 bytes in 100 MB
+      // Optional
+      validate: () =>
+        pianoAccompaniment.value == null ||
+        pianoAccompaniment.value[1] <= 104857600, // There are 104,857,600 bytes in 100 MB
     }),
 
-    new Question({
-      component: (
-        <UploadButton
-          title="Upload your Library Band Ensemble profile as one PDF file."
-          key="ensembleProfile"
-          state={ensembleProfile}
-          setState={setEnsembleProfile}
-        />
-      ),
+    title == "Library Music Hour"
+      ? new Question({
+          component: (
+            <UploadButton
+              title="Upload your Library Band Ensemble profile as one PDF file."
+              key="ensembleProfile"
+              state={ensembleProfile}
+              setState={setEnsembleProfile}
+              navigation={navigation}
+              required={true}
+            />
+          ),
 
-      isVisible: () => performanceType.value?.includes("Ensemble"),
+          isVisible: () => performanceType.value?.includes("Ensemble"),
 
-      // Only PDF files can be uploaded
-      validate: () => (ensembleProfile.value?.size ?? 1000000000) <= 104857600, // There are 104,857,600 bytes in 100 MB
-    }),
+          // Only PDF files can be uploaded
+          // Required only if visible (selected ensemble option)
+          validate: () =>
+            ensembleProfile.value != null &&
+            ensembleProfile.value[1] <= 104857600, // There are 104,857,600 bytes in 100 MB
+        })
+      : null,
 
     new Question({
       component: (
@@ -301,7 +324,9 @@ export default function VolunteerFormScreen({ route }) {
     }),
   ];
 
-  function submit() {
+  questions = questions.filter((q) => q != null);
+
+  async function submit() {
     let allValid = true;
     let minInvalidY = Infinity;
 
@@ -312,7 +337,7 @@ export default function VolunteerFormScreen({ route }) {
         valid: isValid,
       }));
 
-      if (!isValid && question.isVisible) {
+      if (!isValid) {
         allValid = false;
         if (question.y < minInvalidY) {
           minInvalidY = question.y;
@@ -335,27 +360,29 @@ export default function VolunteerFormScreen({ route }) {
     }
 
     const form = forms[title];
-    const formData = new FormData();
+    const formData = new FormString();
 
-    if (title == "Library Music Hour") {
-      formData.append(`entry.${form.location}`, location);
-      formData.append(`entry.${form.date}`, date);
-      formData.append(`entry.${form.fullName}`, fullName.value);
-      formData.append(`entry.${form.city}`, city.value);
-      formData.append(`entry.${form.phoneNumber}`, phoneNumber.value);
-      formData.append(`entry.${form.age}`, age.value);
-      formData.append(`entry.${form.musicPiece}`, musicPiece.value);
-      formData.append(`entry.${form.composer}`, composer.value);
-      formData.append(`entry.${form.instrument}`, instrument.value);
-      formData.append(`entry.${form.length}`, length.value);
-      formData.append(`entry.${form.recordingLink}`, recordingLink.value);
-      formData.append(`entry.${form.performanceType}`, performanceType.value);
+    if (title == "Library Music Hour" || title == "Music by the Tracks") {
+      formData.append(form.location, location);
+      formData.append(form.date, date);
+      formData.append(form.fullName, fullName.value);
+      formData.append(form.city, city.value);
+      formData.append(form.phoneNumber, phoneNumber.value);
+      formData.append(form.age, age.value);
+      formData.append(form.musicPiece, musicPiece.value);
+      formData.append(form.composer, composer.value);
+      formData.append(form.instrument, instrument.value);
+      formData.append(form.length, length.value);
+      formData.append(form.recordingLink, recordingLink.value);
+      if (title == "Library Music Hour") {
+        formData.append(form.performanceType, performanceType.value);
+      }
       formData.append(
-        `entry.${form.publicPermission}`,
+        form.publicPermission,
         publicPermission.value ? "Yes" : "No",
       );
       formData.append(
-        `entry.${form.parentalConsent}`,
+        form.parentalConsent,
         parentalConsent.value == null
           ? ""
           : parentalConsent.value
@@ -363,21 +390,38 @@ export default function VolunteerFormScreen({ route }) {
             : "No",
       );
       formData.append(
-        `entry.${form.pianoAccompaniment}`,
-        pianoAccompaniment.value ?? "",
+        form.pianoAccompaniment,
+        pianoAccompaniment.value ? pianoAccompaniment.value[0] : "",
       );
-      formData.append(
-        `entry.${form.ensembleProfile}`,
-        ensembleProfile.value ?? "",
-      );
-      formData.append(`entry.${form.otherInfo}`, otherInfo.value ?? "");
+      if (title == "Library Music Hour") {
+        formData.append(
+          form.ensembleProfile,
+          ensembleProfile.value ? ensembleProfile.value[0] : "",
+        );
+      }
+      formData.append(form.otherInfo, otherInfo.value ?? "");
     }
 
-    if (submitForm(form.id, formData)) {
-      Alert.alert(`Form "${title}" submitted!`);
-    } else {
-      Alert.alert("Error: Check console");
+    if (!submitForm(form.id, formData)) {
+      navigation.navigate("End", { isSuccess: false });
+      return;
     }
+
+    try {
+      const submittedForms = await AsyncStorage.getItem("submittedForms");
+      const hash = hashForm(title, location, date);
+      if (submittedForms == null) {
+        await AsyncStorage.setItem("submittedForms", JSON.stringify([hash]));
+      } else {
+        const newForms = JSON.parse(submittedForms);
+        newForms.push(hash);
+        await AsyncStorage.setItem("submittedForms", JSON.stringify(newForms));
+      }
+    } catch (error) {
+      alertError(`Unable to get/save submittedForms: ${error}`);
+    }
+
+    navigation.navigate("End", { isSuccess: true });
   }
 
   return (
@@ -406,7 +450,7 @@ export default function VolunteerFormScreen({ route }) {
             </View>
             <View style={styles.form}>
               {questions
-                .filter((question) => question.isVisible())
+                .filter((question) => question?.isVisible())
                 .map((question) => question.component)}
             </View>
             <Pressable style={styles.nextButton} onPress={() => submit()}>

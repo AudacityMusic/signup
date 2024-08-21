@@ -14,10 +14,22 @@ import {
 } from "@react-native-google-signin/google-signin";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { alertError } from "../utils";
 
 GoogleSignin.configure({
-  webClientId: process.env.EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID, // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
-  iosClientId: process.env.EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID, // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+  webClientId:
+    process.env.EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID ??
+    alertError("Undefined EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID env variable"), // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
+  iosClientId:
+    process.env.EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID ??
+    alertError("Undefined EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID env variable"), // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+  scopes: [
+    "https://www.googleapis.com/auth/userinfo.profile",
+    "https://www.googleapis.com/auth/userinfo.email",
+    "https://www.googleapis.com/auth/drive.file",
+    "openid",
+  ],
+  offlineAccess: true,
 });
 
 export default function SignInScreen({ navigation }) {
@@ -40,33 +52,19 @@ export default function SignInScreen({ navigation }) {
               await GoogleSignin.hasPlayServices();
               const userInfo = await GoogleSignin.signIn();
               AsyncStorage.setItem("user", JSON.stringify(userInfo.user));
-              console.log(userInfo);
-              navigation.navigate("Home");
+              AsyncStorage.setItem(
+                "access-token",
+                (await GoogleSignin.getTokens()).accessToken,
+              );
+              navigation.navigate("Home", { shouldRefresh: true });
             } catch (error) {
               if (isErrorWithCode(error)) {
-                switch (error.code) {
-                  case statusCodes.SIGN_IN_CANCELLED:
-                    // user cancelled the login flow
-                    console.log("Cancelled");
-                    break;
-                  case statusCodes.IN_PROGRESS:
-                    // operation (eg. sign in) already in progress
-                    console.error("In progress");
-                    break;
-                  case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-                    // play services not available or outdated
-                    console.error("Play services not available or outdated");
-                    break;
-                  case statusCodes.SIGN_IN_REQUIRED:
-                    console.error("Sign in required");
-                    break;
-                  default:
-                    console.error(error);
-                    break;
+                if (error.code == statusCodes.SIGN_IN_CANCELLED) {
+                  return;
                 }
+                alertError(`While signing in: (${error.code}) ${error}`);
               } else {
-                console.error("No error code for: " + error);
-                // an error that's not related to google sign in occurred
+                alertError(`While signing in: (no error code) ${error}`);
               }
             }
           }}

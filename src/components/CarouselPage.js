@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Alert, Pressable, StyleSheet, View, Dimensions } from "react-native";
 import AnimatedDotsCarousel from "react-native-animated-dots-carousel";
 import VolunteerOpportunity from "./VolunteerOpportunity";
 import Carousel from "react-native-reanimated-carousel";
+import Heading from "./Heading";
+import RefreshButton from "./RefreshButton";
 
-export default function CarouselPage({ navigation, data }) {
+export default function CarouselPage({ navigation, data, onRefresh }) {
   const [dotIndex, setDotIndex] = useState(0);
-
   const renderItem = ({ item }) => {
     return (
       <View>
@@ -37,6 +38,7 @@ export default function CarouselPage({ navigation, data }) {
                   ? null
                   : component["Form Link"]
               }
+              isSubmitted={component.isSubmitted}
               key={index}
             />
           );
@@ -44,10 +46,26 @@ export default function CarouselPage({ navigation, data }) {
       </View>
     );
   };
+  const onPress = () => {
+    onRefresh();
+    Alert.alert("Refreshed!");
+  };
+
   return (
     <View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Heading>Volunteer Opportunities</Heading>
+        <Pressable onPress={onPress}>
+          <RefreshButton />
+        </Pressable>
+      </View>
       <Carousel
-        width={400}
+        width={Dimensions.get("window").width - 30}
         height={280}
         data={data}
         renderItem={renderItem}

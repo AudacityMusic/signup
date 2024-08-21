@@ -1,4 +1,7 @@
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function VolunteerOpportunity({
   navigation,
@@ -9,6 +12,7 @@ export default function VolunteerOpportunity({
   description,
   tags,
   formURL,
+  isSubmitted,
 }) {
   return (
     <Pressable
@@ -21,40 +25,47 @@ export default function VolunteerOpportunity({
           image,
           description,
           tags,
+          formURL,
+          isSubmitted,
         })
       }
     >
       <View style={{ flexDirection: "row" }}>
         <Image
           style={styles.image}
-          // source={require("./../assets/warm-springs-bart.png")}
           source={{ width: 0, height: 0, uri: image }}
         />
         <View style={{ flexDirection: "column", alignSelf: "center" }}>
           <Text style={styles.title}>
-            {title.length <= 22 ? title : title.slice(0, 22) + "..."}
+            {title.length <= 19 ? title : title.slice(0, 16) + "..."}
           </Text>
           <Text style={styles.info}>
-            <Image
+            <MaterialCommunityIcons
+              name="clock-time-five-outline"
+              size={10}
+              color="black"
               style={styles.icon}
-              source={require("./../assets/clock.png")}
             />
             {"  "}
             {date}
           </Text>
           <Text style={styles.info}>
-            <Image
+            <SimpleLineIcons
+              name="location-pin"
+              size={10}
+              color="black"
               style={styles.icon}
-              source={require("./../assets/location.png")}
             />
             {"  "}
             {location}
           </Text>
         </View>
       </View>
-      <Image
-        style={styles.caret}
-        source={require("./../assets/caret-left.png")}
+      <FontAwesome
+        name={isSubmitted ? "check" : "chevron-right"}
+        size={25}
+        color="black"
+        style={isSubmitted ? styles.checkmark : styles.caret}
       />
     </Pressable>
   );
@@ -73,6 +84,7 @@ const styles = StyleSheet.create({
     borderColor: "#e0e0e0",
     borderWidth: 1,
     marginBottom: 10,
+    marginRight: 10,
   },
   image: {
     width: 80,
@@ -99,9 +111,12 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   caret: {
-    width: 20,
-    height: 50,
-    marginRight: 30,
-    transform: [{ rotateZ: "180deg" }],
+    marginRight: 20,
+  },
+  checkmark: {
+    marginRight: 20,
+    width: 25,
+    height: 25,
+    tintColor: "black",
   },
 });

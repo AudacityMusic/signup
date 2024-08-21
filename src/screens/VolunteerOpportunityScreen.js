@@ -11,12 +11,22 @@ import { LinearGradient } from "expo-linear-gradient";
 import SignUpButton from "../components/SignUpButton";
 import Tag from "../components/Tag";
 import Heading from "../components/Heading";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import colors from "../constants/colors";
 
 export default function VolunteerOpportunityScreen({ route, navigation }) {
-  const { title, location, date, image, description, tags, formURL } =
-    route.params;
+  const {
+    title,
+    location,
+    date,
+    image,
+    description,
+    tags,
+    formURL,
+    isSubmitted,
+  } = route.params;
   const tagsIcons = tags.map((text) => <Tag key={text} text={text} />);
-  console.log(formURL);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.banner}>
@@ -44,17 +54,15 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
       <View style={styles.subcontainer}>
         <View style={styles.details}>
           <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
-            <Image
-              source={require("./../assets/clock.png")}
-              style={{ height: 18, width: 18 }}
-            ></Image>
+            <MaterialCommunityIcons
+              name="clock-time-five-outline"
+              size={18}
+              color="black"
+            />
             <Text style={styles.detailsText}>{date}</Text>
           </View>
           <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
-            <Image
-              source={require("./../assets/location.png")}
-              style={{ height: 18, width: 18 }}
-            ></Image>
+            <SimpleLineIcons name="location-pin" size={18} color="black" />
             <Text style={styles.detailsText}>{location}</Text>
           </View>
         </View>
@@ -70,16 +78,26 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
             <View style={styles.tags}>{tagsIcons}</View>
           </View>
         ) : null}
-        <Pressable
-          style={styles.signUpButton}
-          onPress={() =>
-            formURL == null
-              ? navigation.navigate("Volunteer Form", { title, location, date })
-              : navigation.navigate("Google Forms", { formURL })
-          }
-        >
-          <SignUpButton />
-        </Pressable>
+        <View style={styles.lowerRight}>
+          {isSubmitted ? (
+            <Text style={styles.alreadySubmitted}>
+              Warning: You have already submitted this form.
+            </Text>
+          ) : null}
+          <Pressable
+            onPress={() =>
+              formURL == null
+                ? navigation.navigate("Volunteer Form", {
+                    title,
+                    location,
+                    date,
+                  })
+                : navigation.navigate("Google Forms", { formURL })
+            }
+          >
+            <SignUpButton />
+          </Pressable>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -115,7 +133,11 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: 5,
   },
-  signUpButton: {
+  alreadySubmitted: {
+    color: colors.danger,
+    marginBottom: 10,
+  },
+  lowerRight: {
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "flex-end",

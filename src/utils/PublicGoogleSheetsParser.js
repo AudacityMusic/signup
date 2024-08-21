@@ -1,6 +1,8 @@
 // From https://github.com/fureweb-com/public-google-sheets-parser
 // Copyright (c) 2020 Jihwan Oh
 
+import { alertError } from ".";
+
 export class PublicGoogleSheetsParser {
   constructor(spreadsheetId, option) {
     this.id = spreadsheetId;
@@ -45,7 +47,7 @@ export class PublicGoogleSheetsParser {
       return response && response.ok ? response.text() : null;
     } catch (e) {
       /* istanbul ignore next */
-      console.error("Error fetching spreadsheet data:", e);
+      alertError("Error fetching spreadsheet data: " + e);
       /* istanbul ignore next */
       return null;
     }
@@ -100,7 +102,7 @@ export class PublicGoogleSheetsParser {
       }
     } catch (e) {
       /* istanbul ignore next */
-      console.error("Error parsing spreadsheet data:", e);
+      alertError("Error parsing spreadsheet data: " + e);
     }
 
     return rows;
