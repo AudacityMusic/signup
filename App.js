@@ -13,8 +13,10 @@ import SignInScreen from "./src/screens/SignInScreen";
 import VolunteerFormScreen from "./src/screens/VolunteerFormScreen";
 import EmbeddedFormScreen from "./src/screens/EmbeddedFormScreen";
 import VolunteerOpportunityScreen from "./src/screens/VolunteerOpportunityScreen";
+import EndScreen from "./src/screens/EndScreen";
 import HomeHeader from "./src/components/HomeHeader";
 import NoInternetBanner from "./src/components/NoInternetBanner";
+import { alertError } from "./src/utils";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,7 +31,7 @@ export default function App() {
         const userString = await AsyncStorage.getItem("user");
         setIsLoggedIn(userString != null);
       } catch (error) {
-        console.error(error);
+        alertError(`While getting user in App: ${error}`);
       } finally {
         setLoading(false);
       }
@@ -96,6 +98,18 @@ export default function App() {
           <Stack.Screen name="Google Forms" component={EmbeddedFormScreen} />
         </Stack.Navigator>
       </View>
+        />
+        <Stack.Screen name="Volunteer Form" component={VolunteerFormScreen} />
+        <Stack.Screen name="Google Forms" component={EmbeddedFormScreen} />
+        <Stack.Screen
+          name="End"
+          component={EndScreen}
+          options={{
+            title: null,
+            headerBackVisible: false,
+          }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

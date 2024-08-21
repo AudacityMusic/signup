@@ -1,10 +1,17 @@
 import { useState } from "react";
-import { StyleSheet, Text, View, Image, Pressable } from "react-native";
+import { StyleSheet, Text, View, Image, Pressable, Alert } from "react-native";
 import DocumentPicker from "react-native-document-picker";
-
+import * as fs from "react-native-fs";
+import {
+  GDrive,
+  MimeTypes,
+} from "@robinbobin/react-native-google-drive-api-wrapper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../constants/colors";
+import { alertError } from "../utils";
+import Feather from "@expo/vector-icons/Feather";
 
-const uploadFile = async () => {
+const selectFile = async () => {
   try {
     const file = await DocumentPicker.pickSingle({
       type: [DocumentPicker.types.pdf],
@@ -12,12 +19,30 @@ const uploadFile = async () => {
     return file;
   } catch (error) {
     if (!DocumentPicker.isCancel(error)) {
-      throw error;
+      alertError(`In selectFile: ${error}`);
     }
   }
 };
 
-export default function UploadButton({ title, state, setState }) {
+async function getAccessToken() {
+  try {
+    const accessToken = await AsyncStorage.getItem("access-token");
+    if (accessToken === null) {
+      alertError("Undefined access token in getAccessToken");
+    }
+    return accessToken;
+  } catch (error) {
+    alertError(`In getAccessToken: ${error}`);
+  }
+}
+
+export default function UploadButton({
+  title,
+  state,
+  setState,
+  navigation,
+  required = false,
+}) {
   const [fileName, setFileName] = useState(null);
 
   return (
@@ -29,25 +54,88 @@ export default function UploadButton({ title, state, setState }) {
         }));
       }}
     >
-      <Text style={styles.label}>{title}</Text>
+      <Text style={styles.label}>
+        {title}
+        {required ? <Text style={{ color: "red" }}> *</Text> : null}
+      </Text>
       {fileName == null ? null : (
         <Text style={styles.otherInfo}>{fileName}</Text>
       )}
       <Pressable
         style={styles.upload}
         onPress={async () => {
-          const file = await uploadFile();
-          setFileName(file?.name);
+          const accessToken = await getAccessToken();
+          const googleDrive = new GDrive();
+          googleDrive.accessToken = accessToken;
+          googleDrive.fetchTimeout = 5000; // 5 seconds
+
+          const file = await selectFile();
+          console.log(`FILE: ${file.uri}`);
+
+          const fileData = await fs.readFile(file.uri, "base64");
+
+          let id = "";
+
+          try {
+            setFileName(`Uploading ${file.name}...`);
+            const googleFile = await googleDrive.files
+              .newMultipartUploader()
+              .setIsBase64(true)
+              .setData(fileData, MimeTypes.PDF)
+              .setRequestBody({
+                parents: ["root"],
+                name: file.name,
+              })
+              .execute();
+            id = googleFile.id;
+            console.log(`ID Fetching Successful: id=${id}`);
+            await googleDrive.permissions.create(
+              id,
+              {},
+              {
+                role: "reader",
+                type: "anyone",
+              },
+            );
+          } catch (error) {
+            if (error.name == "AbortError") {
+              alertError(
+                "File upload aborted. Use a more stable Internet connection or increase fetchTimeout.",
+              );
+            } else if (error.__response?.status == 403) {
+              Alert.alert(
+                "Permission Denied",
+                'Audacity Music Club does not have permission to share files associated with your Google account.\n\nTo enable this feature, please go to your profile, clear your data, and reauthenticate your Google account. When prompted to select what the app can access, tap on the checkbox to "see, edit, create, and delete Google files in this app."',
+                [
+                  {
+                    text: "Cancel",
+                  },
+                  {
+                    text: "Go to Profile",
+                    isPreferred: true,
+                    onPress: () => {
+                      navigation.navigate("Account");
+                    },
+                  },
+                ],
+              );
+            } else {
+              alertError("Error uploading file: " + error);
+            }
+            setFileName("Upload failed");
+            return;
+          }
+
+          console.log(`ID: https://drive.google.com/open?id=${id}`);
+          setFileName(file.name);
+
           setState((prevState) => ({
             ...prevState,
-            value: file,
+            value: [`https://drive.google.com/open?id=${id}`, file.size],
           }));
         }}
       >
-        <Image
-          source={require("./../assets/upload.png")}
-          style={{ height: 25, width: 25 }}
-        />
+        <Feather name="upload" size={25} color="black" />
         <Text style={styles.uploadText}>Upload</Text>
       </Pressable>
       <Text
@@ -85,7 +173,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     borderRadius: 20,
-    borderWidth: 1.5,
+    borderWidth: 2,
     paddingVertical: 10,
     paddingHorizontal: 15,
   },
