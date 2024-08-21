@@ -1,13 +1,5 @@
-import "@expo/metro-runtime";
-import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  View,
-  Text,
-  StyleSheet,
-  StatusBar,
-  Platform,
-} from "react-native"; // Import StatusBar from 'react-native'
+import React, { useState, useEffect } from "react";
+import { View, Text, ActivityIndicator, StyleSheet, Platform, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -20,8 +12,10 @@ import SignInScreen from "./src/screens/SignInScreen";
 import VolunteerFormScreen from "./src/screens/VolunteerFormScreen";
 import EmbeddedFormScreen from "./src/screens/EmbeddedFormScreen";
 import VolunteerOpportunityScreen from "./src/screens/VolunteerOpportunityScreen";
+import EndScreen from "./src/screens/EndScreen";
 import HomeHeader from "./src/components/HomeHeader";
 import NoInternetBanner from "./src/components/NoInternetBanner";
+import { alertError } from "./src/utils";
 
 const Stack = createNativeStackNavigator();
 
@@ -36,7 +30,7 @@ export default function App() {
         const userString = await AsyncStorage.getItem("user");
         setIsLoggedIn(userString != null);
       } catch (error) {
-        console.error(error);
+        alertError(`While getting user in App: ${error}`);
       } finally {
         setLoading(false);
       }
@@ -62,9 +56,10 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <StatusBar 
-// @ts-ignore
-      style="light" />
+      <StatusBar
+        // @ts-ignore
+        style="light"
+      />
       <View style={styles.container}>
         {!isConnected && <NoInternetBanner />}
         <Stack.Navigator
@@ -103,6 +98,14 @@ export default function App() {
           />
           <Stack.Screen name="Volunteer Form" component={VolunteerFormScreen} />
           <Stack.Screen name="Google Forms" component={EmbeddedFormScreen} />
+          <Stack.Screen
+            name="End"
+            component={EndScreen}
+            options={{
+              title: null,
+              headerBackVisible: false,
+            }}
+          />
         </Stack.Navigator>
       </View>
     </NavigationContainer>
