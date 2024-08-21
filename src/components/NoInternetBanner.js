@@ -11,20 +11,21 @@ const NoInternetBanner = () => (
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.danger,
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: [{ translateX: -150 }, { translateY: -25 }],
+    top: 0,
+    left: 0,
+    right: 0,
     zIndex: 1000,
-    width: 300,
-    height: 50,
     justifyContent: "center",
     alignItems: "center",
+    elevation: 2, 
   },
   text: {
     color: "white",
     textAlign: "center",
+    fontWeight: "bold",
   },
 });
 

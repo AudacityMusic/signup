@@ -1,7 +1,6 @@
 import "@expo/metro-runtime";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, SafeAreaView } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { ActivityIndicator, View, Text, StyleSheet, StatusBar, Platform } from "react-native"; // Import StatusBar from 'react-native'
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -36,7 +35,6 @@ export default function App() {
       }
     })();
 
-    // New useEffect for NetInfo
     const unsubscribe = NetInfo.addEventListener((state) => {
       setIsConnected(state.isConnected);
     });
@@ -47,13 +45,18 @@ export default function App() {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator size="large" />;
+    return (
+      <View style={styles.centeredContainer}>
+        <ActivityIndicator size="large" />
+        <Text>Loading...</Text>
+      </View>
+    );
   }
 
   return (
     <NavigationContainer>
       <StatusBar style="light" />
-      <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
         {!isConnected && <NoInternetBanner />}
         <Stack.Navigator
           initialRouteName={isLoggedIn ? "Home" : "Sign In"}
@@ -92,7 +95,20 @@ export default function App() {
           <Stack.Screen name="Volunteer Form" component={VolunteerFormScreen} />
           <Stack.Screen name="Google Forms" component={EmbeddedFormScreen} />
         </Stack.Navigator>
-      </SafeAreaView>
+      </View>
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.white,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0, 
+  },
+  centeredContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
