@@ -1,10 +1,16 @@
-import "@expo/metro-runtime";
-import { useState, useEffect } from "react";
-import { ActivityIndicator } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+  Platform,
+  StatusBar,
+} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import NetInfo from "@react-native-community/netinfo";
 
 import colors from "./src/constants/colors";
 import HomeScreen from "./src/screens/HomeScreen";
@@ -15,6 +21,7 @@ import EmbeddedFormScreen from "./src/screens/EmbeddedFormScreen";
 import VolunteerOpportunityScreen from "./src/screens/VolunteerOpportunityScreen";
 import EndScreen from "./src/screens/EndScreen";
 import HomeHeader from "./src/components/HomeHeader";
+import NoInternetBanner from "./src/components/NoInternetBanner";
 import { alertError } from "./src/utils";
 
 const Stack = createNativeStackNavigator();
@@ -22,6 +29,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isConnected, setIsConnected] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -34,60 +42,92 @@ export default function App() {
         setLoading(false);
       }
     })();
-  });
+
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      setIsConnected(state.isConnected);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   if (loading) {
-    return <ActivityIndicator size="large" />;
+    return (
+      <View style={styles.centeredContainer}>
+        <ActivityIndicator size="large" />
+        <Text>Loading...</Text>
+      </View>
+    );
   }
 
   return (
     <NavigationContainer>
-      <StatusBar style="light" />
-      <Stack.Navigator
-        initialRouteName={isLoggedIn ? "Home" : "Sign In"}
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: colors.primary,
-          },
-          headerTintColor: colors.white,
-        }}
-      >
-        <Stack.Screen
-          name="Sign In"
-          component={SignInScreen}
-          options={{
-            headerBackVisible: false,
-          }}
-        />
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            header: (props) => <HomeHeader {...props} />,
-          }}
-        />
-        <Stack.Screen name="Account" component={AccountScreen} />
-        <Stack.Screen
-          name="Volunteer Opportunity"
-          component={VolunteerOpportunityScreen}
-          options={{
-            title: null,
+      <StatusBar
+        // @ts-ignore
+        style="light"
+      />
+      <View style={styles.container}>
+        {!isConnected && <NoInternetBanner />}
+        <Stack.Navigator
+          initialRouteName={isLoggedIn ? "Home" : "Sign In"}
+          screenOptions={{
             headerStyle: {
-              backgroundColor: colors.black,
+              backgroundColor: colors.primary,
             },
+            headerTintColor: colors.white,
           }}
-        />
-        <Stack.Screen name="Volunteer Form" component={VolunteerFormScreen} />
-        <Stack.Screen name="Google Forms" component={EmbeddedFormScreen} />
-        <Stack.Screen
-          name="End"
-          component={EndScreen}
-          options={{
-            title: null,
-            headerBackVisible: false,
-          }}
-        />
-      </Stack.Navigator>
+        >
+          <Stack.Screen
+            name="Sign In"
+            component={SignInScreen}
+            options={{
+              headerBackVisible: false,
+            }}
+          />
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{
+              header: (props) => <HomeHeader {...props} />,
+            }}
+          />
+          <Stack.Screen name="Account" component={AccountScreen} />
+          <Stack.Screen
+            name="Volunteer Opportunity"
+            component={VolunteerOpportunityScreen}
+            options={{
+              title: null,
+              headerStyle: {
+                backgroundColor: colors.black,
+              },
+            }}
+          />
+          <Stack.Screen name="Volunteer Form" component={VolunteerFormScreen} />
+          <Stack.Screen name="Google Forms" component={EmbeddedFormScreen} />
+          <Stack.Screen
+            name="End"
+            component={EndScreen}
+            options={{
+              title: null,
+              headerBackVisible: false,
+            }}
+          />
+        </Stack.Navigator>
+      </View>
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.white,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+  },
+  centeredContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
