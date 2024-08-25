@@ -1,9 +1,18 @@
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 
-export default function OtherOpportunities() {
+export default function OtherOpportunities({navigation}) {
   return (
     <View style={styles.container}>
-      <Pressable style={[styles.card, styles.first]}>
+      <Pressable 
+        style={[styles.card, styles.first]} 
+        onPress={() => 
+          navigation.navigate("Volunteer Opportunity", {
+            title: "Request Concert",
+            location: null,
+            date: null,
+          })
+        }
+      >
         <Image
           style={styles.icon}
           source={require("./../assets/music-note.png")}

@@ -123,7 +123,7 @@ export default function HomeScreen({ navigation, route }) {
         onRefresh={onRefresh}
       />
       <Heading>Other Opportunities</Heading>
-      <OtherOpportunities />
+      <OtherOpportunities navigation={navigation}/>
       <Heading>Websites</Heading>
       <Websites />
     </ScrollView>
