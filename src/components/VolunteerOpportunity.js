@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import { View, Text, StyleSheet, Image, Pressable, Platform } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -77,8 +77,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: "#f5f5f5",
-    borderTopRightRadius: 300,
-    borderBottomRightRadius: 300,
+    borderTopRightRadius: Platform.OS == "ios" ? 50 : 300,
+    borderBottomRightRadius: Platform.OS == "ios" ? 50 : 300,
     borderBottomLeftRadius: 1000,
     borderTopLeftRadius: 1000,
     borderColor: "#e0e0e0",
