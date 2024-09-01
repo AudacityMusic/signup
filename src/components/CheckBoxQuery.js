@@ -13,7 +13,7 @@ export default function CheckBoxQuery({ question, state, setState }) {
         }));
       }}
     >
-      <Text style={styles.header}>
+      <Text style={[styles.header, {"color": state.valid ? "black" : colors.danger}]}>
         {question}
         <Text style={{ color: "red" }}>{" *"}</Text>
       </Text>

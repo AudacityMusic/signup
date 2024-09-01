@@ -84,6 +84,7 @@ export async function submitForm(formId, formData) {
 
 const isAtLeast = (value, len) => value ? (value.hasOwnProperty("trim") ? value.trim() : value).length >= len : false;
 const isNotEmpty = (value) => isAtLeast(value, 1);
+const isExactly = (value, len) => !isAtLeast(value, len + 1) && isAtLeast(value, len);
 
 class Form {
   constructor(scrollObject) {
@@ -211,7 +212,7 @@ class MusicHour extends Form {
           <TextField
             title="Phone Number"
             keyboardType="phone-pad"
-            maxLength={10}
+            maxLength={20}
             key="phoneNumber"
             state={this.phoneNumber[0]}
             setState={this.phoneNumber[1]}
@@ -533,7 +534,7 @@ class RequestConcert extends Form {
           <TextField
             title="Phone Number"
             keyboardType="phone-pad"
-            maxLength={10}
+            maxLength={20}
             key="phoneNumber"
             state={this.phoneNumber[0]}
             setState={this.phoneNumber[1]}
@@ -789,7 +790,7 @@ class DanceClub extends Form{
           <TextField
             title="Phone Number"
             keyboardType="phone-pad"
-            maxLength={10}
+            maxLength={20}
             key="phoneNumber"
             state={this.phoneNumber[0]}
             setState={this.phoneNumber[1]}
@@ -837,7 +838,7 @@ class DanceClub extends Form{
             setState={this.favoriteDanceStyles[1]}
           />
         ),
-        validate: isNotEmpty,
+        validate: (value) => isExactly(value, 4),
       }),
   
       new Question({
@@ -857,12 +858,12 @@ class DanceClub extends Form{
         name: 'consent',
         component: (
           <CheckBoxQuery
-            question={"We will record our event and place them on our website." + 
-                      "Maximum efforts will be made to avoid showing faces of the participants," +
-                      "but we can't guarantee it can be avoided completely." +
+            question={"We will record our event and place them on our website. " + 
+                      "Maximum efforts will be made to avoid showing faces of the participants, " +
+                      "but we can't guarantee it can be avoided completely. " +
                       "I consent to my and/or my child's image being recorded/filmed and " +
                       "allow the product to be used for promotional purposes in any way ADC sees fit, " + 
-                      "including on social media. I also understand that ADC retains full ownership" +
+                      "including on social media. I also understand that ADC retains full ownership " +
                       "of these images and/or videos."}
   
             key="recording"

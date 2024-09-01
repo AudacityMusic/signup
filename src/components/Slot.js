@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { View, Pressable, Text, StyleSheet } from 'react-native'
 import DatePicker from 'react-native-date-picker'
 import Ionicons from '@expo/vector-icons/Ionicons';
+import EvilIcons from '@expo/vector-icons/EvilIcons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import colors from '../constants/colors';
 
@@ -115,7 +116,8 @@ export class TimeSlot {
 function RemoveButton({state, setState, index}) {
     return (
         <Pressable key={index * 10 + 7} style={styles.button} onPress={() => {setState(previous => {return {...previous, value: previous.value.slice(0, index).concat(previous.value.slice(index + 1, state.value.length))}})}}>
-            <FontAwesome6 name="trash-alt" size={40} color="FF3B30" />
+            {/* <FontAwesome6 name="trash-alt" size={20} color="#FF3B30" /> */}
+            <EvilIcons name="trash" size={30} color="#FF3B30" />
         </Pressable>
     );
 }
@@ -152,7 +154,7 @@ export function Select({state, setState, index, added, start, setStart, open, se
             mode={start ? "datetime" : "time"}
             title={start ? "Select Start Time" : "Select End Time"}
             minimumDate={start ? new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0) : new Date(start_.getFullYear(), start_.getMonth(), start_.getDate(), start_.getHours(), start_.getMinutes())}
-            maximumDate={start ? new Date(now.getFullYear(), now.getMonth() + 3, now.getDate(), 23, 59) : new Date(start_.getFullYear(), start_.getMonth(), start_.getDate(), 23, 59, 59)}
+            maximumDate={start ? new Date(now.getFullYear(), now.getMonth() + 3, now.getDate(), 23, 59, 59) : new Date(start_.getFullYear(), start_.getMonth(), start_.getDate(), 23, 59, 59)}
             onConfirm={(date) => {
                 if (start) {
                     setState((previous) => {let next = previous.value; next[index].start = date; return {...previous, value: next}});
