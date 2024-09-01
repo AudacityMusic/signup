@@ -3,7 +3,6 @@ import { Alert } from "react-native";
 import TextField from "../components/TextField";
 import CheckBoxQuery from "../components/CheckBoxQuery";
 import UploadButton from "../components/UploadButton";
-import NextButton from "../components/NextButton";
 import MultipleChoice from "../components/MultipleChoice";
 import MultiSelect from "../components/MultiSelect";
 import SlotList from "../components/Slot";
@@ -22,7 +21,7 @@ export async function getUser() {
 }
 
 export class Question {
-  constructor({ component, validate = (_) => true, isVisible = () => true }) {
+  constructor({ name, optional=false, component, validate = (_) => true, isVisible = () => true }) {
     this.component = component;
     this.validate = () => !isVisible() || validate(component.props.state.value);
     this.isVisible = isVisible;
@@ -37,7 +36,7 @@ export function emptyQuestionState(initial = null) {
 }
 
 export function hashForm(title, location, date) {
-  return title + location + date;
+  return title + "&&&" + location + "&&&" + date;
 }
 
 export class FormString {
@@ -83,12 +82,13 @@ export async function submitForm(formId, formData) {
   }
 }
 
-const isAtLeast = (value, len) => !value ? false : value.trim().length >= len;
+const isAtLeast = (value, len) => value ? (value.hasOwnProperty("trim") ? value.trim() : value).length >= len : false;
 const isNotEmpty = (value) => isAtLeast(value, 1);
 
 class Form {
   constructor(scrollObject) {
     this.scrollObject = scrollObject;
+    this.form = null;
   }
 
   questions() {
@@ -180,6 +180,7 @@ class MusicHour extends Form {
   questions() {
     let questions = [
       new Question({
+        name: "fullName",
         component: (
           <TextField
             title="Performer's Full Name"
@@ -192,6 +193,7 @@ class MusicHour extends Form {
       }),
   
       new Question({
+        name: "city",
         component: (
           <TextField
             title="City of Residence"
@@ -204,6 +206,7 @@ class MusicHour extends Form {
       }),
   
       new Question({
+        name: "phoneNumber",
         component: (
           <TextField
             title="Phone Number"
@@ -218,6 +221,7 @@ class MusicHour extends Form {
       }),
   
       new Question({
+        name: "age",
         component: (
           <TextField
             title="Performer's Age"
@@ -237,6 +241,7 @@ class MusicHour extends Form {
       }),
   
       new Question({
+        name: "musicPiece",
         component: (
           <TextField
             title="Name of Music Piece"
@@ -249,6 +254,7 @@ class MusicHour extends Form {
       }),
   
       new Question({
+        name: "composer",
         component: (
           <TextField
             title="Name of Composer"
@@ -261,6 +267,7 @@ class MusicHour extends Form {
       }),
   
       new Question({
+        name: "instrument",
         component: (
           <TextField
             title="Instrument Type"
@@ -274,6 +281,7 @@ class MusicHour extends Form {
   
       this.title == "Library Music Hour"
         ? new Question({
+            name: "performanceType",
             component: (
               <MultipleChoice
                 title="Performance Type"
@@ -295,6 +303,7 @@ class MusicHour extends Form {
         : null,
   
       new Question({
+        name: 'length',
         component: (
           <TextField
             title="Length of Performance (mins)"
@@ -316,6 +325,7 @@ class MusicHour extends Form {
       }),
   
       new Question({
+        name: 'recordingLink',
         component: (
           <TextField
             title="Recording Link"
@@ -336,6 +346,7 @@ class MusicHour extends Form {
       }),
   
       new Question({
+        name: "publicPermission",
         component: (
           <CheckBoxQuery
             question="Do you give permission for Audacity Music Club to post recordings of your performance on public websites?"
@@ -348,6 +359,7 @@ class MusicHour extends Form {
       }),
   
       new Question({
+        name: "parentalConsent",
         component: (
           <CheckBoxQuery
             question="My parent has given their consent for my participation."
@@ -361,6 +373,7 @@ class MusicHour extends Form {
       }),
   
       new Question({
+        name: "pianoAccompaniment",
         component: (
           <UploadButton
             title="Our volunteer piano accompanist can provide sight reading accompaniment for entry level players. To request this service, upload the main score AND accompaniment score in one PDF file."
@@ -379,6 +392,7 @@ class MusicHour extends Form {
   
       this.title == "Library Music Hour"
         ? new Question({
+            name: "ensembleProfile",
             component: (
               <UploadButton
                 title="Upload your Library Band Ensemble profile as one PDF file."
@@ -401,6 +415,7 @@ class MusicHour extends Form {
         : null,
   
       new Question({
+        name: "otherInfo",
         component: (
           <TextField
             title="Other Information (optional)"
@@ -500,7 +515,8 @@ class RequestConcert extends Form {
     this.publicity = emptyQuestionState();
     this.stipend = emptyQuestionState();
     this.donatable = emptyQuestionState();
-    this.slots = emptyQuestionState([]); 
+    this.slots = emptyQuestionState([]);
+    console.log(this.slots[0].value);
     this.audience = emptyQuestionState();
     this.distance = emptyQuestionState();
     this.provided = emptyQuestionState([]);
@@ -512,6 +528,7 @@ class RequestConcert extends Form {
   questions() {
     return [
       new Question({
+        name: "phoneNumber",
         component: (
           <TextField
             title="Phone Number"
@@ -526,6 +543,7 @@ class RequestConcert extends Form {
       }),
   
       new Question({
+        name: "organization",
         component: (
           <TextField
             title="Organization Name & Description"
@@ -538,6 +556,7 @@ class RequestConcert extends Form {
       }),
   
       new Question({
+        name: "eventInfo",
         component: (
           <TextField
             title="Event Information"
@@ -550,6 +569,7 @@ class RequestConcert extends Form {
       }),
   
       new Question({
+        name: "venue",
         component: (
           <TextField
             title="Venue Address & Information"
@@ -562,6 +582,7 @@ class RequestConcert extends Form {
       }),
   
       new Question({
+        name: 'publicity',
         component: (
           <MultipleChoice
             title="Is the event public or private?"
@@ -578,6 +599,7 @@ class RequestConcert extends Form {
       }),
   
       new Question({
+        name: 'stipend',
         component: (
           <CheckBoxQuery
             question="Does your event come with a stipend?"
@@ -591,6 +613,7 @@ class RequestConcert extends Form {
       }),
   
       new Question({
+        name: 'donatable',
         component: (
           <CheckBoxQuery
             question="Are you able to donate to our charitable cause?"
@@ -603,9 +626,11 @@ class RequestConcert extends Form {
       }),
 
       new Question({
+        name: "slots",
         component: (
           <SlotList
             title="Possible Concert Times"
+            key="slots"
             state={this.slots[0]}
             setState={this.slots[1]}
           />
@@ -627,6 +652,7 @@ class RequestConcert extends Form {
       }),
   
       new Question({
+        name: 'audience',
         component: (
           <TextField
             title="Describe the audience"
@@ -639,6 +665,7 @@ class RequestConcert extends Form {
       }),
   
       new Question({
+        name: 'distance',
         component: (
           <TextField
             title="Distance from the parking lot to the stage (ft)"
@@ -652,6 +679,7 @@ class RequestConcert extends Form {
       }),
   
       new Question({
+        name: 'provided',
         component: (
           <MultiSelect
             title="You will provide a:"
@@ -661,10 +689,11 @@ class RequestConcert extends Form {
             setState={this.provided[1]}
           />
         ),
-        validate: isNotEmpty,
+        validate: () => true,
       }),
   
       new Question({
+        name: 'donationBox',
         component: (
           <CheckBoxQuery
             question="Permission for Donation Box for Charitable Causes (See Ongoing Charitable Donation Drives at www.goaudacity.com/projects)"
@@ -677,6 +706,7 @@ class RequestConcert extends Form {
       }),
   
       new Question({
+        name: 'extraAudience',
         component: (
           <CheckBoxQuery
             question="Permission to Draw in Our Own Audience"
@@ -689,6 +719,7 @@ class RequestConcert extends Form {
       }),
   
       new Question({
+        name: 'otherInfo',
         component: (
           <TextField
             title="Other Information (optional)"
@@ -731,7 +762,8 @@ class DanceClub extends Form{
     this.phoneNumber = emptyQuestionState();
     this.favoritePieces = emptyQuestionState();
     this.age = emptyQuestionState();
-    this.favoriteDanceStyles = emptyQuestionState();
+    this.favoriteDanceStyles = emptyQuestionState([]);
+    console.log("Values: " + this.favoriteDanceStyles[0].value);
     this.consent = emptyQuestionState();
     this.recording = emptyQuestionState();
   }
@@ -739,6 +771,7 @@ class DanceClub extends Form{
   questions() {
     return [
       new Question({
+        name: 'fullName',
         component: (
           <TextField
             title="Performer's Full Name"
@@ -751,6 +784,7 @@ class DanceClub extends Form{
       }),
   
       new Question({
+        name: 'phoneNumber',
         component: (
           <TextField
             title="Phone Number"
@@ -765,6 +799,7 @@ class DanceClub extends Form{
       }),
   
       new Question({
+        name: 'favoritePieces',
         component: (
           <TextField
             title="Your 4 Favorite Pieces of Music"
@@ -777,6 +812,7 @@ class DanceClub extends Form{
       }),
   
       new Question({
+        name: 'age',
         component: (
           <MultipleChoice
             title="Your Age"
@@ -791,11 +827,11 @@ class DanceClub extends Form{
       }),
   
       new Question({
+        name: 'favoriteDanceStyles',
         component: (
-          <MultipleChoice
+          <MultiSelect
             title="Your 4 Favorite Dance Styles"
             options={["Ballet", "Bollywood", "Contemporary", "Fitness", "Kpop", "Latin", "Lyrical"]}
-            onSelect={(value) => {this.favoriteDanceStyles[1]((prevState) => ({ ...prevState, value: value }))}}
             key="favoriteDanceStyles"
             state={this.favoriteDanceStyles[0]}
             setState={this.favoriteDanceStyles[1]}
@@ -805,6 +841,7 @@ class DanceClub extends Form{
       }),
   
       new Question({
+        name: 'consent',
         component: (
           <CheckBoxQuery
             question="I am committed to holding the volunteer instructor and organizer harmless"
@@ -817,6 +854,7 @@ class DanceClub extends Form{
       }),
   
       new Question({
+        name: 'consent',
         component: (
           <CheckBoxQuery
             question={"We will record our event and place them on our website." + 

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { View, Pressable, Text, StyleSheet } from 'react-native'
 import DatePicker from 'react-native-date-picker'
 import Ionicons from '@expo/vector-icons/Ionicons';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import colors from '../constants/colors';
 
 function timeFormatter(date) {
@@ -63,6 +64,10 @@ export class TimeSlot {
             this.valid = false;
         }
 
+        else {
+            this.valid = true;
+        }
+
         return this.valid;
     }
 
@@ -90,18 +95,18 @@ export class TimeSlot {
         return (
             <View 
                 key={index * 10} 
-                style={{flexDirection: "row", justifyContent: "space-between"}}
+                style={{flexDirection: "row", justifyContent: "space-between", marginBottom: 10, alignItems: "center"}}
             >
                 <View key={index * 10 + 1} style={{flexDirection: "row"}}>
                     <Pressable key={index * 10 + 2} onPress={() => {setOpen(true); setAdded(false); setStart(true); setIndex(index);}}>
-                        <Text key={index * 10 + 3} style={{fontSize: 20, textDecorationLine: "underline", color: this.valid ? "black" : colors.danger}}>{dateFormatter(this.start)}</Text>
+                        <Text key={index * 10 + 3} style={{fontSize: 16, textDecorationLine: "underline", color: this.valid ? "black" : colors.danger}}>{dateFormatter(this.start)}</Text>
                     </Pressable>
-                    <Text key={index * 10 + 4} style={{fontSize: 20}}> - </Text>
+                    <Text key={index * 10 + 4} style={{fontSize: 16}}> - </Text>
                     <Pressable key={index * 10 + 5} onPress={() => {setOpen(true); setAdded(false); setStart(false); setIndex(index);}}>
-                        <Text key={index * 10 + 6} style={{fontSize: 20, textDecorationLine: "underline", color: this.valid ? "black" : colors.danger}}>{timeFormatter(this.end)}</Text>
+                        <Text key={index * 10 + 6} style={{fontSize: 16, textDecorationLine: "underline", color: this.valid ? "black" : colors.danger}}>{timeFormatter(this.end)}</Text>
                     </Pressable>
                 </View>
-                <RemoveButton state={state} setState={setState} index={index} />
+                <RemoveButton key={10 * index + 7} state={state} setState={setState} index={index} />
             </View>
         );
     }
@@ -110,8 +115,7 @@ export class TimeSlot {
 function RemoveButton({state, setState, index}) {
     return (
         <Pressable key={index * 10 + 7} style={styles.button} onPress={() => {setState(previous => {return {...previous, value: previous.value.slice(0, index).concat(previous.value.slice(index + 1, state.value.length))}})}}>
-            <Ionicons key={index * 10 + 8} name="remove-circle-sharp" size={23} color="#FF3B30" />
-            <Text key={index * 10 + 9} style={{color: "#FF3B30", fontSize: 20}}>  Delete</Text>
+            <FontAwesome6 name="trash-alt" size={40} color="FF3B30" />
         </Pressable>
     );
 }
@@ -126,8 +130,8 @@ function AddButton({state, setState, setIndex, setAdded, setOpen, setStart}) {
             setState((previous) => {return {...previous, value: previous.value.concat([new TimeSlot()])}});
             setOpen(true);
         }}>
-            <Ionicons name="add-circle-sharp" size={28} color="#006AFF" />
-            <Text style={{color: "#006AFF", fontSize: 25}}>  Add Time Slot</Text>
+            <Ionicons name="add-circle-sharp" size={21} color="#006AFF" />
+            <Text style={{color: "#006AFF", fontSize: 19}}>  Add Time Slot</Text>
         </Pressable>
     );
 }
@@ -194,8 +198,8 @@ export default function SlotList({title, state, setState}) {
             }));
         }}
     >
-        <Text style={[styles.title, {"color": state.valid ? "black" : "red"}]}>{title}</Text>
-        <Text style={[styles.requirements, {"color": state.valid ? colors.danger : "black"}]}>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.requirements, {"color": state.valid ? "black" : colors.danger}]}>
             {"Each time slot must start between 10:30 am and 5 pm and end before 6 pm."}
         </Text>
         {state.value.map((slot, index) => (slot == null) || (((index == state.value.length - 1) && open && added)) ? null : slot.render(state, setState, index, setIndex, setOpen, setAdded, setStart))}
@@ -211,21 +215,24 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         marginBottom: 10,
         flexWrap: "wrap",
+        color: "black",
     },
 
     requirements: {
-        fontSize: 15,
+        fontSize: 17,
         color: colors.secondary,
         flexWrap: "wrap",
+        marginBottom: 10,
     },
 
     container: {
         flex: 1,
-        marginTop: 50
+        marginBottom: 10
     },
 
     button: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom: 10,
     }
 });

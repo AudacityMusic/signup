@@ -13,6 +13,7 @@ export default function MultiSelect({ state, setState, title, options }) {
                 y: event.nativeEvent.layout.y,
                 }));
             }}
+            style={styles.container}
         >
             <Text style={[styles.title, {"color": state.valid ? "black" : "red"}]}>{title}</Text>
             {options.map((option, index) => (
@@ -41,6 +42,10 @@ export default function MultiSelect({ state, setState, title, options }) {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        marginBottom: 20,
+    },
+
     title: {
         fontSize: 18,
         fontWeight: "600",

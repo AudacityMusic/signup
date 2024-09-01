@@ -24,22 +24,22 @@ export default function MultipleChoice({
         </Text>
         <Text style={{ color: "red" }}> *</Text>
       </Text>
-      {mapObject(options, (key) => (
+      {options.map((value, index) => (
         <Pressable
-          key={key}
+          key={index}
           style={styles.option}
-          onPress={() => onSelect(key)}
+          onPress={() => onSelect(value)}
         >
           <View style={styles.radioCircle}>
-            {state.value === key && <View style={styles.selectedRb} />}
+            {state.value === value && <View style={styles.selectedRb} />}
           </View>
           <Text
             style={[
               styles.optionText,
-              state.value === key && styles.selectedText,
+              state.value === value && styles.selectedText,
             ]}
           >
-            {key}
+            {value}
           </Text>
         </Pressable>
       ))}

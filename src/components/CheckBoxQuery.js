@@ -66,13 +66,10 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     marginBottom: 25,
-    justifyContent: "center",
-    alignItems: "center",
-    alignSelf: "center",
+    alignSelf: "flex-start",
   },
   checkBoxContainer: {
     flexDirection: "row",
-    alignItems: "center",
     paddingTop: 15,
   },
   text: {
