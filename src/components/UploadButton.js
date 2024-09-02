@@ -8,6 +8,8 @@ import {
 } from "@robinbobin/react-native-google-drive-api-wrapper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../constants/colors";
+import { alertError } from "../utils";
+import Feather from "@expo/vector-icons/Feather";
 
 const selectFile = async () => {
   try {
@@ -17,7 +19,7 @@ const selectFile = async () => {
     return file;
   } catch (error) {
     if (!DocumentPicker.isCancel(error)) {
-      throw error;
+      alertError(`In selectFile: ${error}`);
     }
   }
 };
@@ -25,13 +27,12 @@ const selectFile = async () => {
 async function getAccessToken() {
   try {
     const accessToken = await AsyncStorage.getItem("access-token");
-    console.log(accessToken);
     if (accessToken === null) {
-      throw "EMPTY access token";
+      alertError("Undefined access token in getAccessToken");
     }
     return accessToken;
   } catch (error) {
-    console.error(error);
+    alertError(`In getAccessToken: ${error}`);
   }
 }
 
@@ -72,7 +73,6 @@ export default function UploadButton({
           console.log(`FILE: ${file.uri}`);
 
           const fileData = await fs.readFile(file.uri, "base64");
-          console.log("FILE DATA");
 
           let id = "";
 
@@ -97,10 +97,9 @@ export default function UploadButton({
                 type: "anyone",
               },
             );
-            console.log("Permissions: everyone (with the link) can view");
           } catch (error) {
             if (error.name == "AbortError") {
-              console.error(
+              alertError(
                 "File upload aborted. Use a more stable Internet connection or increase fetchTimeout.",
               );
             } else if (error.__response?.status == 403) {
@@ -121,7 +120,7 @@ export default function UploadButton({
                 ],
               );
             } else {
-              console.error("Error uploading file:", error);
+              alertError("Error uploading file: " + error);
             }
             setFileName("Upload failed");
             return;
@@ -136,10 +135,7 @@ export default function UploadButton({
           }));
         }}
       >
-        <Image
-          source={require("./../assets/upload.png")}
-          style={{ height: 25, width: 25 }}
-        />
+        <Feather name="upload" size={25} color="black" />
         <Text style={styles.uploadText}>Upload</Text>
       </Pressable>
       <Text
@@ -177,7 +173,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     borderRadius: 20,
-    borderWidth: 1.5,
+    borderWidth: 2,
     paddingVertical: 10,
     paddingHorizontal: 15,
   },

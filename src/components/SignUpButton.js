@@ -1,15 +1,13 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import colors from "../constants/colors";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function SignUpButton() {
   return (
     <View style={styles.container}>
       <Text>{"\n\n\n"}</Text>
       <Text style={styles.signUpText}>Sign Up</Text>
-      <Image
-        source={require("./../assets/caret-left.png")}
-        style={styles.caret}
-      />
+      <FontAwesome name="chevron-right" size={20} color="white" />
     </View>
   );
 }
@@ -18,8 +16,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    paddingLeft: "5%",
+    justifyContent: "space-between",
+    paddingRight: "3%",
     borderRadius: 15,
     height: 50,
     width: 120,
@@ -30,6 +28,7 @@ const styles = StyleSheet.create({
   signUpText: {
     fontSize: 20,
     color: "white",
+    paddingBottom: "3%",
   },
   caret: {
     transform: [{ scaleX: -1 }],

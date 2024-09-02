@@ -1,4 +1,14 @@
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Pressable,
+  Platform,
+} from "react-native";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function VolunteerOpportunity({
   navigation,
@@ -30,7 +40,6 @@ export default function VolunteerOpportunity({
       <View style={{ flexDirection: "row" }}>
         <Image
           style={styles.image}
-          // source={require("./../assets/warm-springs-bart.png")}
           source={{ width: 0, height: 0, uri: image }}
         />
         <View style={{ flexDirection: "column", alignSelf: "center" }}>
@@ -38,31 +47,32 @@ export default function VolunteerOpportunity({
             {title.length <= 19 ? title : title.slice(0, 16) + "..."}
           </Text>
           <Text style={styles.info}>
-            <Image
+            <MaterialCommunityIcons
+              name="clock-time-five-outline"
+              size={10}
+              color="black"
               style={styles.icon}
-              source={require("./../assets/clock.png")}
             />
             {"  "}
             {date}
           </Text>
           <Text style={styles.info}>
-            <Image
+            <SimpleLineIcons
+              name="location-pin"
+              size={10}
+              color="black"
               style={styles.icon}
-              source={require("./../assets/location.png")}
             />
             {"  "}
             {location}
           </Text>
         </View>
       </View>
-      <Image
+      <FontAwesome
+        name={isSubmitted ? "check" : "chevron-right"}
+        size={25}
+        color="black"
         style={isSubmitted ? styles.checkmark : styles.caret}
-        //source={require("./../assets/caret-left.png")}
-        source={
-          isSubmitted
-            ? require("./../assets/checkmark.png")
-            : require("./../assets/caret-left.png")
-        }
       />
     </Pressable>
   );
@@ -74,8 +84,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: "#f5f5f5",
-    borderTopRightRadius: 50,
-    borderBottomRightRadius: 50,
+    borderTopRightRadius: Platform.OS == "ios" ? 50 : 300,
+    borderBottomRightRadius: Platform.OS == "ios" ? 50 : 300,
     borderBottomLeftRadius: 1000,
     borderTopLeftRadius: 1000,
     borderColor: "#e0e0e0",
@@ -108,8 +118,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   caret: {
-    transform: [{ rotateZ: "180deg" }],
-    marginRight: 10,
+    marginRight: 20,
   },
   checkmark: {
     marginRight: 20,

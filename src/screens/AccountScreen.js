@@ -7,6 +7,7 @@ import FullWidthButton from "../components/FullWidthButton.js";
 import Profile from "../components/Profile.js";
 
 import colors from "../constants/colors";
+import { alertError } from "../utils/index.js";
 
 export default function AccountScreen({ navigation }) {
   return (
@@ -32,14 +33,14 @@ export default function AccountScreen({ navigation }) {
                     await GoogleSignin.revokeAccess();
                     await GoogleSignin.signOut();
                   } catch (error) {
-                    console.error(
+                    alertError(
                       `Unable to log out and remove Google account while clearing data: ${error}`,
                     );
                   }
                   try {
                     await AsyncStorage.clear();
                   } catch (error) {
-                    console.error(`Unable to clear data: ${error}`);
+                    alertError(`Unable to clear data: ${error}`);
                   }
                   navigation.navigate("Sign In");
                 },
@@ -67,7 +68,7 @@ export default function AccountScreen({ navigation }) {
                   await GoogleSignin.signOut();
                   await AsyncStorage.removeItem("user");
                 } catch (error) {
-                  console.error(`Unable to log out: ${error}`);
+                  alertError(`Unable to log out: ${error}`);
                 }
                 navigation.navigate("Sign In");
               },
