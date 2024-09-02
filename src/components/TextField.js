@@ -8,7 +8,7 @@ export default function TextField({
   maxLength = 32000, // Limit of chars on Google Forms
   state,
   setState,
-  margin=true,
+  extraMargin=true,
 }) {
   return (
     <View
@@ -30,7 +30,8 @@ export default function TextField({
       <TextInput
         style={[
           styles.inputField,
-          { borderColor: state.valid ? "black" : colors.danger, marginBottom: margin ? 20 : 0 },
+          { borderColor: state.valid ? "black" : colors.danger},
+          extraMargin ? { marginBottom: 20 } : {},
         ]}
         onChangeText={(text) => {
           setState((prevState) => ({

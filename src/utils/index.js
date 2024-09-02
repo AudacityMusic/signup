@@ -34,11 +34,11 @@ export class Question {
   constructor({ name, component, validate = (_) => true, isVisible = () => true, state=null, setState=null, y=null}) {
     this.name = name;
     this.component = component;
-    this.validate = () => !isVisible() || validate(component.props.state.value);
-    this.isVisible = isVisible;
     this.state = (state ? state : component.props.state);
     this.setState = (setState ? setState : component.props.setState);
     this.y = (y ? y : component.props.state.y);
+    this.isVisible = isVisible;
+    this.validate = () => !isVisible() || validate((state ? state : component.props.state).value);
   }
 }
 
@@ -787,15 +787,15 @@ class DanceClub extends Form{
                 key={`favoritePieces${index}`}
                 state={piece[0]}
                 setState={piece[1]}
-                margin={index < 3 ? false : true}
+                extraMargin={index == 3}
               />
             ))}
           </View>
         ),
-        state: [...this.favoritePieces.map((piece) => piece[0])],
+        state: {value: this.favoritePieces},
         setState: (value) => {this.favoritePieces = [...value]},
         y: -1,
-        validate: (value) => value.every(isNotEmpty),
+        validate: (value) => value.every((piece) => isNotEmpty(piece[0].value)),
       }),
   
       new Question({
