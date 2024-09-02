@@ -6,8 +6,28 @@ export default function OtherOpportunities({navigation}) {
       <Pressable 
         style={[styles.card, styles.first]} 
         onPress={() => 
-          navigation.navigate("Volunteer Opportunity", {
+          navigation.navigate("Volunteer Form", {
             title: "Request Concert",
+            location: null,
+            date: null,
+          })
+        }
+      >
+        <Image
+          style={styles.icon}
+          source={require("./../assets/music-note.png")}
+        />
+        <Text style={styles.text}>Request a Concert</Text>
+        <Image
+          style={styles.arrow}
+          source={require("./../assets/caret-left.png")}
+        />
+      </Pressable>
+      <Pressable 
+        style={styles.card} 
+        onPress={() => 
+          navigation.navigate("Volunteer Form", {
+            title: "Audacity Dance Club",
             location: null,
             date: null,
           })

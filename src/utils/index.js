@@ -370,7 +370,7 @@ class MusicHour extends Form {
             setState={this.parentalConsent[1]}
           />
         ),
-        validate: (value) => value,
+        validate: (value) => value == "Yes",
         isVisible: () => this.age[0].value < 18,
       }),
   
@@ -442,44 +442,10 @@ class MusicHour extends Form {
 
     formData.append(this.form.location, this.location);
     formData.append(this.form.date, this.date);
-    formData.append(this.form.fullName, this.fullName[0].value);
-    formData.append(this.form.city, this.city[0].value);
-    formData.append(this.form.phoneNumber, this.phoneNumber[0].value);
-    formData.append(this.form.age, this.age[0].value);
-    formData.append(this.form.musicPiece, this.musicPiece[0].value);
-    formData.append(this.form.composer, this.composer[0].value);
-    formData.append(this.form.instrument, this.instrument[0].value);
-    formData.append(this.form.length, this.length[0].value);
-    formData.append(this.form.recordingLink, this.recordingLink[0].value);
-
-    if (this.title == "Library Music Hour") {
-      formData.append(this.form.performanceType, this.performanceType[0].value);
-    }
-
-    formData.append(
-      this.form.publicPermission,
-      this.publicPermission[0].value ? "Yes" : "No",
-    );
-
-    formData.append(
-      this.form.parentalConsent,
-      this.parentalConsent[0].value == null
-        ? ""
-        : this.parentalConsent[0].value
-          ? "Yes"
-          : "No",
-    );
-
-    formData.append(
-      this.form.pianoAccompaniment,
-      this.pianoAccompaniment[0].value ? this.pianoAccompaniment[0].value[0] : "",
-    );
-
-    if (this.title == "Library Music Hour") {
-      formData.append(
-        this.form.ensembleProfile,
-        this.ensembleProfile[0].value ? this.ensembleProfile[0].value[0] : "",
-      );
+    
+    for (const question of this.questions()) {
+      const value = this[question.name][0].value;
+      formData.append(this.form[question.name], (value == null) ? "" : ((value.constructor === Array) ? value : value[0]));
     }
 
     if (!submitForm(this.form.id, formData)) {
@@ -734,7 +700,7 @@ class RequestConcert extends Form {
     ];
   }
 
-  submit() {
+  async submit() {
     if (!super.validate()) {
       return;
     }
@@ -861,7 +827,7 @@ class DanceClub extends Form{
             setState={this.consent[1]}
           />
         ),
-        validate: (value) => value,
+        validate: (value) => value == "Yes",
       }),
   
       new Question({
@@ -881,12 +847,12 @@ class DanceClub extends Form{
             setState={this.recording[1]}
           />
         ),
-        validate: (value) => value,
+        validate: (value) => value == "Yes",
       }),
     ];
   }
 
-  submit() {
+  async submit() {
     if (!super.validate()) {
       return;
     }

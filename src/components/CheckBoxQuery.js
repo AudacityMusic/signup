@@ -24,7 +24,7 @@ export default function CheckBoxQuery({ question, state, setState }) {
           onValueChange={() => {
             setState((prevState) => ({
               ...prevState,
-              value: true,
+              value: "Yes",
             }));
           }}
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
@@ -44,7 +44,7 @@ export default function CheckBoxQuery({ question, state, setState }) {
           onValueChange={() => {
             setState((prevState) => ({
               ...prevState,
-              value: false,
+              value: "No",
             }));
           }}
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
