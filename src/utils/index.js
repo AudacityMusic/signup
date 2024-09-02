@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Alert, View } from "react-native";
+import { Alert, View, Platform } from "react-native";
 import TextField from "../components/TextField";
 import CheckBoxQuery from "../components/CheckBoxQuery";
 import UploadButton from "../components/UploadButton";
@@ -7,6 +7,16 @@ import MultipleChoice from "../components/MultipleChoice";
 import MultiSelect from "../components/MultiSelect";
 import SlotList from "../components/Slot";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import Constants from "expo-constants";
+
+export function alertError(error) {
+  console.error(error);
+  Alert.alert(
+    "Error",
+    `Your request was not processed successfully due to an unexpected error. We apologize for the inconvenience. To help us identify and fix this error, please take a screenshot of this alert and send a bug report to ${Constants.expoConfig.extra.email}. Thank you!\n\nPlatform: ${Platform.OS} with v${Platform.Version}\n\n${error}`,
+  );
+}
 
 export async function getUser() {
   try {
