@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Image, Pressable, Alert } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function OtherOpportunities({navigation}) {
   return (
@@ -16,14 +17,18 @@ export default function OtherOpportunities({navigation}) {
           })
         }
       >
-        <Image
+        <Entypo
+          name="beamed-note"
+          size={18}
+          color="black"
           style={styles.icon}
-          source={require("./../assets/music-note.png")}
         />
         <Text style={styles.text}>Request a Concert</Text>
-        <Image
+        <FontAwesome
+          name="chevron-right"
+          size={20}
+          color="black"
           style={styles.arrow}
-          source={require("./../assets/caret-left.png")}
         />
       </Pressable>
       <Pressable 
@@ -36,10 +41,13 @@ export default function OtherOpportunities({navigation}) {
           })
         }
       >
-        <Image
+        <MaterialCommunityIcons
+          name="human-female-dance"
+          size={18}
+          color="black"
           style={styles.icon}
         />
-        <Text style={styles.text}>Request a Concert</Text>
+        <Text style={styles.text}>Sign Up for Audacity Dance Club</Text>
         <FontAwesome
           name="chevron-right"
           size={20}
