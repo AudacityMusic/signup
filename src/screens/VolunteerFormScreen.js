@@ -12,11 +12,8 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 
-import { getUser, Question, emptyQuestionState, FormString, submitForm, hashForm, questions } from "../utils";
+import { questions } from "../utils";
 import NextButton from "../components/NextButton";
-
-
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function VolunteerFormScreen({ navigation, route }) {
   const { title, location, date } = route.params;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Alert } from "react-native";
+import { Alert, View } from "react-native";
 import TextField from "../components/TextField";
 import CheckBoxQuery from "../components/CheckBoxQuery";
 import UploadButton from "../components/UploadButton";
@@ -21,13 +21,14 @@ export async function getUser() {
 }
 
 export class Question {
-  constructor({ name, optional=false, component, validate = (_) => true, isVisible = () => true }) {
+  constructor({ name, component, validate = (_) => true, isVisible = () => true, state=null, setState=null, y=null}) {
+    this.name = name;
     this.component = component;
     this.validate = () => !isVisible() || validate(component.props.state.value);
     this.isVisible = isVisible;
-    this.state = component.props.state;
-    this.setState = component.props.setState;
-    this.y = component.props.state.y;
+    this.state = (state ? state : component.props.state);
+    this.setState = (setState ? setState : component.props.setState);
+    this.y = (y ? y : component.props.state.y);
   }
 }
 
@@ -761,7 +762,8 @@ class DanceClub extends Form{
     }, []);
 
     this.phoneNumber = emptyQuestionState();
-    this.favoritePieces = emptyQuestionState();
+    this.favoritePieces = [emptyQuestionState(), emptyQuestionState(), emptyQuestionState(), emptyQuestionState()];
+    console.log(this.favoritePieces);
     this.age = emptyQuestionState();
     this.favoriteDanceStyles = emptyQuestionState([]);
     console.log("Values: " + this.favoriteDanceStyles[0].value);
@@ -802,14 +804,22 @@ class DanceClub extends Form{
       new Question({
         name: 'favoritePieces',
         component: (
-          <TextField
-            title="Your 4 Favorite Pieces of Music"
-            key="favoritePieces"
-            state={this.favoritePieces[0]}
-            setState={this.favoritePieces[1]}
-          />
+          <View>
+            {this.favoritePieces.map((piece, index) => (
+              <TextField
+                title={index == 0 ? "Your 4 Favorite Pieces of Music" : ""}
+                key={`favoritePieces${index}`}
+                state={piece[0]}
+                setState={piece[1]}
+                margin={index < 3 ? false : true}
+              />
+            ))}
+          </View>
         ),
-        validate: isNotEmpty,
+        state: [...this.favoritePieces.map((piece) => piece[0])],
+        setState: (value) => {this.favoritePieces = [...value]},
+        y: -1,
+        validate: (value) => value.every(isNotEmpty),
       }),
   
       new Question({
