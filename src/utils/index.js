@@ -53,27 +53,34 @@ export function hashForm(title, location, date) {
 export class FormString {
   constructor() {
     this.string = "";
+    this.repr = "";
   }
 
   append(key, value) {
     if (this.string.length > 0) {
       this.string += "&";
+      this.repr += "\n";
     }
 
     this.string += `entry.${key}=${encodeURIComponent(value)}`;
+    this.repr += `entry.${key}=${value}`;
   }
 
   toString() {
     return this.string;
   }
+
+  log() {
+    return this.repr;
+  }
 }
 
 export async function submitForm(formId, formData) {
   const formUrl = `https://docs.google.com/forms/d/e/${formId}/formResponse`;
-  console.log("Form Data: " + formData);
+  console.log("Form Data: " + formData.log());
 
   try {
-    console.log(formData);
+    console.log(formData.log());
     const response = await fetch(formUrl, {
       method: "POST",
       body: formData.toString(),
@@ -84,8 +91,8 @@ export async function submitForm(formId, formData) {
 
     if (response.ok) {
       return true;
-    }
-    console.error(response);
+    };
+    console.log(response);
     return false;
   } catch (error) {
     console.error(error);
@@ -455,8 +462,10 @@ class MusicHour extends Form {
     
     for (const question of this.questions()) {
       const value = this[question.name][0].value;
-      formData.append(this.form[question.name], (value == null) ? "" : ((value.constructor === Array) ? value : value[0]));
+      formData.append(this.form[question.name], (value == null) ? "" : ((value.constructor === Array) ? value[0] : value));
     }
+
+    console.log(formData.log());
 
     if (!submitForm(this.form.id, formData)) {
       this.navigation.navigate("End", { isSuccess: false });
@@ -494,7 +503,6 @@ class RequestConcert extends Form {
     this.stipend = emptyQuestionState();
     this.donatable = emptyQuestionState();
     this.slots = emptyQuestionState([]);
-    console.log(this.slots[0].value);
     this.audience = emptyQuestionState();
     this.distance = emptyQuestionState();
     this.provided = emptyQuestionState([]);
@@ -739,10 +747,8 @@ class DanceClub extends Form{
 
     this.phoneNumber = emptyQuestionState();
     this.favoritePieces = [emptyQuestionState(), emptyQuestionState(), emptyQuestionState(), emptyQuestionState()];
-    console.log(this.favoritePieces);
     this.age = emptyQuestionState();
     this.favoriteDanceStyles = emptyQuestionState([]);
-    console.log("Values: " + this.favoriteDanceStyles[0].value);
     this.consent = emptyQuestionState();
     this.recording = emptyQuestionState();
   }
@@ -788,14 +794,26 @@ class DanceClub extends Form{
                 state={piece[0]}
                 setState={piece[1]}
                 extraMargin={index == 3}
+                valid={this.favoritePieces.every((piece) => piece[0].valid)}
               />
             ))}
           </View>
         ),
-        state: {value: this.favoritePieces},
-        setState: (value) => {this.favoritePieces = [...value]},
+        state: {value: this.favoritePieces, y: -1, valid: true},
+        setState: (value) => {this.favoritePieces = value},
         y: -1,
-        validate: (value) => value.every((piece) => isNotEmpty(piece[0].value)),
+        validate: (value) => {
+          let good = true;
+
+          for (const [index, piece] of value.entries()) {
+            const result = isNotEmpty(piece[0].value); 
+            const original = this.favoritePieces[index][0]; 
+            this.favoritePieces[index][1]({...original, valid: result});
+            good = good && result;
+          };
+
+          return good;
+        }
       }),
   
       new Question({
