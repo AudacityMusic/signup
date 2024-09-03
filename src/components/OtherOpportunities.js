@@ -4,12 +4,12 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
-export default function OtherOpportunities({navigation}) {
+export default function OtherOpportunities({ navigation }) {
   return (
     <View style={styles.container}>
-      <Pressable 
-        style={[styles.card, styles.first]} 
-        onPress={() => 
+      <Pressable
+        style={[styles.card, styles.first]}
+        onPress={() =>
           navigation.navigate("Volunteer Form", {
             title: "Request Concert",
             location: null,
@@ -31,9 +31,9 @@ export default function OtherOpportunities({navigation}) {
           style={styles.arrow}
         />
       </Pressable>
-      <Pressable 
-        style={styles.card} 
-        onPress={() => 
+      <Pressable
+        style={styles.card}
+        onPress={() =>
           navigation.navigate("Volunteer Form", {
             title: "Audacity Dance Club",
             location: null,

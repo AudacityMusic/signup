@@ -31,14 +31,23 @@ export async function getUser() {
 }
 
 export class Question {
-  constructor({ name, component, validate = (_) => true, isVisible = () => true, state=null, setState=null, y=null}) {
+  constructor({
+    name,
+    component,
+    validate = (_) => true,
+    isVisible = () => true,
+    state = null,
+    setState = null,
+    y = null,
+  }) {
     this.name = name;
     this.component = component;
-    this.state = (state ? state : component.props.state);
-    this.setState = (setState ? setState : component.props.setState);
-    this.y = (y ? y : component.props.state.y);
+    this.state = state ? state : component.props.state;
+    this.setState = setState ? setState : component.props.setState;
+    this.y = y ? y : component.props.state.y;
     this.isVisible = isVisible;
-    this.validate = () => !isVisible() || validate((state ? state : component.props.state).value);
+    this.validate = () =>
+      !isVisible() || validate((state ? state : component.props.state).value);
   }
 }
 
@@ -91,7 +100,7 @@ export async function submitForm(formId, formData) {
 
     if (response.ok) {
       return true;
-    };
+    }
     console.log(response);
     return false;
   } catch (error) {
@@ -100,9 +109,13 @@ export async function submitForm(formId, formData) {
   }
 }
 
-const isAtLeast = (value, len) => value ? (value.hasOwnProperty("trim") ? value.trim() : value).length >= len : false;
+const isAtLeast = (value, len) =>
+  value
+    ? (value.hasOwnProperty("trim") ? value.trim() : value).length >= len
+    : false;
 const isNotEmpty = (value) => isAtLeast(value, 1);
-const isExactly = (value, len) => !isAtLeast(value, len + 1) && isAtLeast(value, len);
+const isExactly = (value, len) =>
+  !isAtLeast(value, len + 1) && isAtLeast(value, len);
 
 class Form {
   constructor(scrollObject) {
@@ -117,14 +130,14 @@ class Form {
   validate() {
     let allValid = true;
     let minInvalidY = Infinity;
-  
+
     for (const question of this.questions()) {
       const isValid = question.validate();
       question.setState((prevState) => ({
         ...prevState,
         valid: isValid,
       }));
-  
+
       if (!isValid) {
         allValid = false;
         if (question.y < minInvalidY) {
@@ -132,7 +145,7 @@ class Form {
         }
       }
     }
-  
+
     if (!allValid) {
       this.scrollObject.scrollTo({
         x: 0,
@@ -141,7 +154,7 @@ class Form {
       });
       return false;
     }
-  
+
     return true;
   }
 }
@@ -162,7 +175,10 @@ class MusicHour extends Form {
       (async () => {
         try {
           const user = await getUser();
-          this.fullName[1]((prevState) => ({ ...prevState, value: user?.name }));
+          this.fullName[1]((prevState) => ({
+            ...prevState,
+            value: user?.name,
+          }));
         } catch (error) {
           console.error(error);
         }
@@ -175,18 +191,16 @@ class MusicHour extends Form {
     this.musicPiece = emptyQuestionState();
     this.composer = emptyQuestionState();
     this.instrument = emptyQuestionState();
-    this.performanceType = emptyQuestionState(); 
+    this.performanceType = emptyQuestionState();
     this.length = emptyQuestionState();
     this.recordingLink = emptyQuestionState();
     this.publicPermission = emptyQuestionState();
     this.parentalConsent = emptyQuestionState();
-    this.pianoAccompaniment = emptyQuestionState(); 
+    this.pianoAccompaniment = emptyQuestionState();
     this.ensembleProfile = emptyQuestionState();
     this.otherInfo = emptyQuestionState();
-    this.timeLimit = useState(
-      title == "Library Music Hour" ? 0 : 10,
-    );
-  
+    this.timeLimit = useState(title == "Library Music Hour" ? 0 : 10);
+
     this.performanceOptions = {
       "Individual performance only": 8,
       "Individual performance and music instrument presentation": 12,
@@ -210,7 +224,7 @@ class MusicHour extends Form {
         ),
         validate: (value) => value.trim().split(" ").length >= 2,
       }),
-  
+
       new Question({
         name: "city",
         component: (
@@ -223,7 +237,7 @@ class MusicHour extends Form {
         ),
         validate: isNotEmpty,
       }),
-  
+
       new Question({
         name: "phoneNumber",
         component: (
@@ -238,7 +252,7 @@ class MusicHour extends Form {
         ),
         validate: (value) => isAtLeast(value, 10),
       }),
-  
+
       new Question({
         name: "age",
         component: (
@@ -258,7 +272,7 @@ class MusicHour extends Form {
           return age >= 5 && age <= 125;
         },
       }),
-  
+
       new Question({
         name: "musicPiece",
         component: (
@@ -271,7 +285,7 @@ class MusicHour extends Form {
         ),
         validate: isNotEmpty,
       }),
-  
+
       new Question({
         name: "composer",
         component: (
@@ -284,7 +298,7 @@ class MusicHour extends Form {
         ),
         validate: isNotEmpty,
       }),
-  
+
       new Question({
         name: "instrument",
         component: (
@@ -297,7 +311,7 @@ class MusicHour extends Form {
         ),
         validate: isNotEmpty,
       }),
-  
+
       this.title == "Library Music Hour"
         ? new Question({
             name: "performanceType",
@@ -320,9 +334,9 @@ class MusicHour extends Form {
             validate: isNotEmpty,
           })
         : null,
-  
+
       new Question({
-        name: 'length',
+        name: "length",
         component: (
           <TextField
             title="Length of Performance (mins)"
@@ -342,9 +356,9 @@ class MusicHour extends Form {
           return time > 0;
         },
       }),
-  
+
       new Question({
-        name: 'recordingLink',
+        name: "recordingLink",
         component: (
           <TextField
             title="Recording Link"
@@ -363,7 +377,7 @@ class MusicHour extends Form {
           return true;
         },
       }),
-  
+
       new Question({
         name: "publicPermission",
         component: (
@@ -376,7 +390,7 @@ class MusicHour extends Form {
         ),
         validate: (value) => value != null,
       }),
-  
+
       new Question({
         name: "parentalConsent",
         component: (
@@ -390,7 +404,7 @@ class MusicHour extends Form {
         validate: (value) => value == "Yes",
         isVisible: () => this.age[0].value < 18,
       }),
-  
+
       new Question({
         name: "pianoAccompaniment",
         component: (
@@ -408,7 +422,7 @@ class MusicHour extends Form {
           this.pianoAccompaniment[0].value == null ||
           this.pianoAccompaniment[0].value[1] <= 104857600, // There are 104,857,600 bytes in 100 MB
       }),
-  
+
       this.title == "Library Music Hour"
         ? new Question({
             name: "ensembleProfile",
@@ -422,9 +436,10 @@ class MusicHour extends Form {
                 required={true}
               />
             ),
-  
-            isVisible: () => this.performanceType[0].value?.includes("Ensemble"),
-  
+
+            isVisible: () =>
+              this.performanceType[0].value?.includes("Ensemble"),
+
             // Only PDF files can be uploaded
             // Required only if visible (selected ensemble option)
             validate: () =>
@@ -432,7 +447,7 @@ class MusicHour extends Form {
               this.ensembleProfile[0].value <= 104857600, // There are 104,857,600 bytes in 100 MB
           })
         : null,
-  
+
       new Question({
         name: "otherInfo",
         component: (
@@ -445,9 +460,9 @@ class MusicHour extends Form {
         ),
       }),
     ];
-  
+
     questions = questions.filter((question) => question != null);
-    return questions;  
+    return questions;
   }
 
   async submit() {
@@ -459,10 +474,13 @@ class MusicHour extends Form {
 
     formData.append(this.form.location, this.location);
     formData.append(this.form.date, this.date);
-    
+
     for (const question of this.questions()) {
       const value = this[question.name][0].value;
-      formData.append(this.form[question.name], (value == null) ? "" : ((value.constructor === Array) ? value[0] : value));
+      formData.append(
+        this.form[question.name],
+        value == null ? "" : value.constructor === Array ? value[0] : value,
+      );
     }
 
     console.log(formData.log());
@@ -527,7 +545,7 @@ class RequestConcert extends Form {
         ),
         validate: (value) => isAtLeast(value, 10),
       }),
-  
+
       new Question({
         name: "organization",
         component: (
@@ -540,7 +558,7 @@ class RequestConcert extends Form {
         ),
         validate: isNotEmpty,
       }),
-  
+
       new Question({
         name: "eventInfo",
         component: (
@@ -553,7 +571,7 @@ class RequestConcert extends Form {
         ),
         validate: isNotEmpty,
       }),
-  
+
       new Question({
         name: "venue",
         component: (
@@ -566,15 +584,18 @@ class RequestConcert extends Form {
         ),
         validate: isNotEmpty,
       }),
-  
+
       new Question({
-        name: 'publicity',
+        name: "publicity",
         component: (
           <MultipleChoice
             title="Is the event public or private?"
             options={["Public", "Private"]}
             onSelect={(option) => {
-              this.publicity[1]((prevState) => ({ ...prevState, value: option }));
+              this.publicity[1]((prevState) => ({
+                ...prevState,
+                value: option,
+              }));
             }}
             key="publicity"
             state={this.publicity[0]}
@@ -583,9 +604,9 @@ class RequestConcert extends Form {
         ),
         validate: isNotEmpty,
       }),
-  
+
       new Question({
-        name: 'stipend',
+        name: "stipend",
         component: (
           <CheckBoxQuery
             question="Does your event come with a stipend?"
@@ -594,12 +615,12 @@ class RequestConcert extends Form {
             setState={this.stipend[1]}
           />
         ),
-  
+
         validate: (value) => value != null,
       }),
-  
+
       new Question({
-        name: 'donatable',
+        name: "donatable",
         component: (
           <CheckBoxQuery
             question="Are you able to donate to our charitable cause?"
@@ -621,24 +642,24 @@ class RequestConcert extends Form {
             setState={this.slots[1]}
           />
         ),
-  
+
         validate: (value) => {
           if (value.length == 0) {
             return false;
           }
-  
+
           for (const slot of value) {
             if (!slot.validate()) {
               return false;
             }
           }
-  
+
           return true;
-        }
+        },
       }),
-  
+
       new Question({
-        name: 'audience',
+        name: "audience",
         component: (
           <TextField
             title="Describe the audience"
@@ -649,9 +670,9 @@ class RequestConcert extends Form {
         ),
         validate: isNotEmpty,
       }),
-  
+
       new Question({
-        name: 'distance',
+        name: "distance",
         component: (
           <TextField
             title="Distance from the parking lot to the stage (ft)"
@@ -663,13 +684,21 @@ class RequestConcert extends Form {
         ),
         validate: isNotEmpty,
       }),
-  
+
       new Question({
-        name: 'provided',
+        name: "provided",
         component: (
           <MultiSelect
             title="You will provide a:"
-            options={["Cart for Moving Equipment", "PA System", "Large Screen", "Chairs", "Labor", "Canopy", "Covered Stage"]}
+            options={[
+              "Cart for Moving Equipment",
+              "PA System",
+              "Large Screen",
+              "Chairs",
+              "Labor",
+              "Canopy",
+              "Covered Stage",
+            ]}
             key="provided"
             state={this.provided[0]}
             setState={this.provided[1]}
@@ -677,9 +706,9 @@ class RequestConcert extends Form {
         ),
         validate: () => true,
       }),
-  
+
       new Question({
-        name: 'donationBox',
+        name: "donationBox",
         component: (
           <CheckBoxQuery
             question="Permission for Donation Box for Charitable Causes (See Ongoing Charitable Donation Drives at www.goaudacity.com/projects)"
@@ -690,9 +719,9 @@ class RequestConcert extends Form {
         ),
         validate: (value) => value != null,
       }),
-  
+
       new Question({
-        name: 'extraAudience',
+        name: "extraAudience",
         component: (
           <CheckBoxQuery
             question="Permission to Draw in Our Own Audience"
@@ -703,9 +732,9 @@ class RequestConcert extends Form {
         ),
         validate: (value) => value != null,
       }),
-  
+
       new Question({
-        name: 'otherInfo',
+        name: "otherInfo",
         component: (
           <TextField
             title="Other Information (optional)"
@@ -713,8 +742,8 @@ class RequestConcert extends Form {
             state={this.otherInfo[0]}
             setState={this.otherInfo[1]}
           />
-        )
-      })
+        ),
+      }),
     ];
   }
 
@@ -723,11 +752,14 @@ class RequestConcert extends Form {
       return;
     }
 
-    Alert.alert("Not Implemented", "The Request Concert form's submission has not been implemented yet. Please contact the IT Team.");
+    Alert.alert(
+      "Not Implemented",
+      "The Request Concert form's submission has not been implemented yet. Please contact the IT Team.",
+    );
   }
 }
 
-class DanceClub extends Form{
+class DanceClub extends Form {
   constructor(scrollObject, navigation) {
     super(scrollObject);
     this.navigation = navigation;
@@ -738,7 +770,10 @@ class DanceClub extends Form{
       (async () => {
         try {
           const user = await getUser();
-          this.fullName[1]((prevState) => ({ ...prevState, value: user?.name }));
+          this.fullName[1]((prevState) => ({
+            ...prevState,
+            value: user?.name,
+          }));
         } catch (error) {
           console.error(error);
         }
@@ -746,7 +781,12 @@ class DanceClub extends Form{
     }, []);
 
     this.phoneNumber = emptyQuestionState();
-    this.favoritePieces = [emptyQuestionState(), emptyQuestionState(), emptyQuestionState(), emptyQuestionState()];
+    this.favoritePieces = [
+      emptyQuestionState(),
+      emptyQuestionState(),
+      emptyQuestionState(),
+      emptyQuestionState(),
+    ];
     this.age = emptyQuestionState();
     this.favoriteDanceStyles = emptyQuestionState([]);
     this.consent = emptyQuestionState();
@@ -756,7 +796,7 @@ class DanceClub extends Form{
   questions() {
     return [
       new Question({
-        name: 'fullName',
+        name: "fullName",
         component: (
           <TextField
             title="Performer's Full Name"
@@ -767,9 +807,9 @@ class DanceClub extends Form{
         ),
         validate: (value) => value.trim().split(" ").length >= 2,
       }),
-  
+
       new Question({
-        name: 'phoneNumber',
+        name: "phoneNumber",
         component: (
           <TextField
             title="Phone Number"
@@ -782,9 +822,9 @@ class DanceClub extends Form{
         ),
         validate: (value) => isAtLeast(value, 10),
       }),
-  
+
       new Question({
-        name: 'favoritePieces',
+        name: "favoritePieces",
         component: (
           <View>
             {this.favoritePieces.map((piece, index) => (
@@ -799,30 +839,42 @@ class DanceClub extends Form{
             ))}
           </View>
         ),
-        state: {value: this.favoritePieces, y: -1, valid: true},
-        setState: (value) => {this.favoritePieces = value},
+        state: { value: this.favoritePieces, y: -1, valid: true },
+        setState: (value) => {
+          this.favoritePieces = value;
+        },
         y: -1,
         validate: (value) => {
           let good = true;
 
           for (const [index, piece] of value.entries()) {
-            const result = isNotEmpty(piece[0].value); 
-            const original = this.favoritePieces[index][0]; 
-            this.favoritePieces[index][1]({...original, valid: result});
+            const result = isNotEmpty(piece[0].value);
+            const original = this.favoritePieces[index][0];
+            this.favoritePieces[index][1]({ ...original, valid: result });
             good = good && result;
-          };
+          }
 
           return good;
-        }
+        },
       }),
-  
+
       new Question({
-        name: 'age',
+        name: "age",
         component: (
           <MultipleChoice
             title="Your Age"
-            options={["Under 10", "10-15", "16-20", "21-40", "41-60", "61-80", "81-100"]}
-            onSelect={(value) => {this.age[1]((prevState) => ({ ...prevState, value: value }))}}
+            options={[
+              "Under 10",
+              "10-15",
+              "16-20",
+              "21-40",
+              "41-60",
+              "61-80",
+              "81-100",
+            ]}
+            onSelect={(value) => {
+              this.age[1]((prevState) => ({ ...prevState, value: value }));
+            }}
             key="age"
             state={this.age[0]}
             setState={this.age[1]}
@@ -830,13 +882,21 @@ class DanceClub extends Form{
         ),
         validate: isNotEmpty,
       }),
-  
+
       new Question({
-        name: 'favoriteDanceStyles',
+        name: "favoriteDanceStyles",
         component: (
           <MultiSelect
             title="Your 4 Favorite Dance Styles"
-            options={["Ballet", "Bollywood", "Contemporary", "Fitness", "Kpop", "Latin", "Lyrical"]}
+            options={[
+              "Ballet",
+              "Bollywood",
+              "Contemporary",
+              "Fitness",
+              "Kpop",
+              "Latin",
+              "Lyrical",
+            ]}
             key="favoriteDanceStyles"
             state={this.favoriteDanceStyles[0]}
             setState={this.favoriteDanceStyles[1]}
@@ -844,9 +904,9 @@ class DanceClub extends Form{
         ),
         validate: (value) => isExactly(value, 4),
       }),
-  
+
       new Question({
-        name: 'consent',
+        name: "consent",
         component: (
           <CheckBoxQuery
             question="I am committed to holding the volunteer instructor and organizer harmless"
@@ -857,19 +917,20 @@ class DanceClub extends Form{
         ),
         validate: (value) => value == "Yes",
       }),
-  
+
       new Question({
-        name: 'consent',
+        name: "consent",
         component: (
           <CheckBoxQuery
-            question={"We will record our event and place them on our website. " + 
-                      "Maximum efforts will be made to avoid showing faces of the participants, " +
-                      "but we can't guarantee it can be avoided completely. " +
-                      "I consent to my and/or my child's image being recorded/filmed and " +
-                      "allow the product to be used for promotional purposes in any way ADC sees fit, " + 
-                      "including on social media. I also understand that ADC retains full ownership " +
-                      "of these images and/or videos."}
-  
+            question={
+              "We will record our event and place them on our website. " +
+              "Maximum efforts will be made to avoid showing faces of the participants, " +
+              "but we can't guarantee it can be avoided completely. " +
+              "I consent to my and/or my child's image being recorded/filmed and " +
+              "allow the product to be used for promotional purposes in any way ADC sees fit, " +
+              "including on social media. I also understand that ADC retains full ownership " +
+              "of these images and/or videos."
+            }
             key="recording"
             state={this.recording[0]}
             setState={this.recording[1]}
@@ -885,14 +946,29 @@ class DanceClub extends Form{
       return;
     }
 
-    Alert.alert("Not Implemented", "The Dance Club Signup form's submission has not been implemented yet. Please contact the IT Team.");
+    Alert.alert(
+      "Not Implemented",
+      "The Dance Club Signup form's submission has not been implemented yet. Please contact the IT Team.",
+    );
   }
 }
 
 export function questions(date, location, navigation, scrollObject) {
   return {
-    "Library Music Hour": new MusicHour("Library Music Hour", date, location, navigation, scrollObject),
-    "Music by the Tracks": new MusicHour("Music by the Tracks", date, location, navigation, scrollObject),
+    "Library Music Hour": new MusicHour(
+      "Library Music Hour",
+      date,
+      location,
+      navigation,
+      scrollObject,
+    ),
+    "Music by the Tracks": new MusicHour(
+      "Music by the Tracks",
+      date,
+      location,
+      navigation,
+      scrollObject,
+    ),
     "Request Concert": new RequestConcert(scrollObject, navigation),
     "Audacity Dance Club": new DanceClub(scrollObject, navigation),
   };

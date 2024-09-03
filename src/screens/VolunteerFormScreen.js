@@ -46,7 +46,8 @@ export default function VolunteerFormScreen({ navigation, route }) {
               </Text>
             </View>
             <View style={styles.form}>
-              {form.questions()
+              {form
+                .questions()
                 .filter((question) => question?.isVisible())
                 .map((question) => question.component)}
             </View>
