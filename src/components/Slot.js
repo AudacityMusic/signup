@@ -173,7 +173,14 @@ function RemoveButton({ state, setState, index }) {
   );
 }
 
-function AddButton({ state, setState, setIndex, setIsAdded, setIsOpen, setIsStart }) {
+function AddButton({
+  state,
+  setState,
+  setIndex,
+  setIsAdded,
+  setIsOpen,
+  setIsStart,
+}) {
   return (
     <Pressable
       style={styles.button}
