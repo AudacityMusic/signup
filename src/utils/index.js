@@ -26,7 +26,7 @@ export async function getUser() {
     }
     return JSON.parse(userString);
   } catch (error) {
-    console.error(error);
+    alertError("Unexpected error in getUser: " + error);
   }
 }
 
@@ -101,10 +101,10 @@ export async function submitForm(formId, formData) {
     if (response.ok) {
       return true;
     }
-    console.log(response);
+    alertError(`submitForm failed with response: ${response}`);
     return false;
   } catch (error) {
-    console.error(error);
+    alertError(`submitForm errored with: ${error}`);
     return false;
   }
 }
@@ -180,7 +180,7 @@ class MusicHour extends Form {
             value: user?.name,
           }));
         } catch (error) {
-          console.error(error);
+          alertError("Unable to get user information in MusicHour: " + error);
         }
       })();
     }, []);
@@ -775,7 +775,7 @@ class DanceClub extends Form {
             value: user?.name,
           }));
         } catch (error) {
-          console.error(error);
+          alertError("Unable to get user information in DanceClub: " + error);
         }
       })();
     }, []);
@@ -826,7 +826,7 @@ class DanceClub extends Form {
       new Question({
         name: "favoritePieces",
         component: (
-          <View>
+          <View key="favoritePiecesView">
             {this.favoritePieces.map((piece, index) => (
               <TextField
                 title={index == 0 ? "Your 4 Favorite Pieces of Music" : ""}

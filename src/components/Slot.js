@@ -83,7 +83,7 @@ export class TimeSlot {
     }
   }
 
-  render(state, setState, index, setIndex, setOpen, setAdded, setStart) {
+  render(state, setState, index, setIndex, setIsOpen, setIsAdded, setIsStart) {
     return (
       <View
         key={index * 10}
@@ -98,9 +98,9 @@ export class TimeSlot {
           <Pressable
             key={index * 10 + 2}
             onPress={() => {
-              setOpen(true);
-              setAdded(false);
-              setStart(true);
+              setIsOpen(true);
+              setIsAdded(false);
+              setIsStart(true);
               setIndex(index);
             }}
           >
@@ -122,9 +122,9 @@ export class TimeSlot {
           <Pressable
             key={index * 10 + 5}
             onPress={() => {
-              setOpen(true);
-              setAdded(false);
-              setStart(false);
+              setIsOpen(true);
+              setIsAdded(false);
+              setIsStart(false);
               setIndex(index);
             }}
           >
@@ -173,13 +173,13 @@ function RemoveButton({ state, setState, index }) {
   );
 }
 
-function AddButton({ state, setState, setIndex, setAdded, setOpen, setStart }) {
+function AddButton({ state, setState, setIndex, setIsAdded, setIsOpen, setIsStart }) {
   return (
     <Pressable
       style={styles.button}
       onPress={() => {
-        setAdded(true);
-        setStart(true);
+        setIsAdded(true);
+        setIsStart(true);
         let length = state.value.length;
         setIndex(length);
         setState((previous) => {
@@ -188,7 +188,7 @@ function AddButton({ state, setState, setIndex, setAdded, setOpen, setStart }) {
             value: previous.value.concat([new TimeSlot()]),
           };
         });
-        setOpen(true);
+        setIsOpen(true);
       }}
     >
       <Ionicons name="add-circle-sharp" size={21} color="#006AFF" />
@@ -201,57 +201,55 @@ export function Select({
   state,
   setState,
   index,
-  added,
-  start,
-  setStart,
-  open,
-  setOpen,
+  isAdded,
+  isStart,
+  setIsStart,
+  isOpen,
+  setIsOpen,
 }) {
   const now = new Date();
-  console.log(state);
-  console.log(index);
 
-  let start_ = state.value[index].start;
-  let end_ = state.value[index].end;
+  let start = state.value[index].start;
+  let end = state.value[index].end;
 
   return (
     <DatePicker
       modal
-      open={open}
+      open={isOpen}
       date={
-        start && added
+        isStart && isAdded
           ? new Date()
-          : start || added
+          : isStart || isAdded
             ? new Date(
                 now.getFullYear(),
                 now.getMonth(),
                 now.getDate(),
-                start_.getHours(),
-                start_.getMinutes(),
+                start.getHours(),
+                start.getMinutes(),
               )
             : new Date(
                 now.getFullYear(),
                 now.getMonth(),
                 now.getDate(),
-                end_.getHours(),
-                end_.getMinutes(),
+                end.getHours(),
+                end.getMinutes(),
               )
       }
-      mode={start ? "datetime" : "time"}
-      title={start ? "Select Start Time" : "Select End Time"}
+      mode={isStart ? "datetime" : "time"}
+      title={isStart ? "Select Start Time" : "Select End Time"}
       minimumDate={
-        start
+        isStart
           ? new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0)
           : new Date(
-              start_.getFullYear(),
-              start_.getMonth(),
-              start_.getDate(),
-              start_.getHours(),
-              start_.getMinutes(),
+              start.getFullYear(),
+              start.getMonth(),
+              start.getDate(),
+              start.getHours(),
+              start.getMinutes(),
             )
       }
       maximumDate={
-        start
+        isStart
           ? new Date(
               now.getFullYear(),
               now.getMonth() + 3,
@@ -261,27 +259,27 @@ export function Select({
               59,
             )
           : new Date(
-              start_.getFullYear(),
-              start_.getMonth(),
-              start_.getDate(),
+              start.getFullYear(),
+              start.getMonth(),
+              start.getDate(),
               23,
               59,
               59,
             )
       }
       onConfirm={(date) => {
-        if (start) {
+        if (isStart) {
           setState((previous) => {
             let next = previous.value;
             next[index].start = date;
             return { ...previous, value: next };
           });
-          setStart(false);
+          setIsStart(false);
 
-          setOpen(false);
+          setIsOpen(false);
 
-          if (added) {
-            setOpen(true);
+          if (isAdded) {
+            setIsOpen(true);
           }
         } else {
           setState((previous) => {
@@ -289,26 +287,26 @@ export function Select({
             next[index].end = date;
             return { ...previous, value: next };
           });
-          setOpen(false);
+          setIsOpen(false);
         }
       }}
       onCancel={() => {
-        if (added && start) {
+        if (isAdded && isStart) {
           setState((previous) => {
             return { ...previous, value: previous.value.slice(0, index - 1) };
           });
         }
 
-        setOpen(false);
+        setIsOpen(false);
       }}
     />
   );
 }
 
 export default function SlotList({ title, state, setState }) {
-  const [open, setOpen] = useState(false);
-  const [start, setStart] = useState(true);
-  const [added, setAdded] = useState(false);
+  const [open, setIsOpen] = useState(false);
+  const [start, setIsStart] = useState(true);
+  const [added, setIsAdded] = useState(false);
   const [index, setIndex] = useState(0);
 
   return (
@@ -340,29 +338,29 @@ export default function SlotList({ title, state, setState }) {
               setState,
               index,
               setIndex,
-              setOpen,
-              setAdded,
-              setStart,
+              setIsOpen,
+              setIsAdded,
+              setIsStart,
             ),
       )}
       <AddButton
         state={state}
         setState={setState}
         setIndex={setIndex}
-        setAdded={setAdded}
-        setOpen={setOpen}
-        setStart={setStart}
+        setIsAdded={setIsAdded}
+        setIsOpen={setIsOpen}
+        setIsStart={setIsStart}
       />
       {open ? (
         <Select
           state={state}
           setState={setState}
           index={index}
-          added={added}
-          start={start}
-          setStart={setStart}
-          open={open}
-          setOpen={setOpen}
+          isAdded={added}
+          isStart={start}
+          setIsStart={setIsStart}
+          isOpen={open}
+          setIsOpen={setIsOpen}
         />
       ) : null}
     </View>

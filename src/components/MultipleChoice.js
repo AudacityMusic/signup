@@ -24,9 +24,9 @@ export default function MultipleChoice({
         </Text>
         <Text style={{ color: "red" }}> *</Text>
       </Text>
-      {options.map((value, index) => (
+      {mapObject(options, (value) => (
         <Pressable
-          key={index}
+          key={value}
           style={styles.option}
           onPress={() => onSelect(value)}
         >

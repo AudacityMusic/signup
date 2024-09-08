@@ -14,7 +14,6 @@ export default function TextField({
   return (
     <View
       onLayout={(event) => {
-        console.log(title, state);
         setState((prevState) => ({
           ...prevState,
           y: event.nativeEvent.layout.y,
