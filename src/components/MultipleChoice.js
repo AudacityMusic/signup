@@ -24,7 +24,7 @@ export default function MultipleChoice({
         </Text>
         <Text style={{ color: "red" }}> *</Text>
       </Text>
-      {mapObject(options, (value) => (
+      {options.map((value) => (
         <Pressable
           key={value}
           style={styles.option}
@@ -83,11 +83,3 @@ const styles = StyleSheet.create({
     fontWeight: "condensedBold",
   },
 });
-
-function mapObject(obj, callback) {
-  const items = [];
-  for (const key in obj) {
-    items.push(callback(key));
-  }
-  return items;
-}

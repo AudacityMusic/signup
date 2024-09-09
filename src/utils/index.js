@@ -201,7 +201,14 @@ class MusicHour extends Form {
     this.otherInfo = emptyQuestionState();
     this.timeLimit = useState(title == "Library Music Hour" ? 0 : 10);
 
-    this.performanceOptions = {
+    this.performanceOptions = ["Individual performance only", 
+                               "Individual Performance and music instrument presentation",
+                               "Group performance only",
+                               "Group performance and music instrument presentation",
+                               "Library Band Ensemble (Band, Orchestra, or Choir)"
+                              ];
+    
+    this.performanceOptionsTimes = {
       "Individual performance only": 8,
       "Individual performance and music instrument presentation": 12,
       "Group performance only": 15,
@@ -324,7 +331,7 @@ class MusicHour extends Form {
                     ...prevState,
                     value: option,
                   }));
-                  this.timeLimit[1](this.performanceOptions[option]);
+                  this.timeLimit[1](this.performanceOptionsTimes[option]);
                 }}
                 key="performanceType"
                 state={this.performanceType[0]}
