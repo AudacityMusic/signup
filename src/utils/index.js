@@ -201,13 +201,14 @@ class MusicHour extends Form {
     this.otherInfo = emptyQuestionState();
     this.timeLimit = useState(title == "Library Music Hour" ? 0 : 10);
 
-    this.performanceOptions = ["Individual performance only", 
-                               "Individual Performance and music instrument presentation",
-                               "Group performance only",
-                               "Group performance and music instrument presentation",
-                               "Library Band Ensemble (Band, Orchestra, or Choir)"
-                              ];
-    
+    this.performanceOptions = [
+      "Individual performance only",
+      "Individual Performance and music instrument presentation",
+      "Group performance only",
+      "Group performance and music instrument presentation",
+      "Library Band Ensemble (Band, Orchestra, or Choir)",
+    ];
+
     this.performanceOptionsTimes = {
       "Individual performance only": 8,
       "Individual performance and music instrument presentation": 12,
