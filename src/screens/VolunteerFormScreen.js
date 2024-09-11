@@ -12,14 +12,36 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 
-import { questions } from "../utils";
 import NextButton from "../components/NextButton";
+
+import { alertError } from "../utils";
+import LibraryMusicHour from "../utils/forms/LibraryMusicHour";
+import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
+import RequestConcert from "../utils/forms/RequestConcert";
+import DanceClub from "../utils/forms/DanceClub";
+
+function getForm(title, date, location, navigation, scrollObject) {
+  if (title == "Library Music Hour") {
+    return new LibraryMusicHour(date, location, navigation, scrollObject);
+  }
+  if (title == "Music by the Tracks") {
+    return new MusicByTheTracks(date, location, navigation, scrollObject);
+  }
+  if (title == "Request a Concert") {
+    return new RequestConcert(date, location, navigation, scrollObject);
+  }
+  if (title == "Audacity Dance Club") {
+    return new DanceClub(date, location, navigation, scrollObject);
+  }
+
+  alertError(`Unknown form title ${title} in getForm`);
+}
 
 export default function VolunteerFormScreen({ navigation, route }) {
   const { title, location, date } = route.params;
   const [scrollObject, setScrollObject] = useState(null);
 
-  const form = questions(date, location, navigation, scrollObject)[title];
+  const form = getForm(title, date, location, navigation, scrollObject);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -40,10 +62,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
         >
           <View style={styles.questions}>
             <View style={styles.header}>
-              <Text style={styles.instructions}>
-                Please fill in the following details about the person who will
-                be performing at the concert.
-              </Text>
+              <Text style={styles.instructions}>{form.title}</Text>
             </View>
             <View style={styles.form}>
               {form

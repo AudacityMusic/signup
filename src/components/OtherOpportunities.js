@@ -11,7 +11,7 @@ export default function OtherOpportunities({ navigation }) {
         style={[styles.card, styles.first]}
         onPress={() =>
           navigation.navigate("Volunteer Form", {
-            title: "Request Concert",
+            title: "Request a Concert",
             location: null,
             date: null,
           })
