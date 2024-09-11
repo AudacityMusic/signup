@@ -1,6 +1,5 @@
-import { View } from "react-native";
-import colors from "../constants/colors";
 import Feather from "@expo/vector-icons/Feather";
+import { View } from "react-native";
 
 export default function SignUpButton() {
   return (

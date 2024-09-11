@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { Alert, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
+import { useState } from "react";
+import { Alert, Platform } from "react-native";
 
 export function alertError(error) {
   console.error(error);

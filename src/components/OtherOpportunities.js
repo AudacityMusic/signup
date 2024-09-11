@@ -1,7 +1,8 @@
-import { View, Text, StyleSheet, Image, Pressable, Alert } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+
 import Entypo from "@expo/vector-icons/Entypo";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function OtherOpportunities({ navigation }) {

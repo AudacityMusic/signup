@@ -1,24 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import {
-  Alert,
+  Dimensions,
+  KeyboardAvoidingView,
   Pressable,
-  View,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
-  Dimensions,
-  KeyboardAvoidingView,
+  View,
 } from "react-native";
 
 import NextButton from "../components/NextButton";
 
 import { alertError } from "../utils";
+import DanceClub from "../utils/forms/DanceClub";
 import LibraryMusicHour from "../utils/forms/LibraryMusicHour";
 import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
 import RequestConcert from "../utils/forms/RequestConcert";
-import DanceClub from "../utils/forms/DanceClub";
 
 function getForm(title, date, location, navigation, scrollObject) {
   if (title == "Library Music Hour") {

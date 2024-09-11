@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import { LinearGradient } from "expo-linear-gradient";
+import { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Image,
-  Text,
-  StyleSheet,
   Pressable,
   SafeAreaView,
-  ActivityIndicator,
+  StyleSheet,
+  Text,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 
 import colors from "../constants/colors";
 import { getUser } from "../utils";

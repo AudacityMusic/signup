@@ -1,15 +1,16 @@
-import { useState } from "react";
-import { StyleSheet, Text, View, Image, Pressable, Alert } from "react-native";
-import DocumentPicker from "react-native-document-picker";
-import * as fs from "react-native-fs";
+import Feather from "@expo/vector-icons/Feather";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   GDrive,
   MimeTypes,
 } from "@robinbobin/react-native-google-drive-api-wrapper";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState } from "react";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import DocumentPicker from "react-native-document-picker";
+import * as fs from "react-native-fs";
+
 import colors from "../constants/colors";
 import { alertError } from "../utils";
-import Feather from "@expo/vector-icons/Feather";
 
 const selectFile = async () => {
   try {

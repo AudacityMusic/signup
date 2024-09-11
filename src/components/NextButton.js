@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Image } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function NextButton() {
   return (

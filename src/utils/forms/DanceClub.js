@@ -12,10 +12,10 @@ import {
 } from "..";
 import Form from "./Form";
 
-import TextField from "../../components/TextField";
 import CheckBoxQuery from "../../components/CheckBoxQuery";
 import MultipleChoice from "../../components/MultipleChoice";
 import MultiSelect from "../../components/MultiSelect";
+import TextField from "../../components/TextField";
 
 export default class DanceClub extends Form {
   constructor(date, location, navigation, scrollObject) {

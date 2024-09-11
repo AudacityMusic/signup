@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View } from "react-native";
 import { Checkbox } from "expo-checkbox";
+import { StyleSheet, Text, View } from "react-native";
+
 import colors from "../constants/colors";
 
 export default function CheckBoxQuery({ question, state, setState }) {

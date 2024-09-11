@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { View, Pressable, Text, StyleSheet } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import DatePicker from "react-native-date-picker";
-import Ionicons from "@expo/vector-icons/Ionicons";
+
 import EvilIcons from "@expo/vector-icons/EvilIcons";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import Ionicons from "@expo/vector-icons/Ionicons";
+
 import colors from "../constants/colors";
 
 function timeFormatter(date) {
@@ -167,7 +168,6 @@ function RemoveButton({ state, setState, index }) {
         });
       }}
     >
-      {/* <FontAwesome6 name="trash-alt" size={20} color="#FF3B30" /> */}
       <EvilIcons name="trash" size={30} color="#FF3B30" />
     </Pressable>
   );
@@ -310,7 +310,7 @@ export function Select({
   );
 }
 
-export default function SlotList({ title, state, setState }) {
+export default function TimeSlotList({ title, state, setState }) {
   const [open, setIsOpen] = useState(false);
   const [start, setIsStart] = useState(true);
   const [added, setIsAdded] = useState(false);
@@ -326,7 +326,10 @@ export default function SlotList({ title, state, setState }) {
         }));
       }}
     >
-      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.title}>
+        {title}
+        <Text style={{ color: "red" }}> *</Text>
+      </Text>
       <Text
         style={[
           styles.requirements,

@@ -1,16 +1,16 @@
 import {
+  Image,
+  Pressable,
+  SafeAreaView,
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
-  Pressable,
-  Image,
 } from "react-native";
 
 import {
   GoogleSignin,
-  statusCodes,
   isErrorWithCode,
+  statusCodes,
 } from "@react-native-google-signin/google-signin";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";

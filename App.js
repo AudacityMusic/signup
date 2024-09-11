@@ -1,20 +1,21 @@
 import "@expo/metro-runtime";
-import { useState, useEffect } from "react";
-import { ActivityIndicator } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StatusBar } from "expo-status-bar";
+import { useEffect, useState } from "react";
+import { ActivityIndicator } from "react-native";
 
-import colors from "./src/constants/colors";
-import HomeScreen from "./src/screens/HomeScreen";
 import AccountScreen from "./src/screens/AccountScreen";
+import EmbeddedFormScreen from "./src/screens/EmbeddedFormScreen";
+import EndScreen from "./src/screens/EndScreen";
+import HomeScreen from "./src/screens/HomeScreen";
 import SignInScreen from "./src/screens/SignInScreen";
 import VolunteerFormScreen from "./src/screens/VolunteerFormScreen";
-import EmbeddedFormScreen from "./src/screens/EmbeddedFormScreen";
 import VolunteerOpportunityScreen from "./src/screens/VolunteerOpportunityScreen";
-import EndScreen from "./src/screens/EndScreen";
+
 import HomeHeader from "./src/components/HomeHeader";
+import colors from "./src/constants/colors";
 import { alertError } from "./src/utils";
 
 const Stack = createNativeStackNavigator();

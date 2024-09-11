@@ -1,12 +1,11 @@
-import React from "react";
 import Feather from "@expo/vector-icons/Feather";
 import {
-  View,
-  Text,
-  StyleSheet,
   Image,
-  Pressable,
   Linking,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 
 export default function Websites() {

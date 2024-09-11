@@ -1,11 +1,11 @@
 import { Question, emptyQuestionState, isAtLeast, isNotEmpty } from "..";
 import Form from "./Form";
 
-import TextField from "../../components/TextField";
 import CheckBoxQuery from "../../components/CheckBoxQuery";
 import MultipleChoice from "../../components/MultipleChoice";
 import MultiSelect from "../../components/MultiSelect";
-import SlotList from "../../components/Slot";
+import TextField from "../../components/TextField";
+import TimeSlotList from "../../components/TimeSlotList";
 
 export default class RequestConcert extends Form {
   constructor(date, location, navigation, scrollObject) {
@@ -133,7 +133,7 @@ export default class RequestConcert extends Form {
       new Question({
         name: "slots",
         component: (
-          <SlotList
+          <TimeSlotList
             title="Possible Concert Times"
             key="slots"
             state={this.slots[0]}

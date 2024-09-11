@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { View, Pressable, Text, StyleSheet } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function MultiSelect({ state, setState, title, options }) {
   const [selected, setSelected] = useState(
