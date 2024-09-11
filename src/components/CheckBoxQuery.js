@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View } from "react-native";
 import { Checkbox } from "expo-checkbox";
+import { StyleSheet, Text, View } from "react-native";
+
 import colors from "../constants/colors";
 
 export default function CheckBoxQuery({ question, state, setState }) {
@@ -13,18 +14,23 @@ export default function CheckBoxQuery({ question, state, setState }) {
         }));
       }}
     >
-      <Text style={styles.header}>
+      <Text
+        style={[
+          styles.header,
+          { color: state.valid ? "black" : colors.danger },
+        ]}
+      >
         {question}
         <Text style={{ color: "red" }}>{" *"}</Text>
       </Text>
       <View style={styles.checkBoxContainer}>
         <Checkbox
           color={"#0d79ff"}
-          value={state.value == true}
+          value={state.value == "Yes"}
           onValueChange={() => {
             setState((prevState) => ({
               ...prevState,
-              value: true,
+              value: "Yes",
             }));
           }}
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
@@ -40,11 +46,11 @@ export default function CheckBoxQuery({ question, state, setState }) {
         <Text> </Text>
         <Checkbox
           color={"#0d79ff"}
-          value={state.value == false}
+          value={state.value == "No"}
           onValueChange={() => {
             setState((prevState) => ({
               ...prevState,
-              value: false,
+              value: "No",
             }));
           }}
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
@@ -66,13 +72,10 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     marginBottom: 25,
-    justifyContent: "center",
-    alignItems: "center",
-    alignSelf: "center",
+    alignSelf: "flex-start",
   },
   checkBoxContainer: {
     flexDirection: "row",
-    alignItems: "center",
     paddingTop: 15,
   },
   text: {

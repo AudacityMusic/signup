@@ -1,428 +1,46 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import {
-  Alert,
+  Dimensions,
+  KeyboardAvoidingView,
   Pressable,
-  View,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
-  Dimensions,
-  KeyboardAvoidingView,
+  View,
 } from "react-native";
 
-import forms from "../constants/forms";
-import {
-  getUser,
-  FormString,
-  submitForm,
-  hashForm,
-  alertError,
-} from "../utils";
-
-import TextField from "../components/TextField";
-import CheckBoxQuery from "../components/CheckBoxQuery";
-import UploadButton from "../components/UploadButton";
 import NextButton from "../components/NextButton";
-import MultipleChoice from "../components/MultipleChoice";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { alertError } from "../utils";
+import DanceClub from "../utils/forms/DanceClub";
+import LibraryMusicHour from "../utils/forms/LibraryMusicHour";
+import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
+import RequestConcert from "../utils/forms/RequestConcert";
 
-class Question {
-  constructor({ component, validate = (_) => true, isVisible = () => true }) {
-    this.component = component;
-    this.validate = () => !isVisible() || validate(component.props.state.value);
-    this.isVisible = isVisible;
-    this.state = component.props.state;
-    this.setState = component.props.setState;
-    this.y = component.props.state.y;
+function getForm(title, date, location, navigation, scrollObject) {
+  if (title == "Library Music Hour") {
+    return new LibraryMusicHour(date, location, navigation, scrollObject);
   }
+  if (title == "Music by the Tracks") {
+    return new MusicByTheTracks(date, location, navigation, scrollObject);
+  }
+  if (title == "Request a Concert") {
+    return new RequestConcert(date, location, navigation, scrollObject);
+  }
+  if (title == "Audacity Dance Club") {
+    return new DanceClub(date, location, navigation, scrollObject);
+  }
+
+  alertError(`Unknown form title ${title} in getForm`);
 }
 
 export default function VolunteerFormScreen({ navigation, route }) {
   const { title, location, date } = route.params;
-
-  function emptyQuestionState(initial = null) {
-    return useState({ value: initial, y: null, valid: true });
-  }
-
-  const [fullName, setFullName] = emptyQuestionState();
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const user = await getUser();
-        setFullName((prevState) => ({ ...prevState, value: user?.name }));
-      } catch (error) {
-        alertError(`While getting user in volunteer form screen: ${error}`);
-      }
-    })();
-  }, []);
-
-  const [city, setCity] = emptyQuestionState();
-  const [phoneNumber, setPhoneNumber] = emptyQuestionState();
-  const [age, setAge] = emptyQuestionState();
-  const [musicPiece, setMusicPiece] = emptyQuestionState();
-  const [composer, setComposer] = emptyQuestionState();
-  const [instrument, setInstrument] = emptyQuestionState();
-  const [performanceType, setPerformanceType] = emptyQuestionState();
-  const [length, setLength] = emptyQuestionState();
-  const [recordingLink, setRecordingLink] = emptyQuestionState();
-  const [publicPermission, setPublicPermission] = emptyQuestionState();
-  const [parentalConsent, setParentalConsent] = emptyQuestionState();
-  const [pianoAccompaniment, setPianoAccompaniment] = emptyQuestionState();
-  const [ensembleProfile, setEnsembleProfile] = emptyQuestionState();
-  const [otherInfo, setOtherInfo] = emptyQuestionState();
-
   const [scrollObject, setScrollObject] = useState(null);
-  const [timeLimit, setTimeLimit] = useState(
-    title == "Library Music Hour" ? 0 : 10,
-  );
 
-  const performanceOptions = {
-    "Individual performance only": 8,
-    "Individual performance and music instrument presentation": 12,
-    "Group performance only": 15,
-    "Group performance and music instrument presentation": 20,
-    "Library Band Ensemble (Band, Orchestra, or Choir)": 60,
-  };
-
-  const isAtLeast = (value, len) => value?.trim().length >= len;
-  const isNotEmpty = (value) => isAtLeast(value, 1);
-
-  let questions = [
-    new Question({
-      component: (
-        <TextField
-          title="Performer's Full Name"
-          key="fullName"
-          state={fullName}
-          setState={setFullName}
-        />
-      ),
-      validate: (value) => value.trim().split(" ").length >= 2,
-    }),
-
-    new Question({
-      component: (
-        <TextField
-          title="City of Residence"
-          key="city"
-          state={city}
-          setState={setCity}
-        />
-      ),
-      validate: isNotEmpty,
-    }),
-
-    new Question({
-      component: (
-        <TextField
-          title="Phone Number"
-          keyboardType="phone-pad"
-          maxLength={11}
-          key="phoneNumber"
-          state={phoneNumber}
-          setState={setPhoneNumber}
-        />
-      ),
-      validate: (value) => isAtLeast(value, 10),
-    }),
-
-    new Question({
-      component: (
-        <TextField
-          title="Performer's Age"
-          keyboardType="numeric"
-          key="age"
-          state={age}
-          setState={setAge}
-        />
-      ),
-      validate(value) {
-        const age = Number(value);
-        if (isNaN(age)) {
-          return false;
-        }
-        return age >= 5 && age <= 125;
-      },
-    }),
-
-    new Question({
-      component: (
-        <TextField
-          title="Name of Music Piece"
-          key="musicPiece"
-          state={musicPiece}
-          setState={setMusicPiece}
-        />
-      ),
-      validate: isNotEmpty,
-    }),
-
-    new Question({
-      component: (
-        <TextField
-          title="Name of Composer"
-          key="composer"
-          state={composer}
-          setState={setComposer}
-        />
-      ),
-      validate: isNotEmpty,
-    }),
-
-    new Question({
-      component: (
-        <TextField
-          title="Instrument Type"
-          key="instrument"
-          state={instrument}
-          setState={setInstrument}
-        />
-      ),
-      validate: isNotEmpty,
-    }),
-
-    title == "Library Music Hour"
-      ? new Question({
-          component: (
-            <MultipleChoice
-              title="Performance Type"
-              options={performanceOptions}
-              onSelect={(option) => {
-                setPerformanceType((prevState) => ({
-                  ...prevState,
-                  value: option,
-                }));
-                setTimeLimit(performanceOptions[option]);
-              }}
-              key="performanceType"
-              state={performanceType}
-              setState={setPerformanceType}
-            />
-          ),
-          validate: isNotEmpty,
-        })
-      : null,
-
-    new Question({
-      component: (
-        <TextField
-          title="Length of Performance (mins)"
-          subtitle={`Time Limit: ${timeLimit} minutes`}
-          keyboardType="numeric"
-          key="length"
-          state={length}
-          setState={setLength}
-        />
-      ),
-      validate(value) {
-        const time = Number(value);
-        if (isNaN(time)) {
-          return false;
-        }
-        return time > 0 && time <= timeLimit;
-      },
-    }),
-
-    new Question({
-      component: (
-        <TextField
-          title="Recording Link"
-          keyboardType="url"
-          key="recordingLink"
-          state={recordingLink}
-          setState={setRecordingLink}
-        />
-      ),
-      validate(value) {
-        try {
-          new URL(value);
-        } catch {
-          return false;
-        }
-        return true;
-      },
-    }),
-
-    new Question({
-      component: (
-        <CheckBoxQuery
-          question="Do you give permission for Audacity Music Club to post recordings of your performance on public websites?"
-          key="publicPermission"
-          state={publicPermission}
-          setState={setPublicPermission}
-        />
-      ),
-      validate: (value) => value != null,
-    }),
-
-    new Question({
-      component: (
-        <CheckBoxQuery
-          question="My parent has given their consent for my participation."
-          key="parentalConsent"
-          state={parentalConsent}
-          setState={setParentalConsent}
-        />
-      ),
-      validate: (value) => value,
-      isVisible: () => age.value < 18,
-    }),
-
-    new Question({
-      component: (
-        <UploadButton
-          title="Our volunteer piano accompanist can provide sight reading accompaniment for entry level players. To request this service, upload the main score AND accompaniment score in one PDF file."
-          key="pianoAccompaniment"
-          state={pianoAccompaniment}
-          setState={setPianoAccompaniment}
-          navigation={navigation}
-        />
-      ),
-      // Only PDF files can be uploaded
-      // Optional
-      validate: () =>
-        pianoAccompaniment.value == null ||
-        pianoAccompaniment.value[1] <= 104857600, // There are 104,857,600 bytes in 100 MB
-    }),
-
-    title == "Library Music Hour"
-      ? new Question({
-          component: (
-            <UploadButton
-              title="Upload your Library Band Ensemble profile as one PDF file."
-              key="ensembleProfile"
-              state={ensembleProfile}
-              setState={setEnsembleProfile}
-              navigation={navigation}
-              required={true}
-            />
-          ),
-
-          isVisible: () => performanceType.value?.includes("Ensemble"),
-
-          // Only PDF files can be uploaded
-          // Required only if visible (selected ensemble option)
-          validate: () =>
-            ensembleProfile.value != null &&
-            ensembleProfile.value[1] <= 104857600, // There are 104,857,600 bytes in 100 MB
-        })
-      : null,
-
-    new Question({
-      component: (
-        <TextField
-          title="Other Information (optional)"
-          key="otherInfo"
-          state={otherInfo}
-          setState={setOtherInfo}
-        />
-      ),
-    }),
-  ];
-
-  questions = questions.filter((q) => q != null);
-
-  async function submit() {
-    let allValid = true;
-    let minInvalidY = Infinity;
-
-    for (const question of questions) {
-      const isValid = question.validate();
-      question.setState((prevState) => ({
-        ...prevState,
-        valid: isValid,
-      }));
-
-      if (!isValid) {
-        allValid = false;
-        if (question.y < minInvalidY) {
-          minInvalidY = question.y;
-        }
-      }
-    }
-
-    if (!allValid) {
-      scrollObject.scrollTo({
-        x: 0,
-        y: minInvalidY,
-        animated: true,
-      });
-      return;
-    }
-
-    if (!forms.hasOwnProperty(title)) {
-      Alert.alert(`Form "${title}" is not implemented`);
-      return;
-    }
-
-    const form = forms[title];
-    const formData = new FormString();
-
-    if (title == "Library Music Hour" || title == "Music by the Tracks") {
-      formData.append(form.location, location);
-      formData.append(form.date, date);
-      formData.append(form.fullName, fullName.value);
-      formData.append(form.city, city.value);
-      formData.append(form.phoneNumber, phoneNumber.value);
-      formData.append(form.age, age.value);
-      formData.append(form.musicPiece, musicPiece.value);
-      formData.append(form.composer, composer.value);
-      formData.append(form.instrument, instrument.value);
-      formData.append(form.length, length.value);
-      formData.append(form.recordingLink, recordingLink.value);
-      if (title == "Library Music Hour") {
-        formData.append(form.performanceType, performanceType.value);
-      }
-      formData.append(
-        form.publicPermission,
-        publicPermission.value ? "Yes" : "No",
-      );
-      formData.append(
-        form.parentalConsent,
-        parentalConsent.value == null
-          ? ""
-          : parentalConsent.value
-            ? "Yes"
-            : "No",
-      );
-      formData.append(
-        form.pianoAccompaniment,
-        pianoAccompaniment.value ? pianoAccompaniment.value[0] : "",
-      );
-      if (title == "Library Music Hour") {
-        formData.append(
-          form.ensembleProfile,
-          ensembleProfile.value ? ensembleProfile.value[0] : "",
-        );
-      }
-      formData.append(form.otherInfo, otherInfo.value ?? "");
-    }
-
-    if (!submitForm(form.id, formData)) {
-      navigation.navigate("End", { isSuccess: false });
-      return;
-    }
-
-    try {
-      const submittedForms = await AsyncStorage.getItem("submittedForms");
-      const hash = hashForm(title, location, date);
-      if (submittedForms == null) {
-        await AsyncStorage.setItem("submittedForms", JSON.stringify([hash]));
-      } else {
-        const newForms = JSON.parse(submittedForms);
-        newForms.push(hash);
-        await AsyncStorage.setItem("submittedForms", JSON.stringify(newForms));
-      }
-    } catch (error) {
-      alertError(`Unable to get/save submittedForms: ${error}`);
-    }
-
-    navigation.navigate("End", { isSuccess: true });
-  }
+  const form = getForm(title, date, location, navigation, scrollObject);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -443,17 +61,15 @@ export default function VolunteerFormScreen({ navigation, route }) {
         >
           <View style={styles.questions}>
             <View style={styles.header}>
-              <Text style={styles.instructions}>
-                Please fill in the following details about the person who will
-                be performing at the concert.
-              </Text>
+              <Text style={styles.instructions}>{form.title}</Text>
             </View>
             <View style={styles.form}>
-              {questions
+              {form
+                .questions()
                 .filter((question) => question?.isVisible())
                 .map((question) => question.component)}
             </View>
-            <Pressable style={styles.nextButton} onPress={() => submit()}>
+            <Pressable style={styles.nextButton} onPress={() => form.submit()}>
               <NextButton />
             </Pressable>
           </View>

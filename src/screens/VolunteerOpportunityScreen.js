@@ -1,18 +1,18 @@
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import { LinearGradient } from "expo-linear-gradient";
 import {
+  ImageBackground,
   Pressable,
-  View,
   SafeAreaView,
   StyleSheet,
   Text,
-  Image,
-  ImageBackground,
+  View,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+
+import Heading from "../components/Heading";
 import SignUpButton from "../components/SignUpButton";
 import Tag from "../components/Tag";
-import Heading from "../components/Heading";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import colors from "../constants/colors";
 
 export default function VolunteerOpportunityScreen({ route, navigation }) {

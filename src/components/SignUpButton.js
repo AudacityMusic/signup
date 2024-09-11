@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View, Image } from "react-native";
-import colors from "../constants/colors";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { StyleSheet, Text, View } from "react-native";
+import colors from "../constants/colors";
 
 export default function SignUpButton() {
   return (
-    <View style={styles.signUp}>
+    <View style={styles.container}>
       <Text>{"\n\n\n"}</Text>
       <Text style={styles.signUpText}>Sign Up</Text>
       <FontAwesome name="chevron-right" size={20} color="white" />
@@ -13,7 +13,7 @@ export default function SignUpButton() {
 }
 
 const styles = StyleSheet.create({
-  signUp: {
+  container: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",

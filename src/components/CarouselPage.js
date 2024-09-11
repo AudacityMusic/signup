@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Alert, Pressable, StyleSheet, View, Dimensions } from "react-native";
+import { Alert, Dimensions, Pressable, StyleSheet, View } from "react-native";
 import AnimatedDotsCarousel from "react-native-animated-dots-carousel";
-import VolunteerOpportunity from "./VolunteerOpportunity";
 import Carousel from "react-native-reanimated-carousel";
+
 import Heading from "./Heading";
 import RefreshButton from "./RefreshButton";
+import VolunteerOpportunity from "./VolunteerOpportunity";
 
 export default function CarouselPage({ navigation, data, onRefresh }) {
   const [dotIndex, setDotIndex] = useState(0);

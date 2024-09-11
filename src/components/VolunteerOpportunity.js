@@ -1,14 +1,14 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Pressable,
-  Platform,
-} from "react-native";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import {
+  Image,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 export default function VolunteerOpportunity({
   navigation,

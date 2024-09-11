@@ -1,17 +1,21 @@
-import { View, Text, StyleSheet, Image, Pressable, Alert } from "react-native";
-import Entypo from "@expo/vector-icons/Entypo";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
-export default function OtherOpportunities() {
+import Entypo from "@expo/vector-icons/Entypo";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+
+export default function OtherOpportunities({ navigation }) {
   return (
-    <View style={styles.cardContainer}>
+    <View style={styles.container}>
       <Pressable
         style={[styles.card, styles.first]}
         onPress={() =>
-          Alert.alert(
-            "Request a Concert is not available yet. Please check back soon for more updates!",
-          )
+          navigation.navigate("Volunteer Form", {
+            title: "Request a Concert",
+            location: null,
+            date: null,
+          })
         }
       >
         <Entypo
@@ -21,6 +25,30 @@ export default function OtherOpportunities() {
           style={styles.icon}
         />
         <Text style={styles.text}>Request a Concert</Text>
+        <FontAwesome
+          name="chevron-right"
+          size={20}
+          color="black"
+          style={styles.arrow}
+        />
+      </Pressable>
+      <Pressable
+        style={styles.card}
+        onPress={() =>
+          navigation.navigate("Volunteer Form", {
+            title: "Audacity Dance Club",
+            location: null,
+            date: null,
+          })
+        }
+      >
+        <MaterialCommunityIcons
+          name="human-female-dance"
+          size={18}
+          color="black"
+          style={styles.icon}
+        />
+        <Text style={styles.text}>Sign Up for Audacity Dance Club</Text>
         <FontAwesome
           name="chevron-right"
           size={20}
@@ -38,7 +66,7 @@ export default function OtherOpportunities() {
 }
 
 const styles = StyleSheet.create({
-  cardContainer: {
+  container: {
     backgroundColor: "#f5f5f5",
     borderRadius: 10,
     marginBottom: 10,

@@ -1,9 +1,10 @@
 // From https://github.com/fureweb-com/public-google-sheets-parser
 // Copyright (c) 2020 Jihwan Oh
+// MIT License
 
 import { alertError } from ".";
 
-export class PublicGoogleSheetsParser {
+export default class PublicGoogleSheetsParser {
   constructor(spreadsheetId, option) {
     this.id = spreadsheetId;
     this.setOption(option);

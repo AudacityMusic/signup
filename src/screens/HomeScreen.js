@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
-import { StyleSheet, ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
+import { ScrollView, StyleSheet } from "react-native";
 
-import OtherOpportunities from "../components/OtherOpportunities";
-import Heading from "../components/Heading";
-import Websites from "../components/Websites";
 import CarouselPage from "../components/CarouselPage";
+import Heading from "../components/Heading";
+import OtherOpportunities from "../components/OtherOpportunities";
+import Websites from "../components/Websites";
 
-import { PublicGoogleSheetsParser } from "../utils/PublicGoogleSheetsParser";
 import { alertError, hashForm } from "../utils";
+import PublicGoogleSheetsParser from "../utils/PublicGoogleSheetsParser";
 
 export default function HomeScreen({ navigation, route }) {
   function formatData(data) {
@@ -146,7 +146,7 @@ export default function HomeScreen({ navigation, route }) {
         onRefresh={onRefresh}
       />
       <Heading>Other Opportunities</Heading>
-      <OtherOpportunities />
+      <OtherOpportunities navigation={navigation} />
       <Heading>Websites</Heading>
       <Websites />
     </ScrollView>

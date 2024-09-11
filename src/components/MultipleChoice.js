@@ -1,4 +1,4 @@
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import colors from "../constants/colors";
 
 export default function MultipleChoice({
@@ -18,28 +18,28 @@ export default function MultipleChoice({
         }));
       }}
     >
-      <Text style={styles.label}>
+      <Text style={styles.title}>
         <Text style={{ color: state.valid ? "black" : colors.danger }}>
           {title}
         </Text>
         <Text style={{ color: "red" }}> *</Text>
       </Text>
-      {mapObject(options, (key) => (
+      {options.map((value) => (
         <Pressable
-          key={key}
+          key={value}
           style={styles.option}
-          onPress={() => onSelect(key)}
+          onPress={() => onSelect(value)}
         >
           <View style={styles.radioCircle}>
-            {state.value === key && <View style={styles.selectedRb} />}
+            {state.value === value && <View style={styles.selectedRb} />}
           </View>
           <Text
             style={[
               styles.optionText,
-              state.value === key && styles.selectedText,
+              state.value === value && styles.selectedText,
             ]}
           >
-            {key}
+            {value}
           </Text>
         </Pressable>
       ))}
@@ -48,7 +48,7 @@ export default function MultipleChoice({
 }
 
 const styles = StyleSheet.create({
-  label: {
+  title: {
     fontSize: 18,
     fontWeight: "600",
     marginBottom: 10,
@@ -83,11 +83,3 @@ const styles = StyleSheet.create({
     fontWeight: "condensedBold",
   },
 });
-
-function mapObject(obj, callback) {
-  const items = [];
-  for (const key in obj) {
-    items.push(callback(key));
-  }
-  return items;
-}

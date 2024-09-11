@@ -8,6 +8,8 @@ export default function TextField({
   maxLength = 32000, // Limit of chars on Google Forms
   state,
   setState,
+  extraMargin = true,
+  valid = null,
 }) {
   return (
     <View
@@ -19,8 +21,14 @@ export default function TextField({
       }}
     >
       <Text style={styles.heading}>
-        <Text>{title}</Text>
-        {title.slice(-10) == "(optional)" ? null : (
+        <Text
+          style={{
+            color: !state.valid || valid == false ? colors.danger : "black",
+          }}
+        >
+          {title}
+        </Text>
+        {title == "" || title.slice(-10) == "(optional)" ? null : (
           <Text style={{ color: "red" }}> *</Text>
         )}
       </Text>
@@ -28,7 +36,10 @@ export default function TextField({
       <TextInput
         style={[
           styles.inputField,
-          { borderColor: state.valid ? "black" : colors.danger },
+          {
+            borderColor: state.valid ? "black" : colors.danger,
+            marginBottom: extraMargin ? 20 : 0,
+          },
         ]}
         onChangeText={(text) => {
           setState((prevState) => ({
@@ -61,6 +72,5 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: colors.secondary,
     textAlign: "center",
-    marginBottom: 20,
   },
 });

@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View, Image } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function NextButton() {
   return (
-    <View style={styles.back}>
+    <View style={styles.container}>
       <Text style={styles.nextText}>{"Next"}</Text>
       <Feather name="chevron-right" size={32} color="white" />
     </View>
@@ -11,7 +11,7 @@ export default function NextButton() {
 }
 
 const styles = StyleSheet.create({
-  back: {
+  container: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",

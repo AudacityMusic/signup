@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Image, ActivityIndicator } from "react-native";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
 
 import { getUser } from "../utils";
 
@@ -11,7 +11,7 @@ export default function Profile() {
   }, []);
 
   return (
-    <View style={styles.background}>
+    <View style={styles.container}>
       {user?.photo ? (
         <Image
           style={styles.image}
@@ -29,7 +29,7 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
-  background: {
+  container: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#f5f5f5", // Light grey background color

@@ -1,11 +1,11 @@
 import { StyleSheet, Text } from "react-native";
 
 export default function Heading({ children }) {
-  return <Text style={styles.heading}>{children}</Text>;
+  return <Text style={styles.container}>{children}</Text>;
 }
 
 const styles = StyleSheet.create({
-  heading: {
+  container: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 5,
