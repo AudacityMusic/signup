@@ -176,7 +176,7 @@ export default class DanceClub extends Form {
       }),
 
       new Question({
-        name: "consent",
+        name: "recording",
         component: (
           <CheckBoxQuery
             question={
