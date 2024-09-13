@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     marginBottom: "5%",
   },
   message: {
-    justifyContent: "center",
+    textAlign: "center",
     fontSize: 24,
   },
 });
