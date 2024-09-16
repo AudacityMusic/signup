@@ -1,14 +1,8 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
-import {
-  Image,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Image, Platform, StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function VolunteerOpportunity({
   navigation,
@@ -22,7 +16,7 @@ export default function VolunteerOpportunity({
   isSubmitted,
 }) {
   return (
-    <Pressable
+    <TouchableOpacity
       style={styles.container}
       onPress={() =>
         navigation.navigate("Volunteer Opportunity", {
@@ -74,7 +68,7 @@ export default function VolunteerOpportunity({
         color="black"
         style={isSubmitted ? styles.checkmark : styles.caret}
       />
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 
