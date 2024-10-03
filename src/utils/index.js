@@ -12,11 +12,14 @@ export function alertError(error) {
   return null;
 }
 
-export async function getUser() {
+export async function getUser(isEmptySafe = false) {
   try {
     const userString = await AsyncStorage.getItem("user");
     if (userString === null) {
-      throw "EMPTY User";
+      if (!isEmptySafe) {
+        alertError("Empty getUser");
+      }
+      return;
     }
     return JSON.parse(userString);
   } catch (error) {

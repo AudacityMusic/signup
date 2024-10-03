@@ -1,13 +1,7 @@
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  Image,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-} from "react-native";
+import { Image, Pressable, SafeAreaView, StyleSheet, Text } from "react-native";
 
 import colors from "../constants/colors";
 import { getUser } from "../utils";
@@ -16,8 +10,8 @@ export default function HomeHeader({ navigation }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    getUser().then(setUser);
-  }, []);
+    getUser(true).then(setUser);
+  });
 
   return (
     <LinearGradient
@@ -33,7 +27,12 @@ export default function HomeHeader({ navigation }) {
               source={{ width: 0, height: 0, uri: user.photo }} // Size doesn't matter
             ></Image>
           ) : (
-            <ActivityIndicator size="large"></ActivityIndicator>
+            <FontAwesome
+              name="user-circle"
+              size={40}
+              color="white"
+              style={styles.profile}
+            />
           )}
         </Pressable>
       </SafeAreaView>

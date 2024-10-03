@@ -1,5 +1,6 @@
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 
 import { getUser } from "../utils";
 
@@ -10,19 +11,33 @@ export default function Profile() {
     getUser().then(setUser);
   }, []);
 
+  let name = user?.name ?? "Loading";
+  if (name == "") {
+    name = "Anonymous Apple User";
+  }
+  let email = user?.email ?? "Loading";
+  if (email == "") {
+    email = "apple.com";
+  }
+
   return (
     <View style={styles.container}>
-      {user?.photo ? (
+      {user?.photo != null ? (
         <Image
           style={styles.image}
           source={{ width: 0, height: 0, uri: user.photo }} // size doesn't matter
         ></Image>
       ) : (
-        <ActivityIndicator size="large"></ActivityIndicator>
+        <FontAwesome
+          name="user-circle"
+          size={60}
+          color="black"
+          style={styles.image}
+        />
       )}
       <View>
-        <Text style={styles.name}>{user?.name ?? "Loading..."}</Text>
-        <Text style={styles.email}>{user?.email ?? "Loading..."}</Text>
+        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.email}>{email}</Text>
       </View>
     </View>
   );

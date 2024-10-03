@@ -1,5 +1,6 @@
 import Feather from "@expo/vector-icons/Feather";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import {
   GDrive,
   MimeTypes,
@@ -65,6 +66,25 @@ export default function UploadButton({
       <Pressable
         style={styles.upload}
         onPress={async () => {
+          if (GoogleSignin.getCurrentUser() == null) {
+            Alert.alert(
+              "File upload is unavailable",
+              "Please log in with a Google account to use this feature.",
+              [
+                {
+                  text: "Go to Profile",
+                  onPress: () => {
+                    navigation.navigate("Account");
+                  },
+                },
+                {
+                  text: "Cancel",
+                  isPreferred: true,
+                },
+              ],
+            );
+            return;
+          }
           const accessToken = await getAccessToken();
           const googleDrive = new GDrive();
           googleDrive.accessToken = accessToken;
@@ -109,14 +129,14 @@ export default function UploadButton({
                 'Audacity Music Club does not have permission to share files associated with your Google account.\n\nTo enable this feature, please go to your profile, clear your data, and reauthenticate your Google account. When prompted to select what the app can access, tap on the checkbox to "see, edit, create, and delete Google files in this app."',
                 [
                   {
-                    text: "Cancel",
-                  },
-                  {
                     text: "Go to Profile",
-                    isPreferred: true,
                     onPress: () => {
                       navigation.navigate("Account");
                     },
+                  },
+                  {
+                    text: "Cancel",
+                    isPreferred: true,
                   },
                 ],
               );
