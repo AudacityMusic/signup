@@ -49,7 +49,6 @@ export default function TextField({
         }}
         value={state.value}
         maxLength={maxLength}
-        // @ts-ignore
         keyboardType={keyboardType}
       />
     </View>

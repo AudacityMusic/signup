@@ -142,7 +142,8 @@ export class TimeSlot {
           </Pressable>
         </View>
         <RemoveButton
-          key={10 * index + 7}
+          // @ts-expect-error
+          key={index * 10 + 7}
           state={state}
           setState={setState}
           index={index}
@@ -216,10 +217,15 @@ export function Select({
 }) {
   const now = new Date();
 
+  if (state.value.length <= index) {
+    return;
+  }
+
   let start = state.value[index].start;
   let end = state.value[index].end;
 
   return (
+    // @ts-expect-error
     <DatePicker
       modal
       open={isOpen}
@@ -300,10 +306,12 @@ export function Select({
       onCancel={() => {
         if (isAdded && isStart) {
           setState((previous) => {
-            return { ...previous, value: previous.value.slice(0, index - 1) };
+            return {
+              ...previous,
+              value: previous.value.slice(0, previous.value.length - 1),
+            };
           });
         }
-
         setIsOpen(false);
       }}
     />
