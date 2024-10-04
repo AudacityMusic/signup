@@ -117,7 +117,7 @@ export default function HomeScreen({ navigation, route }) {
       alertError("In onRefresh: " + error);
     }
 
-    parser.parse().then((data) => {
+    parser.parse().then(async (data) => {
       for (const opportunity of data) {
         const hash = hashForm(
           opportunity.Title,
@@ -125,6 +125,9 @@ export default function HomeScreen({ navigation, route }) {
           formatDate(opportunity.Date),
         );
         opportunity.isSubmitted = submittedForms.includes(hash);
+        if (!("Image" in opportunity)) {
+          opportunity.Image = "https://placehold.co/600x400";
+        }
       }
       setData(data);
     });

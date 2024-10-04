@@ -61,7 +61,15 @@ export default function VolunteerFormScreen({ navigation, route }) {
         >
           <View style={styles.questions}>
             <View style={styles.header}>
-              <Text style={styles.instructions}>{form.title}</Text>
+              <Text style={[styles.headerText, { fontWeight: "bold" }]}>
+                {title}
+              </Text>
+              {date == null ? null : (
+                <Text style={styles.headerText}>{date}</Text>
+              )}
+              {location == null ? null : (
+                <Text style={styles.headerText}>{location}</Text>
+              )}
             </View>
             <View style={styles.form}>
               {form
@@ -96,15 +104,15 @@ const styles = StyleSheet.create({
   header: {
     alignItems: "center",
     textAlign: "center",
+    paddingVertical: 20,
   },
   questions: {
     paddingHorizontal: 30,
   },
-  instructions: {
-    fontSize: 20,
+  headerText: {
+    fontSize: 18,
     flexWrap: "wrap",
     textAlign: "center",
-    paddingVertical: 20,
   },
   checkBoxesContainer: {
     flex: 1,

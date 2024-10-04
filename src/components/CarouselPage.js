@@ -19,11 +19,7 @@ export default function CarouselPage({ navigation, data, onRefresh }) {
               title={component.Title}
               location={component.Location}
               date={component.Date}
-              image={
-                component.Image == undefined
-                  ? "https://placehold.co/600x400"
-                  : component.Image
-              }
+              image={component.Image}
               description={
                 component.Description == undefined ? "" : component.Description
               }

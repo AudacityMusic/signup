@@ -1,14 +1,8 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import { ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  ImageBackground,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 import Heading from "../components/Heading";
 import SignUpButton from "../components/SignUpButton";
@@ -33,6 +27,9 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
         <ImageBackground
           source={{ width: 0, height: 0, uri: image }}
           style={styles.backgroundImage}
+          placeholder={{ blurhash: "LT9Hq#RPVrt8%%RjWCkCR:WWtSWB" }}
+          transition={500}
+          cachePolicy="memory"
         >
           <LinearGradient
             colors={["transparent", "rgba(0,0,0,0.8)"]}
@@ -43,8 +40,7 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
           style={[
             {
               justifyContent: "flex-end",
-              marginLeft: "3%",
-              paddingRight: "30%",
+              marginLeft: 20,
             },
           ]}
         >
@@ -53,16 +49,20 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
       </View>
       <View style={styles.subcontainer}>
         <View style={styles.details}>
-          <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+          <View style={styles.icon}>
             <MaterialCommunityIcons
               name="clock-time-five-outline"
-              size={18}
-              color="black"
+              size={20}
+              color={colors.black}
             />
             <Text style={styles.detailsText}>{date}</Text>
           </View>
-          <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
-            <SimpleLineIcons name="location-pin" size={18} color="black" />
+          <View style={styles.icon}>
+            <SimpleLineIcons
+              name="location-pin"
+              size={20}
+              color={colors.black}
+            />
             <Text style={styles.detailsText}>{location}</Text>
           </View>
         </View>
@@ -121,6 +121,11 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     justifyContent: "center",
   },
+  icon: {
+    flexDirection: "row",
+    gap: 5,
+    alignItems: "center",
+  },
   about: {
     paddingVertical: 10,
   },
@@ -149,9 +154,10 @@ const styles = StyleSheet.create({
   },
   headerText: {
     position: "absolute",
-    fontSize: 30,
+    fontSize: 35,
     color: "white",
     fontWeight: "bold",
+    paddingBottom: 5,
   },
   detailsText: {
     fontSize: 18,

@@ -1,7 +1,8 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
-import { Image, Platform, StyleSheet, Text, View } from "react-native";
+import { Image } from "expo-image";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function VolunteerOpportunity({
@@ -35,6 +36,9 @@ export default function VolunteerOpportunity({
         <Image
           style={styles.image}
           source={{ width: 0, height: 0, uri: image }}
+          placeholder={{ blurhash: "LT9Hq#RPVrt8%%RjWCkCR:WWtSWB" }}
+          transition={500}
+          cachePolicy="memory"
         />
         <View style={{ flexDirection: "column", alignSelf: "center" }}>
           <Text style={styles.title}>
