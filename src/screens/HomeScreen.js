@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
 import CarouselPage from "../components/CarouselPage";
 import Heading from "../components/Heading";
@@ -142,21 +142,23 @@ export default function HomeScreen({ navigation, route }) {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <CarouselPage
-        navigation={navigation}
-        data={formatData(data)}
-        onRefresh={onRefresh}
-      />
-      <Heading>Other Opportunities</Heading>
-      <OtherOpportunities navigation={navigation} />
-      <Heading>Websites</Heading>
-      <Websites />
+    <ScrollView>
+      <View style={styles.container}>
+        <CarouselPage
+          navigation={navigation}
+          data={formatData(data)}
+          onRefresh={onRefresh}
+        />
+        <Heading>Other Opportunities</Heading>
+        <OtherOpportunities navigation={navigation} />
+        <Heading>Websites</Heading>
+        <Websites />
+      </View>
     </ScrollView>
   );
 }
 const styles = StyleSheet.create({
   container: {
-    margin: 20,
+    margin: 15,
   },
 });

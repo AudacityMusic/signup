@@ -1,9 +1,13 @@
+import Constants from "expo-constants";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { maybeOpenURL, openURL } from "../utils";
 
 import Entypo from "@expo/vector-icons/Entypo";
+import Feather from "@expo/vector-icons/Feather";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export default function OtherOpportunities({ navigation }) {
   return (
@@ -32,6 +36,7 @@ export default function OtherOpportunities({ navigation }) {
           style={styles.arrow}
         />
       </Pressable>
+
       <Pressable
         style={styles.card}
         onPress={() =>
@@ -56,11 +61,43 @@ export default function OtherOpportunities({ navigation }) {
           style={styles.arrow}
         />
       </Pressable>
-      <View style={styles.divider} />
-      <View style={[styles.card, styles.last]}>
+
+      <Pressable
+        style={styles.card}
+        onPress={() => openURL(`mailto:${Constants.expoConfig.extra.email}`)}
+      >
+        <MaterialIcons
+          name="feedback"
+          size={18}
+          color="black"
+          style={styles.icon}
+        />
+        <Text
+          style={styles.text}
+        >{`Send feedback to ${Constants.expoConfig.extra.email}`}</Text>
+        <Feather
+          name="external-link"
+          size={21}
+          color="black"
+          style={styles.external}
+        />
+      </Pressable>
+
+      <Pressable
+        style={[styles.card, styles.last]}
+        onPress={() =>
+          maybeOpenURL("zelle://", "zelle", "1260755201", "com.zellepay.zelle")
+        }
+      >
         <Ionicons name="gift" size={18} color="black" style={styles.icon} />
         <Text style={styles.text}>Donate to admin@funyouth.us on Zelle</Text>
-      </View>
+        <Feather
+          name="external-link"
+          size={21}
+          color="black"
+          style={styles.external}
+        />
+      </Pressable>
     </View>
   );
 }
@@ -100,8 +137,9 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  divider: {
-    height: 0.1,
-    backgroundColor: "#e0e0e0",
+  external: {
+    width: 20,
+    height: 20,
+    marginRight: 3,
   },
 });

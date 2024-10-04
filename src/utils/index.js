@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import { useState } from "react";
-import { Alert, Platform } from "react-native";
+import { Alert, Linking, Platform } from "react-native";
 
 export function alertError(error) {
   console.error(error);
@@ -10,6 +10,32 @@ export function alertError(error) {
     `Your request was not processed successfully due to an unexpected error. We apologize for the inconvenience. To help us identify and fix this error, please take a screenshot of this alert and send a bug report to ${Constants.expoConfig.extra.email}. Thank you!\n\nPlatform: ${Platform.OS} with v${Platform.Version}\n\n${error}`,
   );
   return null;
+}
+
+export function openURL(url) {
+  Linking.openURL(url).catch((_) => {
+    Alert.alert(
+      `Unable to open URL`,
+      `Your device does not support opening ${url} from this app. Please copy and paste the URL into your browser.`,
+    );
+  });
+}
+
+export function maybeOpenURL(url, appName, appStoreID, playStoreID) {
+  Linking.openURL(url).catch((error) => {
+    if (error.code == "EUNSPECIFIED") {
+      if (Platform.OS == "ios") {
+        openURL(`https://apps.apple.com/us/app/${appName}/id${appStoreID}`);
+      } else {
+        openURL(`https://play.google.com/store/apps/details?id=${playStoreID}`);
+      }
+    } else {
+      Alert.alert(
+        `Unable to open URL`,
+        `Your device does not support opening ${url} from this app. Please copy and paste the URL into your browser.`,
+      );
+    }
+  });
 }
 
 export async function getUser(isEmptySafe = false) {

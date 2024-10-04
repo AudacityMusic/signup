@@ -1,24 +1,15 @@
 import Feather from "@expo/vector-icons/Feather";
-import {
-  Image,
-  Linking,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+
+import { openURL } from "../utils";
 
 export default function Websites() {
-  const openLink = (url) => {
-    Linking.openURL(url);
-  };
-
   return (
     <View>
       <View style={styles.container}>
         <Pressable
           style={[styles.card, styles.first]}
-          onPress={() => openLink("https://eternityband.org/")}
+          onPress={() => openURL("https://eternityband.org/")}
         >
           <Image
             style={styles.icon}
@@ -29,13 +20,12 @@ export default function Websites() {
             name="external-link"
             size={21}
             color="black"
-            style={styles.arrow}
+            style={styles.external}
           />
         </Pressable>
-        <View style={styles.divider} />
         <Pressable
           style={styles.card}
-          onPress={() => openLink("https://goaudacity.com/")}
+          onPress={() => openURL("https://goaudacity.com/")}
         >
           <Image
             style={styles.icon}
@@ -46,13 +36,12 @@ export default function Websites() {
             name="external-link"
             size={21}
             color="black"
-            style={styles.arrow}
+            style={styles.external}
           />
         </Pressable>
-        <View style={styles.divider} />
         <Pressable
           style={styles.card}
-          onPress={() => openLink("https://funyouth.us/art")}
+          onPress={() => openURL("https://funyouth.us/art")}
         >
           <Image
             style={styles.icon}
@@ -63,13 +52,12 @@ export default function Websites() {
             name="external-link"
             size={21}
             color="black"
-            style={styles.arrow}
+            style={styles.external}
           />
         </Pressable>
-        <View style={styles.divider} />
         <Pressable
           style={[styles.card, styles.last]}
-          onPress={() => openLink("https://funyouth.us/")}
+          onPress={() => openURL("https://funyouth.us/")}
         >
           <Image
             style={styles.icon}
@@ -80,7 +68,7 @@ export default function Websites() {
             name="external-link"
             size={21}
             color="black"
-            style={styles.arrow}
+            style={styles.external}
           />
         </Pressable>
       </View>
@@ -118,12 +106,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#555",
   },
-  arrow: {
-    width: 21,
-    height: 21,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: "#e0e0e0",
+  external: {
+    width: 20,
+    height: 20,
+    marginRight: 3,
   },
 });
