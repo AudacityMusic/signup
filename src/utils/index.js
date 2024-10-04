@@ -38,6 +38,7 @@ export class Question {
     this.component = component;
     this.state = component.props.state;
     this.setState = component.props.setState;
+    this.y = component.props.state.y;
     this.isVisible = isVisible;
     this.validate = () => !isVisible() || validate(component.props.state.value);
   }
