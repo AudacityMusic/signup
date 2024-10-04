@@ -121,7 +121,11 @@ export default class Form {
       const value = this[question.name][0].value;
       formData.append(
         form[question.name],
-        value == null ? "" : value.constructor === Array ? value[0] : value,
+        value == null
+          ? ""
+          : value.constructor === Array
+            ? value.join(", ")
+            : value,
       );
     }
 

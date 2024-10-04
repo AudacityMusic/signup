@@ -30,18 +30,13 @@ export class Question {
     component,
     validate = (_) => true,
     isVisible = () => true,
-    state = null,
-    setState = null,
-    y = null,
   }) {
     this.name = name;
     this.component = component;
-    this.state = state ? state : component.props.state;
-    this.setState = setState ? setState : component.props.setState;
-    this.y = y ? y : component.props.state.y;
+    this.state = component.props.state;
+    this.setState = component.props.setState;
     this.isVisible = isVisible;
-    this.validate = () =>
-      !isVisible() || validate((state ? state : component.props.state).value);
+    this.validate = () => !isVisible() || validate(component.props.state.value);
   }
 }
 
