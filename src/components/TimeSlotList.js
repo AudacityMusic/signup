@@ -198,8 +198,8 @@ function AddButton({
         setIsOpen(true);
       }}
     >
-      <Ionicons name="add-circle-sharp" size={21} color="#006AFF" />
-      <Text style={{ color: "#006AFF", fontSize: 19 }}> Add Time Slot</Text>
+      <Ionicons name="add-circle-sharp" size={21} color={colors.blue} />
+      <Text style={{ color: colors.blue, fontSize: 19 }}> Add Time Slot</Text>
     </Pressable>
   );
 }

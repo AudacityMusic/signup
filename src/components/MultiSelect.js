@@ -1,6 +1,7 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import colors from "../constants/colors";
 
 export default function MultiSelect({
   state,
@@ -52,7 +53,7 @@ export default function MultiSelect({
                 selected[index] ? "checkbox-marked" : "checkbox-blank-outline"
               }
               size={24}
-              color={selected[index] ? "blue" : "black"}
+              color={selected[index] ? colors.blue : colors.black}
             />
             <Text key={index * 4 + 3} style={styles.optionText}>
               {option}

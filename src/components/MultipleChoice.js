@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: "#1E90FF",
+    backgroundColor: colors.blue,
   },
   optionText: {
     marginLeft: 10,
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   selectedText: {
-    color: "#1E90FF",
+    color: colors.blue,
     fontWeight: "condensedBold",
   },
 });

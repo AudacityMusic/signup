@@ -25,7 +25,7 @@ export default function CheckBoxQuery({ question, state, setState }) {
       </Text>
       <View style={styles.checkBoxContainer}>
         <Checkbox
-          color={"#0d79ff"}
+          color={colors.blue}
           value={state.value == "Yes"}
           onValueChange={() => {
             setState((prevState) => ({
@@ -45,7 +45,7 @@ export default function CheckBoxQuery({ question, state, setState }) {
         </Text>
         <Text> </Text>
         <Checkbox
-          color={"#0d79ff"}
+          color={colors.blue}
           value={state.value == "No"}
           onValueChange={() => {
             setState((prevState) => ({
