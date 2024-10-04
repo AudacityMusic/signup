@@ -29,13 +29,15 @@ export default function AccountScreen({ navigation }) {
               {
                 text: "Continue",
                 onPress: async () => {
-                  try {
-                    await GoogleSignin.revokeAccess();
-                    await GoogleSignin.signOut();
-                  } catch (error) {
-                    alertError(
-                      `Unable to log out and remove Google account while clearing data: ${error}`,
-                    );
+                  if (GoogleSignin.getCurrentUser() != null) {
+                    try {
+                      await GoogleSignin.revokeAccess();
+                      await GoogleSignin.signOut();
+                    } catch (error) {
+                      alertError(
+                        `Unable to log out and remove Google account while clearing data: ${error}`,
+                      );
+                    }
                   }
                   try {
                     await AsyncStorage.clear();
@@ -64,11 +66,18 @@ export default function AccountScreen({ navigation }) {
             {
               text: "Continue",
               onPress: async () => {
+                if (GoogleSignin.getCurrentUser() != null) {
+                  try {
+                    await GoogleSignin.signOut();
+                  } catch (error) {
+                    alertError(`Unable to log out of Google: ${error}`);
+                  }
+                }
                 try {
-                  await GoogleSignin.signOut();
                   await AsyncStorage.removeItem("user");
+                  await AsyncStorage.removeItem("access-token");
                 } catch (error) {
-                  alertError(`Unable to log out: ${error}`);
+                  alertError(`Unable to remove user data: ${error}`);
                 }
                 navigation.navigate("Sign In");
               },

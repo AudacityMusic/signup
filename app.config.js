@@ -13,6 +13,7 @@ export default {
   ios: {
     supportsTablet: true,
     bundleIdentifier: "org.eternityband.signup",
+    usesAppleSignIn: true,
   },
   android: {
     adaptiveIcon: {
@@ -47,6 +48,7 @@ export default {
           ),
       },
     ],
+    "expo-apple-authentication",
   ],
   owner: "audacitymusic",
 };

@@ -7,13 +7,14 @@ import {
   View,
 } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   GoogleSignin,
   isErrorWithCode,
   statusCodes,
 } from "@react-native-google-signin/google-signin";
+import * as AppleAuth from "expo-apple-authentication";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { alertError } from "../utils";
 
 GoogleSignin.configure({
@@ -37,11 +38,8 @@ export default function SignInScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.body}>
         <Text style={styles.paragraph}>
-          {"\n"}
-          {"Thank you for choosing to help\n"}
-          {"make our volunteer concerts a\n"}
-          {"success! To begin, please sign\n"}
-          {"in using your Google account.\n"}
+          Thank you for choosing to help make our volunteer concerts a success!
+          To begin, please sign in.
         </Text>
 
         <Pressable
@@ -62,9 +60,13 @@ export default function SignInScreen({ navigation }) {
                 if (error.code == statusCodes.SIGN_IN_CANCELLED) {
                   return;
                 }
-                alertError(`While signing in: (${error.code}) ${error}`);
+                alertError(
+                  `While signing in with Google: (${error.code}) ${error}`,
+                );
               } else {
-                alertError(`While signing in: (no error code) ${error}`);
+                alertError(
+                  `While signing in with Google: (no error code) ${error}`,
+                );
               }
             }
           }}
@@ -75,6 +77,45 @@ export default function SignInScreen({ navigation }) {
           />
           <Text style={[styles.OAuthText]}> Sign in with Google</Text>
         </Pressable>
+
+        {AppleAuth.isAvailableAsync() ? (
+          <AppleAuth.AppleAuthenticationButton
+            buttonType={AppleAuth.AppleAuthenticationButtonType.SIGN_IN}
+            buttonStyle={AppleAuth.AppleAuthenticationButtonStyle.BLACK}
+            cornerRadius={5}
+            style={styles.OAuth}
+            onPress={async () => {
+              try {
+                const credential = await AppleAuth.signInAsync({
+                  requestedScopes: [
+                    AppleAuth.AppleAuthenticationScope.FULL_NAME,
+                    AppleAuth.AppleAuthenticationScope.EMAIL,
+                  ],
+                });
+                AsyncStorage.setItem(
+                  "user",
+                  JSON.stringify({
+                    // Apple Auth only returns fullName and email once
+                    // https://docs.expo.dev/versions/latest/sdk/apple-authentication/#appleauthenticationsigninasyncoptions
+                    // TODO: Use fullName and email while complying with data clearing policies
+                    // name: `${credential.fullName.givenName} ${credential.fullName.familyName}`,
+                    // email: credential.email,
+                    name: "",
+                    email: "",
+                  }),
+                );
+                AsyncStorage.setItem("access-token", credential.identityToken);
+                navigation.navigate("Home", { shouldRefresh: true });
+              } catch (error) {
+                if (error.code != "ERR_REQUEST_CANCELED") {
+                  alertError(
+                    `While signing in with Apple: (${error.code}) ${error}`,
+                  );
+                }
+              }
+            }}
+          />
+        ) : null}
       </View>
     </SafeAreaView>
   );
@@ -94,6 +135,7 @@ const styles = StyleSheet.create({
 
   paragraph: {
     fontSize: 18,
+    padding: 20,
   },
 
   OAuth: {
@@ -102,21 +144,23 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 270,
     height: 50,
-    borderRadius: 15,
+    borderRadius: 5,
+    margin: 5,
   },
 
   OAuthLogo: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
   },
 
   OAuthText: {
     color: "#fff",
-    fontSize: 20,
+    fontSize: 18,
+    fontWeight: 600,
   },
 
   GoogleOAuth: {
-    backgroundColor: "#353535",
+    backgroundColor: "#000",
     color: "#fff",
   },
 
