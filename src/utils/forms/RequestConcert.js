@@ -202,7 +202,6 @@ export default class RequestConcert extends Form {
             setState={this.provided[1]}
           />
         ),
-        validate: () => true,
       }),
 
       new Question({

@@ -138,6 +138,7 @@ export default class DanceClub extends Form {
             key="favoriteDanceStyles"
             state={this.favoriteDanceStyles[0]}
             setState={this.favoriteDanceStyles[1]}
+            required={true}
           />
         ),
         validate: (value) => isExactly(value, 4),

@@ -2,7 +2,13 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-export default function MultiSelect({ state, setState, title, options }) {
+export default function MultiSelect({
+  state,
+  setState,
+  title,
+  options,
+  required = false,
+}) {
   const [selected, setSelected] = useState(
     new Array(options.length).fill(false),
   );
@@ -17,8 +23,9 @@ export default function MultiSelect({ state, setState, title, options }) {
       }}
       style={styles.container}
     >
-      <Text style={[styles.title, { color: state.valid ? "black" : "red" }]}>
-        {title}
+      <Text style={styles.heading}>
+        <Text style={{ color: state.valid ? "black" : "red" }}>{title}</Text>
+        {required ? <Text style={{ color: "red" }}> *</Text> : null}
       </Text>
       {options.map((option, index) => (
         <Pressable
@@ -62,7 +69,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 
-  title: {
+  heading: {
     fontSize: 18,
     fontWeight: "600",
     marginBottom: 10,
