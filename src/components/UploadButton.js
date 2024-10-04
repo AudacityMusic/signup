@@ -69,7 +69,7 @@ export default function UploadButton({
           if (GoogleSignin.getCurrentUser() == null) {
             Alert.alert(
               "File upload is unavailable",
-              "Please log in with a Google account to use this feature.",
+              "The upload feature uses Google Drive to share your file with Audacity Music Club. Please log in with a Google account to use this feature.",
               [
                 {
                   text: "Go to Profile",
@@ -91,14 +91,15 @@ export default function UploadButton({
           googleDrive.fetchTimeout = 5000; // 5 seconds
 
           const file = await selectFile();
-          console.log(`FILE: ${file.uri}`);
-
+          if (file == null) {
+            return;
+          }
           const fileData = await fs.readFile(file.uri, "base64");
 
           let id = "";
 
           try {
-            setFileName(`Uploading ${file.name}...`);
+            setFileName("Uploading...");
             const googleFile = await googleDrive.files
               .newMultipartUploader()
               .setIsBase64(true)
