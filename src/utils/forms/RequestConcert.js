@@ -18,7 +18,7 @@ export default class RequestConcert extends Form {
     this.publicity = emptyQuestionState();
     this.stipend = emptyQuestionState();
     this.donatable = emptyQuestionState();
-    this.slots = emptyQuestionState([]);
+    this.timeSlots = emptyQuestionState([]);
     this.audience = emptyQuestionState();
     this.distance = emptyQuestionState();
     this.provided = emptyQuestionState([]);
@@ -131,13 +131,13 @@ export default class RequestConcert extends Form {
       }),
 
       new Question({
-        name: "slots",
+        name: "timeSlots",
         component: (
           <TimeSlotList
             title="Possible Concert Times"
-            key="slots"
-            state={this.slots[0]}
-            setState={this.slots[1]}
+            key="timeSlots"
+            state={this.timeSlots[0]}
+            setState={this.timeSlots[1]}
           />
         ),
 

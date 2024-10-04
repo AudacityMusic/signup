@@ -44,7 +44,7 @@ async function submitForm(formId, formData) {
     if (response.ok) {
       return true;
     }
-    alertError(`submitForm failed with response: ${response}`);
+    alertError(`submitForm failed with response: ${JSON.stringify(response)}`);
     return false;
   } catch (error) {
     alertError(`submitForm errored with: ${error}`);
@@ -110,18 +110,27 @@ export default class Form {
     const form = formIDs[this.title];
     const formData = new FormString();
 
-    formData.append(form.location, this.location);
-    formData.append(form.date, this.date);
+    if ("location" in form) {
+      formData.append(form.location, this.location);
+    }
+    if ("date" in form) {
+      formData.append(form.date, this.date);
+    }
 
     for (const question of this.questions()) {
       const value = this[question.name][0].value;
       formData.append(
         form[question.name],
-        value == null ? "" : value.constructor === Array ? value[0] : value,
+        value == null
+          ? ""
+          : value.constructor === Array
+            ? value.join(", ")
+            : value,
       );
     }
 
-    if (!submitForm(form.id, formData)) {
+    const isFormSuccessful = await submitForm(form.id, formData);
+    if (!isFormSuccessful) {
       this.navigation.navigate("End", { isSuccess: false });
       return;
     }

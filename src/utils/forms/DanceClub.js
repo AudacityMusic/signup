@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { View } from "react-native";
 
 import {
   Question,
@@ -16,6 +15,7 @@ import CheckBoxQuery from "../../components/CheckBoxQuery";
 import MultipleChoice from "../../components/MultipleChoice";
 import MultiSelect from "../../components/MultiSelect";
 import TextField from "../../components/TextField";
+import TextFieldGroup from "../../components/TextFieldGroup";
 
 export default class DanceClub extends Form {
   constructor(date, location, navigation, scrollObject) {
@@ -38,12 +38,7 @@ export default class DanceClub extends Form {
     }, []);
 
     this.phoneNumber = emptyQuestionState();
-    this.favoritePieces = [
-      emptyQuestionState(),
-      emptyQuestionState(),
-      emptyQuestionState(),
-      emptyQuestionState(),
-    ];
+    this.favoritePieces = emptyQuestionState(["", "", "", ""]);
     this.age = emptyQuestionState();
     this.favoriteDanceStyles = emptyQuestionState([]);
     this.consent = emptyQuestionState();
@@ -83,35 +78,21 @@ export default class DanceClub extends Form {
       new Question({
         name: "favoritePieces",
         component: (
-          <View key="favoritePiecesView">
-            {this.favoritePieces.map((piece, index) => (
-              <TextField
-                title={index == 0 ? "Your 4 Favorite Pieces of Music" : ""}
-                key={`favoritePieces${index}`}
-                state={piece[0]}
-                setState={piece[1]}
-                extraMargin={index == 3}
-                valid={this.favoritePieces.every((piece) => piece[0].valid)}
-              />
-            ))}
-          </View>
+          <TextFieldGroup
+            title="Your 4 Favorite Pieces of Music"
+            key="favoritePieces"
+            n={4}
+            state={this.favoritePieces[0]}
+            setState={this.favoritePieces[1]}
+          />
         ),
-        state: { value: this.favoritePieces, y: -1, valid: true },
-        setState: (value) => {
-          this.favoritePieces = value;
-        },
-        y: -1,
-        validate: (value) => {
-          let good = true;
-
-          for (const [index, piece] of value.entries()) {
-            const result = isNotEmpty(piece[0].value);
-            const original = this.favoritePieces[index][0];
-            this.favoritePieces[index][1]({ ...original, valid: result });
-            good = good && result;
+        validate(pieces) {
+          for (const piece of pieces) {
+            if (!isNotEmpty(piece)) {
+              return false;
+            }
           }
-
-          return good;
+          return true;
         },
       }),
 
@@ -176,7 +157,7 @@ export default class DanceClub extends Form {
       }),
 
       new Question({
-        name: "consent",
+        name: "recording",
         component: (
           <CheckBoxQuery
             question={
