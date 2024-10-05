@@ -1,6 +1,6 @@
 export default {
   name: "Audacity Sign Up",
-  slug: "audacity-sign-up",
+  slug: "audacity-music-club",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./src/assets/eternity-band.png",
