@@ -45,7 +45,6 @@ export default function SignInScreen({ navigation }) {
         <Pressable
           style={[styles.OAuth, styles.GoogleOAuth]}
           onPress={async () => {
-            console.log("Signing In...");
             try {
               await GoogleSignin.hasPlayServices();
               const userInfo = await GoogleSignin.signIn();

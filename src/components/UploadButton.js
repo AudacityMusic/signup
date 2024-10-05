@@ -88,7 +88,7 @@ export default function UploadButton({
           const accessToken = await getAccessToken();
           const googleDrive = new GDrive();
           googleDrive.accessToken = accessToken;
-          googleDrive.fetchTimeout = 5000; // 5 seconds
+          googleDrive.fetchTimeout = 20000; // 20 seconds
 
           const file = await selectFile();
           if (file == null) {
@@ -110,7 +110,6 @@ export default function UploadButton({
               })
               .execute();
             id = googleFile.id;
-            console.log(`ID Fetching Successful: id=${id}`);
             await googleDrive.permissions.create(
               id,
               {},
@@ -121,8 +120,9 @@ export default function UploadButton({
             );
           } catch (error) {
             if (error.name == "AbortError") {
-              alertError(
-                "File upload aborted. Use a more stable Internet connection or increase fetchTimeout.",
+              Alert.alert(
+                "File upload aborted",
+                "Your file could not be uploaded due to a connection error. Please check your Internet connection and try again.",
               );
             } else if (error.__response?.status == 403) {
               Alert.alert(
@@ -148,7 +148,6 @@ export default function UploadButton({
             return;
           }
 
-          console.log(`ID: https://drive.google.com/open?id=${id}`);
           setFileName(file.name);
 
           setState((prevState) => ({
