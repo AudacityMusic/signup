@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Alert, Dimensions, Pressable, StyleSheet, View } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
 import AnimatedDotsCarousel from "react-native-animated-dots-carousel";
 import Carousel from "react-native-reanimated-carousel";
 
+import { formatDate } from "../utils";
 import Heading from "./Heading";
 import RefreshButton from "./RefreshButton";
 import VolunteerOpportunity from "./VolunteerOpportunity";
@@ -18,7 +19,7 @@ export default function CarouselPage({ navigation, data, onRefresh }) {
               navigation={navigation}
               title={component.Title}
               location={component.Location}
-              date={component.Date}
+              date={formatDate(component.Date)}
               image={component.Image}
               description={
                 component.Description == undefined ? "" : component.Description
@@ -43,11 +44,6 @@ export default function CarouselPage({ navigation, data, onRefresh }) {
       </View>
     );
   };
-  const onPress = () => {
-    onRefresh();
-    Alert.alert("Refreshed!");
-  };
-
   return (
     <View>
       <View
@@ -57,9 +53,7 @@ export default function CarouselPage({ navigation, data, onRefresh }) {
         }}
       >
         <Heading>Volunteer Opportunities</Heading>
-        <Pressable onPress={onPress}>
-          <RefreshButton />
-        </Pressable>
+        <RefreshButton onRefresh={onRefresh} />
       </View>
       <Carousel
         width={Dimensions.get("window").width - 30}

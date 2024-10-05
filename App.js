@@ -67,7 +67,11 @@ export default function App() {
             header: (props) => <HomeHeader {...props} />,
           }}
         />
-        <Stack.Screen name="Account" component={AccountScreen} />
+        <Stack.Screen
+          name="Account"
+          component={AccountScreen}
+          options={{ animation: "slide_from_bottom" }}
+        />
         <Stack.Screen
           name="Volunteer Opportunity"
           component={VolunteerOpportunityScreen}

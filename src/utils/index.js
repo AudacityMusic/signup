@@ -52,6 +52,30 @@ export async function getUser(isEmptySafe = false) {
     alertError("Unexpected error in getUser: " + error);
   }
 }
+export function strToDate(str) {
+  const [year, month, day, hour, minute, second] = str
+    .slice(5, -1)
+    .split(",")
+    .map(Number);
+
+  return new Date(year, month, day, hour, minute, second);
+}
+
+export function formatDate(date) {
+  const datePart = date.toLocaleDateString("en-us", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+
+  const timePart = date.toLocaleTimeString("en-us", {
+    hour: "numeric",
+    minute: "numeric",
+  });
+
+  return `${datePart} ${timePart}`;
+}
 
 export class Question {
   constructor({
@@ -83,5 +107,5 @@ export const isExactly = (value, len) =>
   !isAtLeast(value, len + 1) && isAtLeast(value, len);
 
 export function hashForm(title, location, date) {
-  return title + "&&&" + location + "&&&" + date;
+  return `${title}&&&${location}&&&${date}`;
 }

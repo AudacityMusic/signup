@@ -7,22 +7,17 @@ import Heading from "../components/Heading";
 import OtherOpportunities from "../components/OtherOpportunities";
 import Websites from "../components/Websites";
 
-import { alertError, hashForm } from "../utils";
+import { alertError, hashForm, strToDate } from "../utils";
 import PublicGoogleSheetsParser from "../utils/PublicGoogleSheetsParser";
 
 export default function HomeScreen({ navigation, route }) {
-  function formatData(data) {
-    data.sort((a, b) => compareDate(a.Date, b.Date));
+  const [data, setData] = useState([]);
 
+  function formatData(data) {
     let formattedArray = [];
     let tempArray = [];
 
     for (const opportunity of data) {
-      const formattedDate = formatDate(opportunity.Date);
-      if (formattedDate == null) {
-        continue;
-      }
-      opportunity.Date = formattedDate;
       tempArray.push(opportunity);
 
       if (tempArray.length === 3) {
@@ -36,65 +31,6 @@ export default function HomeScreen({ navigation, route }) {
     }
     return formattedArray;
   }
-
-  function compareDate(dateString1, dateString2) {
-    const date1 = dateString1.slice(5, -1).split(",").map(Number);
-
-    const date2 = dateString2.slice(5, -1).split(",").map(Number);
-
-    for (let index = 0; index < 6; index++) {
-      if (date1[index] < date2[index]) {
-        return -1;
-      } else if (date1[index] > date2[index]) {
-        return 1;
-      }
-    }
-
-    return 0;
-  }
-
-  function formatDate(dateString) {
-    const [year, month, day, hour, minute, second] = dateString
-      .slice(5, -1)
-      .split(",")
-      .map(Number);
-
-    const date = new Date(year, month, day, hour, minute, second);
-
-    if (new Date() > date) {
-      return null;
-    }
-
-    const days = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    const h = hour % 12 == 0 ? 12 : hour % 12;
-    const m = (minute < 10 ? "0" : "") + minute;
-    const period = hour >= 12 ? "PM" : "AM";
-    return `${days[date.getDay()]}, ${months[month]} ${day}, ${year} ${h}:${m} ${period}`;
-  }
-
-  const [data, setData] = useState([]);
 
   async function onRefresh() {
     const parser = new PublicGoogleSheetsParser(
@@ -117,20 +53,32 @@ export default function HomeScreen({ navigation, route }) {
       alertError("In onRefresh: " + error);
     }
 
-    parser.parse().then(async (data) => {
-      for (const opportunity of data) {
-        const hash = hashForm(
-          opportunity.Title,
-          opportunity.Location,
-          formatDate(opportunity.Date),
-        );
-        opportunity.isSubmitted = submittedForms.includes(hash);
-        if (!("Image" in opportunity)) {
-          opportunity.Image = "https://placehold.co/600x400";
-        }
+    const unparsedData = await parser.parse();
+
+    const newData = [];
+
+    for (let i = 0; i < unparsedData.length; i++) {
+      const opportunity = unparsedData[i];
+      opportunity.Date = strToDate(opportunity.Date);
+      if (opportunity.Date < new Date()) {
+        continue;
       }
-      setData(data);
-    });
+      const hash = hashForm(
+        opportunity.Title,
+        opportunity.Location,
+        opportunity.Date,
+      );
+      opportunity.isSubmitted = submittedForms.includes(hash);
+      if (!("Image" in opportunity)) {
+        opportunity.Image = "https://placehold.co/600x400";
+      }
+      newData.push(opportunity);
+    }
+
+    newData.sort((a, b) => a.Date - b.Date);
+    setData(newData);
+
+    return newData.length;
   }
 
   useEffect(() => {
