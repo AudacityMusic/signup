@@ -232,7 +232,7 @@ export default class LibraryMusicHour extends Form {
         name: "publicPermission",
         component: (
           <CheckBoxQuery
-            question="Do you give permission for Audacity Music Club to post recordings of your performance on public websites?"
+            question="Do you give permission for Audacity Sign Up to post recordings of your performance on public websites?"
             key="publicPermission"
             state={this.publicPermission[0]}
             setState={this.publicPermission[1]}

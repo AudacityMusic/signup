@@ -19,7 +19,7 @@ export default function AccountScreen({ navigation }) {
         onPress={() => {
           Alert.alert(
             "Are you sure you want to clear all data on this device?",
-            `You will be logged out and prompted to sign in if you proceed. To clear data that you have submitted to Audacity Music Club in previous forms, please contact the IT Team at ${Constants.expoConfig.extra.email}.`,
+            `You will be logged out and prompted to sign in if you proceed. To clear data that you have submitted to Audacity Sign Up in previous forms, please contact the IT Team at ${Constants.expoConfig.extra.email}.`,
             [
               {
                 text: "Cancel",

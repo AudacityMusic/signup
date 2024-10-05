@@ -69,7 +69,7 @@ export default function UploadButton({
           if (GoogleSignin.getCurrentUser() == null) {
             Alert.alert(
               "File upload is unavailable",
-              "The upload feature uses Google Drive to share your file with Audacity Music Club. Please log in with a Google account to use this feature.",
+              "The upload feature uses Google Drive to share your file with Audacity Sign Up. Please log in with a Google account to use this feature.",
               [
                 {
                   text: "Go to Profile",
@@ -127,7 +127,7 @@ export default function UploadButton({
             } else if (error.__response?.status == 403) {
               Alert.alert(
                 "Permission Denied",
-                'Audacity Music Club does not have permission to share files associated with your Google account.\n\nTo enable this feature, please go to your profile, clear your data, and reauthenticate your Google account. When prompted to select what the app can access, tap on the checkbox to "see, edit, create, and delete Google files in this app."',
+                'Audacity Sign Up does not have permission to share files associated with your Google account.\n\nTo enable this feature, please go to your profile, clear your data, and reauthenticate your Google account. When prompted to select what the app can access, tap on the checkbox to "see, edit, create, and delete Google files in this app."',
                 [
                   {
                     text: "Go to Profile",
