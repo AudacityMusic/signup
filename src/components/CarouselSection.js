@@ -52,7 +52,7 @@ export default function CarouselSection({ navigation, data, onRefresh }) {
         <RefreshButton onRefresh={onRefresh} />
       </View>
       <Carousel
-        width={Dimensions.get("window").width - 30}
+        width={Dimensions.get("window").width - 20}
         height={280}
         data={data}
         renderItem={renderItem}

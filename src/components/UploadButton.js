@@ -1,6 +1,5 @@
 import Feather from "@expo/vector-icons/Feather";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import {
   GDrive,
   MimeTypes,
@@ -20,18 +19,16 @@ const selectFile = async () => {
     });
     return file;
   } catch (error) {
-    if (!DocumentPicker.isCancel(error)) {
-      alertError(`In selectFile: ${error}`);
+    if (DocumentPicker.isCancel(error)) {
+      return null;
     }
+    alertError(`In selectFile: ${error}`);
   }
 };
 
 async function getAccessToken() {
   try {
     const accessToken = await AsyncStorage.getItem("access-token");
-    if (accessToken === null) {
-      alertError("Undefined access token in getAccessToken");
-    }
     return accessToken;
   } catch (error) {
     alertError(`In getAccessToken: ${error}`);
@@ -67,10 +64,11 @@ export default function UploadButton({
       <Pressable
         style={styles.upload}
         onPress={async () => {
-          if (GoogleSignin.getCurrentUser() == null) {
+          const accessToken = await getAccessToken();
+          if (accessToken == null) {
             Alert.alert(
               "File upload is unavailable",
-              "The upload feature uses Google Drive to share your file with Audacity Sign Up. Please log in with a Google account to use this feature.",
+              "The upload feature uses Google Drive to share your file with Audacity Sign Up. Your session may have expired or you may be using an unsupported Apple account. Please log out and log in with a Google account to use this feature.",
               [
                 {
                   text: "Go to Profile",
@@ -88,18 +86,35 @@ export default function UploadButton({
           }
           setState((prevState) => ({ ...prevState, value: "Uploading" }));
 
-          const accessToken = await getAccessToken();
           const googleDrive = new GDrive();
           googleDrive.accessToken = accessToken;
           googleDrive.fetchTimeout = 20000; // 20 seconds
 
           const file = await selectFile();
           if (file == null) {
+            // Cancel
+            setFileName(null);
             setState((prevState) => ({ ...prevState, value: null }));
             return;
           }
-          const fileData = await fs.readFile(file.uri, "base64");
 
+          let fileData;
+          try {
+            fileData = await fs.readFile(file.uri, "base64");
+          } catch (error) {
+            setFileName("Upload failed");
+            setState((prevState) => ({ ...prevState, value: null }));
+
+            const fileName = file.name?.endsWith(".pdf")
+              ? file.name.slice(0, file.name.length - 4)
+              : file.name;
+
+            Alert.alert(
+              "Invalid file",
+              `Please make sure your file (${fileName}) is a single PDF that can be accessed by the app.`,
+            );
+            return;
+          }
           let id = "";
 
           try {
@@ -184,7 +199,7 @@ export default function UploadButton({
           },
         ]}
       >
-        100MB Limit
+        PDF only - 100MB Limit
       </Text>
     </View>
   );

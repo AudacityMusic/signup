@@ -38,8 +38,8 @@ export default function SignInScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.body}>
         <Text style={styles.paragraph}>
-          Thank you for choosing to help make our volunteer concerts a success!
-          To begin, please sign in.
+          Thank you for choosing to help make our volunteer opportunities and
+          concerts across the Bay Area a success! To begin, please sign in.
         </Text>
 
         <Pressable
@@ -48,8 +48,8 @@ export default function SignInScreen({ navigation }) {
             try {
               await GoogleSignin.hasPlayServices();
               const userInfo = await GoogleSignin.signIn();
-              AsyncStorage.setItem("user", JSON.stringify(userInfo.user));
-              AsyncStorage.setItem(
+              await AsyncStorage.setItem("user", JSON.stringify(userInfo.user));
+              await AsyncStorage.setItem(
                 "access-token",
                 (await GoogleSignin.getTokens()).accessToken,
               );
@@ -91,7 +91,7 @@ export default function SignInScreen({ navigation }) {
                     AppleAuth.AppleAuthenticationScope.EMAIL,
                   ],
                 });
-                AsyncStorage.setItem(
+                await AsyncStorage.setItem(
                   "user",
                   JSON.stringify({
                     // Apple Auth only returns fullName and email once
@@ -104,7 +104,7 @@ export default function SignInScreen({ navigation }) {
                     id: "apple",
                   }),
                 );
-                AsyncStorage.setItem("access-token", credential.identityToken);
+                await AsyncStorage.removeItem("access-token");
                 navigation.navigate("Home", { forceRerender: true });
               } catch (error) {
                 if (error.code != "ERR_REQUEST_CANCELED") {
