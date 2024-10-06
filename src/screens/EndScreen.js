@@ -19,7 +19,7 @@ export default function EndScreen({ route, navigation }) {
       </Text>
       <Pressable
         onPress={() => {
-          navigation.navigate("Home", { shouldRefresh: true });
+          navigation.navigate("Home", { forceRerender: true });
         }}
       >
         <Text

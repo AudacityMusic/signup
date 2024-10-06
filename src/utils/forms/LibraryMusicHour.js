@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 import {
   Question,
-  alertError,
   emptyQuestionState,
   getUser,
   isAtLeast,
@@ -23,15 +22,11 @@ export default class LibraryMusicHour extends Form {
 
     useEffect(() => {
       (async () => {
-        try {
-          const user = await getUser();
-          this.fullName[1]((prevState) => ({
-            ...prevState,
-            value: user?.name,
-          }));
-        } catch (error) {
-          alertError("Unable to get user information in MusicHour: " + error);
-        }
+        const user = await getUser();
+        this.fullName[1]((prevState) => ({
+          ...prevState,
+          value: user?.name,
+        }));
       })();
     }, []);
 

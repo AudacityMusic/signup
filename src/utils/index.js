@@ -106,6 +106,6 @@ export const isNotEmpty = (value) => isAtLeast(value, 1);
 export const isExactly = (value, len) =>
   !isAtLeast(value, len + 1) && isAtLeast(value, len);
 
-export function hashForm(title, location, date) {
-  return `${title}&&&${location}&&&${date}`;
+export function hashForm(userID, title, location, date) {
+  return `${userID}&&&${title}&&&${location}&&&${date}`;
 }

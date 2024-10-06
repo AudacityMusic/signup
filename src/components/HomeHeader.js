@@ -6,12 +6,12 @@ import { Image, Pressable, SafeAreaView, StyleSheet, Text } from "react-native";
 import colors from "../constants/colors";
 import { getUser } from "../utils";
 
-export default function HomeHeader({ navigation }) {
+export default function HomeHeader({ navigation, route }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     getUser(true).then(setUser);
-  }, []);
+  }, [route]);
 
   return (
     <LinearGradient

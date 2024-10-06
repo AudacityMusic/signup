@@ -2,7 +2,6 @@ import { useEffect } from "react";
 
 import {
   Question,
-  alertError,
   emptyQuestionState,
   getUser,
   isAtLeast,
@@ -25,15 +24,11 @@ export default class DanceClub extends Form {
 
     useEffect(() => {
       (async () => {
-        try {
-          const user = await getUser();
-          this.fullName[1]((prevState) => ({
-            ...prevState,
-            value: user?.name,
-          }));
-        } catch (error) {
-          alertError("Unable to get user information in DanceClub: " + error);
-        }
+        const user = await getUser();
+        this.fullName[1]((prevState) => ({
+          ...prevState,
+          value: user?.name,
+        }));
       })();
     }, []);
 

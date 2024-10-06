@@ -8,7 +8,7 @@ import OtherOpportunities from "../components/OtherOpportunities";
 import PersistScrollView from "../components/PersistScrollView";
 import Websites from "../components/Websites";
 
-import { alertError, hashForm, strToDate } from "../utils";
+import { alertError, formatDate, getUser, hashForm, strToDate } from "../utils";
 import PublicGoogleSheetsParser from "../utils/PublicGoogleSheetsParser";
 
 export default function HomeScreen({ navigation, route }) {
@@ -56,6 +56,7 @@ export default function HomeScreen({ navigation, route }) {
 
     const unparsedData = await parser.parse();
     const newData = [];
+    const user = await getUser();
 
     for (let i = 0; i < unparsedData.length; i++) {
       const opportunity = unparsedData[i];
@@ -64,9 +65,10 @@ export default function HomeScreen({ navigation, route }) {
         continue;
       }
       const hash = hashForm(
+        user.id,
         opportunity.Title,
         opportunity.Location,
-        opportunity.Date,
+        formatDate(opportunity.Date),
       );
       opportunity.isSubmitted = submittedForms.includes(hash);
       if (!("Image" in opportunity)) {
@@ -82,12 +84,9 @@ export default function HomeScreen({ navigation, route }) {
   }
 
   useEffect(() => {
+    console.log("home refresh");
     onRefresh();
-  }, []);
-
-  if (route?.params?.shouldRefresh) {
-    onRefresh();
-  }
+  }, [route]);
 
   return (
     <PersistScrollView>

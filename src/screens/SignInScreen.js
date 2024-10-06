@@ -53,7 +53,7 @@ export default function SignInScreen({ navigation }) {
                 "access-token",
                 (await GoogleSignin.getTokens()).accessToken,
               );
-              navigation.navigate("Home", { shouldRefresh: true });
+              navigation.navigate("Home", { forceRerender: true });
             } catch (error) {
               if (isErrorWithCode(error)) {
                 if (error.code == statusCodes.SIGN_IN_CANCELLED) {
@@ -101,10 +101,11 @@ export default function SignInScreen({ navigation }) {
                     // email: credential.email,
                     name: "",
                     email: "",
+                    id: "apple",
                   }),
                 );
                 AsyncStorage.setItem("access-token", credential.identityToken);
-                navigation.navigate("Home", { shouldRefresh: true });
+                navigation.navigate("Home", { forceRerender: true });
               } catch (error) {
                 if (error.code != "ERR_REQUEST_CANCELED") {
                   alertError(
