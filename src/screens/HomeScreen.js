@@ -8,7 +8,14 @@ import OtherOpportunities from "../components/OtherOpportunities";
 import PersistScrollView from "../components/PersistScrollView";
 import Websites from "../components/Websites";
 
-import { alertError, formatDate, getUser, hashForm, strToDate } from "../utils";
+import {
+  alertError,
+  formatDate,
+  getUser,
+  hashForm,
+  request,
+  strToDate,
+} from "../utils";
 import PublicGoogleSheetsParser from "../utils/PublicGoogleSheetsParser";
 
 export default function HomeScreen({ navigation, route }) {
@@ -54,7 +61,10 @@ export default function HomeScreen({ navigation, route }) {
       alertError("In onRefresh: " + error);
     }
 
-    const unparsedData = await parser.parse();
+    const unparsedData = await request(() => parser.parse());
+    if (unparsedData == null) {
+      return null;
+    }
     const newData = [];
     const user = await getUser();
 
@@ -84,7 +94,6 @@ export default function HomeScreen({ navigation, route }) {
   }
 
   useEffect(() => {
-    console.log("home refresh");
     onRefresh();
   }, [route]);
 

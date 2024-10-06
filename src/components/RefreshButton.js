@@ -13,9 +13,11 @@ export default function RefreshButton({ onRefresh }) {
   return (
     <Pressable
       onPress={() => {
-        onRefresh().then((length) =>
-          Alert.alert(`Refreshed ${length} volunteer opportunities!`),
-        );
+        onRefresh().then((length) => {
+          if (length != null) {
+            Alert.alert(`Refreshed ${length} volunteer opportunities!`);
+          }
+        });
         Animated.timing(rotation, {
           toValue: 1,
           duration: 750,

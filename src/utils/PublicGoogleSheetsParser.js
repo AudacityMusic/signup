@@ -43,15 +43,14 @@ export default class PublicGoogleSheetsParser {
     let url = `https://docs.google.com/spreadsheets/d/${this.id}/gviz/tq?`;
     url += this.sheetId ? `gid=${this.sheetId}` : `sheet=${this.sheetName}`;
 
-    try {
-      const response = await fetch(url);
-      return response && response.ok ? response.text() : null;
-    } catch (e) {
-      /* istanbul ignore next */
-      alertError("Error fetching spreadsheet data: " + e);
-      /* istanbul ignore next */
+    const response = await fetch(url);
+    if (!response.ok) {
+      alertError(
+        `Response NOT OK ${response.status} when fetching spreadsheet data: ${response.statusText}`,
+      );
       return null;
     }
+    return response.text();
   }
 
   normalizeRow(rows) {
@@ -102,8 +101,7 @@ export default class PublicGoogleSheetsParser {
         rows = this.applyHeaderIntoRows(header, originalRows);
       }
     } catch (e) {
-      /* istanbul ignore next */
-      alertError("Error parsing spreadsheet data: " + e);
+      alertError(`Error parsing spreadsheet data: ${e}`);
     }
 
     return rows;
@@ -117,7 +115,9 @@ export default class PublicGoogleSheetsParser {
 
     const spreadsheetResponse = await this.getSpreadsheetDataUsingFetch();
 
-    if (spreadsheetResponse === null) return [];
+    if (spreadsheetResponse == null) {
+      return null;
+    }
 
     return this.getItems(spreadsheetResponse);
   }

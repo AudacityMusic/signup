@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { alertError, getUser, hashForm } from "..";
+import { alertError, getUser, hashForm, request } from "..";
 import formIDs from "../../constants/formIDs";
 
 class FormString {
@@ -30,24 +30,20 @@ class FormString {
 
 async function submitForm(formId, formData) {
   const formUrl = `https://docs.google.com/forms/d/e/${formId}/formResponse`;
-  try {
-    const response = await fetch(formUrl, {
+  const response = await request(() =>
+    fetch(formUrl, {
       method: "POST",
       body: formData.toString(),
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-    });
-
-    if (response.ok) {
-      return true;
-    }
-    alertError(`submitForm failed with response: ${JSON.stringify(response)}`);
-    return false;
-  } catch (error) {
-    alertError(`submitForm errored with: ${error}`);
-    return false;
+    }),
+  );
+  if (response.ok) {
+    return true;
   }
+  alertError(`submitForm failed with response: ${JSON.stringify(response)}`);
+  return false;
 }
 
 export default class Form {

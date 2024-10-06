@@ -52,6 +52,39 @@ export async function getUser(isEmptySafe = false) {
     alertError("Unexpected error in getUser: " + error);
   }
 }
+
+function wait(time) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, time);
+  });
+}
+
+export async function request(fn) {
+  let data;
+
+  // Request after 0, 1/5, 1, and 5 seconds
+  for (let i = -2; i <= 1; i++) {
+    if (i > -2) {
+      await wait(Math.pow(5, i) * 1000);
+    }
+    try {
+      data = await fn();
+    } catch (error) {
+      if (i == 1) {
+        Alert.alert(
+          "Network error",
+          `The app could not establish a connection after 6 seconds. Please reopen the app when you have a stable Internet connection.\n\n${error}`,
+        );
+      }
+    }
+    if (data != null) {
+      break;
+    }
+  }
+
+  return data;
+}
+
 export function strToDate(str) {
   const [year, month, day, hour, minute, second] = str
     .slice(5, -1)
