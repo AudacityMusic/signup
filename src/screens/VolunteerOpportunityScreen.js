@@ -5,7 +5,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 import Heading from "../components/Heading";
-import SignUpButton from "../components/SignUpButton";
+import NextButton from "../components/NextButton";
+import PersistScrollView from "../components/PersistScrollView";
 import Tag from "../components/Tag";
 import colors from "../constants/colors";
 
@@ -20,7 +21,9 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
     formURL,
     isSubmitted,
   } = route.params;
+
   const tagsIcons = tags.map((text) => <Tag key={text} text={text} />);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.banner}>
@@ -47,58 +50,60 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
           <Text style={styles.headerText}>{title}</Text>
         </View>
       </View>
-      <View style={styles.subcontainer}>
-        <View style={styles.details}>
-          <View style={styles.icon}>
-            <MaterialCommunityIcons
-              name="clock-time-five-outline"
-              size={20}
-              color={colors.black}
-            />
-            <Text style={styles.detailsText}>{date}</Text>
+      <PersistScrollView style={styles.scrollContainer}>
+        <View style={styles.subContainer}>
+          <View style={styles.details}>
+            <View style={styles.icon}>
+              <MaterialCommunityIcons
+                name="clock-time-five-outline"
+                size={20}
+                color={colors.black}
+              />
+              <Text style={styles.detailsText}>{date}</Text>
+            </View>
+            <View style={styles.icon}>
+              <SimpleLineIcons
+                name="location-pin"
+                size={20}
+                color={colors.black}
+              />
+              <Text style={styles.detailsText}>{location}</Text>
+            </View>
           </View>
-          <View style={styles.icon}>
-            <SimpleLineIcons
-              name="location-pin"
-              size={20}
-              color={colors.black}
-            />
-            <Text style={styles.detailsText}>{location}</Text>
-          </View>
-        </View>
-        {description != "" ? (
-          <View style={styles.about}>
-            <Heading>About</Heading>
-            <Text style={{ fontSize: 14 }}>{description}</Text>
-          </View>
-        ) : null}
-        {tags.length > 0 ? (
-          <View style={styles.tagsContainer}>
-            <Heading>Tags</Heading>
-            <View style={styles.tags}>{tagsIcons}</View>
-          </View>
-        ) : null}
-        <View style={styles.lowerRight}>
-          {isSubmitted ? (
-            <Text style={styles.alreadySubmitted}>
-              Warning: You have already submitted this form.
-            </Text>
+          {description != "" ? (
+            <View style={styles.about}>
+              <Heading>About</Heading>
+              <Text style={{ fontSize: 14 }}>{description}</Text>
+            </View>
           ) : null}
-          <Pressable
-            onPress={() =>
-              formURL == null
-                ? navigation.navigate("Volunteer Form", {
-                    title,
-                    location,
-                    date,
-                  })
-                : navigation.navigate("Google Forms", { formURL })
-            }
-          >
-            <SignUpButton />
-          </Pressable>
+          {tags.length > 0 ? (
+            <View style={styles.tagsContainer}>
+              <Heading>Tags</Heading>
+              <View style={styles.tags}>{tagsIcons}</View>
+            </View>
+          ) : null}
+          <View style={styles.lowerRight}>
+            {isSubmitted ? (
+              <Text style={styles.alreadySubmitted}>
+                Warning: You have already submitted this form.
+              </Text>
+            ) : null}
+            <Pressable
+              onPress={() =>
+                formURL == null
+                  ? navigation.navigate("Volunteer Form", {
+                      title,
+                      location,
+                      date,
+                    })
+                  : navigation.navigate("Google Forms", { formURL })
+              }
+            >
+              <NextButton>Sign Up</NextButton>
+            </Pressable>
+          </View>
         </View>
-      </View>
+      </PersistScrollView>
     </SafeAreaView>
   );
 }
@@ -113,8 +118,15 @@ const styles = StyleSheet.create({
   banner: {
     flex: 0.5,
   },
-  subcontainer: {
+  backgroundImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+  scrollContainer: {
     flex: 1,
+  },
+  subContainer: {
     marginHorizontal: 20,
   },
   details: {
@@ -146,11 +158,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "flex-end",
-  },
-  backgroundImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
+    marginTop: 20,
   },
   headerText: {
     position: "absolute",

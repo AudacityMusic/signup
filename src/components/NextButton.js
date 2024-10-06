@@ -1,11 +1,12 @@
-import Feather from "@expo/vector-icons/Feather";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { StyleSheet, Text, View } from "react-native";
+import colors from "../constants/colors";
 
-export default function NextButton() {
+export default function NextButton({ children }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.nextText}>{"Next"}</Text>
-      <Feather name="chevron-right" size={32} color="white" />
+      <Text style={styles.nextText}>{children}</Text>
+      <FontAwesome name="chevron-right" size={20} color="white" />
     </View>
   );
 }
@@ -15,21 +16,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    paddingVertical: 15,
+    paddingRight: 10,
     borderRadius: 15,
-    height: 60,
-    width: 120,
-    backgroundColor: "black",
-    paddingLeft: "5%",
-    paddingRight: "3%",
+    backgroundColor: colors.primary,
   },
-
   nextText: {
-    fontSize: 25,
+    fontSize: 20,
     color: "white",
-    paddingBottom: "2%",
-  },
-  caret: {
-    transform: [{ scaleX: -1 }],
-    tintColor: "white",
+    paddingHorizontal: 10,
   },
 });

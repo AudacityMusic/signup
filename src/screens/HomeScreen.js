@@ -1,10 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
-import CarouselPage from "../components/CarouselPage";
+import CarouselSection from "../components/CarouselSection";
 import Heading from "../components/Heading";
 import OtherOpportunities from "../components/OtherOpportunities";
+import PersistScrollView from "../components/PersistScrollView";
 import Websites from "../components/Websites";
 
 import { alertError, hashForm, strToDate } from "../utils";
@@ -54,7 +55,6 @@ export default function HomeScreen({ navigation, route }) {
     }
 
     const unparsedData = await parser.parse();
-
     const newData = [];
 
     for (let i = 0; i < unparsedData.length; i++) {
@@ -90,9 +90,9 @@ export default function HomeScreen({ navigation, route }) {
   }
 
   return (
-    <ScrollView>
+    <PersistScrollView>
       <View style={styles.container}>
-        <CarouselPage
+        <CarouselSection
           navigation={navigation}
           data={formatData(data)}
           onRefresh={onRefresh}
@@ -102,7 +102,7 @@ export default function HomeScreen({ navigation, route }) {
         <Heading>Websites</Heading>
         <Websites />
       </View>
-    </ScrollView>
+    </PersistScrollView>
   );
 }
 const styles = StyleSheet.create({

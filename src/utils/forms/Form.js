@@ -51,12 +51,12 @@ async function submitForm(formId, formData) {
 }
 
 export default class Form {
-  constructor(title, date, location, navigation, scrollObject) {
+  constructor(title, date, location, navigation, scrollRef) {
     this.title = title;
     this.date = date;
     this.location = location;
     this.navigation = navigation;
-    this.scrollObject = scrollObject;
+    this.scrollRef = scrollRef;
   }
 
   questions() {
@@ -84,7 +84,7 @@ export default class Form {
     }
 
     if (!allValid) {
-      this.scrollObject.scrollTo({
+      this.scrollRef.current?.scrollTo({
         x: 0,
         y: minInvalidY,
         animated: true,

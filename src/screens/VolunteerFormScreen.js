@@ -5,13 +5,13 @@ import {
   KeyboardAvoidingView,
   Pressable,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 
 import NextButton from "../components/NextButton";
+import PersistScrollView from "../components/PersistScrollView";
 
 import { alertError } from "../utils";
 import DanceClub from "../utils/forms/DanceClub";
@@ -19,18 +19,18 @@ import LibraryMusicHour from "../utils/forms/LibraryMusicHour";
 import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
 import RequestConcert from "../utils/forms/RequestConcert";
 
-function getForm(title, date, location, navigation, scrollObject) {
+function getForm(title, date, location, navigation, scrollRef) {
   if (title == "Library Music Hour") {
-    return new LibraryMusicHour(date, location, navigation, scrollObject);
+    return new LibraryMusicHour(date, location, navigation, scrollRef);
   }
   if (title == "Music by the Tracks") {
-    return new MusicByTheTracks(date, location, navigation, scrollObject);
+    return new MusicByTheTracks(date, location, navigation, scrollRef);
   }
   if (title == "Request a Concert") {
-    return new RequestConcert(date, location, navigation, scrollObject);
+    return new RequestConcert(date, location, navigation, scrollRef);
   }
   if (title == "Audacity Dance Club") {
-    return new DanceClub(date, location, navigation, scrollObject);
+    return new DanceClub(date, location, navigation, scrollRef);
   }
 
   alertError(`Unknown form title ${title} in getForm`);
@@ -38,9 +38,9 @@ function getForm(title, date, location, navigation, scrollObject) {
 
 export default function VolunteerFormScreen({ navigation, route }) {
   const { title, location, date } = route.params;
-  const [scrollObject, setScrollObject] = useState(null);
+  const [scrollRef, setScrollRef] = useState(null);
 
-  const form = getForm(title, date, location, navigation, scrollObject);
+  const form = getForm(title, date, location, navigation, scrollRef);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -54,11 +54,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
         ]}
         behavior="height"
       >
-        <ScrollView
-          ref={(ref) => {
-            setScrollObject(ref);
-          }}
-        >
+        <PersistScrollView setScrollRef={setScrollRef}>
           <View style={styles.questions}>
             <View style={styles.header}>
               <Text style={[styles.headerText, { fontWeight: "bold" }]}>
@@ -77,11 +73,14 @@ export default function VolunteerFormScreen({ navigation, route }) {
                 .filter((question) => question?.isVisible())
                 .map((question) => question.component)}
             </View>
-            <Pressable style={styles.nextButton} onPress={() => form.submit()}>
-              <NextButton />
+            <Pressable
+              style={styles.submitButton}
+              onPress={() => form.submit()}
+            >
+              <NextButton>Submit</NextButton>
             </Pressable>
           </View>
-        </ScrollView>
+        </PersistScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -130,7 +129,7 @@ const styles = StyleSheet.create({
   otherInfoContainer: {
     flex: 1.2,
   },
-  nextButton: {
+  submitButton: {
     alignSelf: "flex-end",
     justifyContent: "flex-end",
     marginBottom: 50,

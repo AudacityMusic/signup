@@ -8,7 +8,7 @@ import Heading from "./Heading";
 import RefreshButton from "./RefreshButton";
 import VolunteerOpportunity from "./VolunteerOpportunity";
 
-export default function CarouselPage({ navigation, data, onRefresh }) {
+export default function CarouselSection({ navigation, data, onRefresh }) {
   const [dotIndex, setDotIndex] = useState(0);
   const renderItem = ({ item }) => {
     return (
@@ -44,14 +44,10 @@ export default function CarouselPage({ navigation, data, onRefresh }) {
       </View>
     );
   };
+
   return (
     <View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
+      <View style={styles.heading}>
         <Heading>Volunteer Opportunities</Heading>
         <RefreshButton onRefresh={onRefresh} />
       </View>
@@ -99,5 +95,9 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     marginBottom: "5%",
+  },
+  heading: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });

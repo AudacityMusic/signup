@@ -16,8 +16,8 @@ import TextField from "../../components/TextField";
 import UploadButton from "../../components/UploadButton";
 
 export default class LibraryMusicHour extends Form {
-  constructor(date, location, navigation, scrollObject) {
-    super("Library Music Hour", date, location, navigation, scrollObject);
+  constructor(date, location, navigation, scrollRef) {
+    super("Library Music Hour", date, location, navigation, scrollRef);
 
     this.fullName = emptyQuestionState();
 

@@ -8,8 +8,8 @@ import TextField from "../../components/TextField";
 import TimeSlotList from "../../components/TimeSlotList";
 
 export default class RequestConcert extends Form {
-  constructor(date, location, navigation, scrollObject) {
-    super("Request a Concert", date, location, navigation, scrollObject);
+  constructor(date, location, navigation, scrollRef) {
+    super("Request a Concert", date, location, navigation, scrollRef);
 
     this.phoneNumber = emptyQuestionState();
     this.organization = emptyQuestionState();

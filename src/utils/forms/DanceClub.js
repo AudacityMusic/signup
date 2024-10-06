@@ -18,8 +18,8 @@ import TextField from "../../components/TextField";
 import TextFieldGroup from "../../components/TextFieldGroup";
 
 export default class DanceClub extends Form {
-  constructor(date, location, navigation, scrollObject) {
-    super("Audacity Dance Club", date, location, navigation, scrollObject);
+  constructor(date, location, navigation, scrollRef) {
+    super("Audacity Dance Club", date, location, navigation, scrollRef);
 
     this.fullName = emptyQuestionState();
 
