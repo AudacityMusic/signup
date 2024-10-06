@@ -261,11 +261,7 @@ export default class LibraryMusicHour extends Form {
             navigation={this.navigation}
           />
         ),
-        // Only PDF files can be uploaded
-        // Optional
-        validate: () =>
-          this.pianoAccompaniment[0].value == null ||
-          this.pianoAccompaniment[0].value[1] <= 104857600, // There are 104,857,600 bytes in 100 MB
+        validate: () => this.pianoAccompaniment[0].value != "Uploading",
       }),
 
       this.title == "Library Music Hour"
@@ -285,11 +281,9 @@ export default class LibraryMusicHour extends Form {
             isVisible: () =>
               this.performanceType[0].value?.includes("Ensemble"),
 
-            // Only PDF files can be uploaded
-            // Required only if visible (selected ensemble option)
             validate: () =>
               this.ensembleProfile[0].value != null &&
-              this.ensembleProfile[0].value[1] <= 104857600, // There are 104,857,600 bytes in 100 MB
+              this.ensembleProfile[0].value != "Uploading",
           })
         : null,
 

@@ -86,6 +86,8 @@ export default function UploadButton({
             );
             return;
           }
+          setState((prevState) => ({ ...prevState, value: "Uploading" }));
+
           const accessToken = await getAccessToken();
           const googleDrive = new GDrive();
           googleDrive.accessToken = accessToken;
@@ -93,6 +95,7 @@ export default function UploadButton({
 
           const file = await selectFile();
           if (file == null) {
+            setState((prevState) => ({ ...prevState, value: null }));
             return;
           }
           const fileData = await fs.readFile(file.uri, "base64");
@@ -146,6 +149,18 @@ export default function UploadButton({
               alertError("Error uploading file: " + error);
             }
             setFileName("Upload failed");
+            setState((prevState) => ({ ...prevState, value: null }));
+            return;
+          }
+
+          if (file.size > 104857600) {
+            // 100 MB
+            Alert.alert(
+              "File size too large",
+              `Your file ${file.name} has a size of ${file.size} bytes. Please compress your file and upload a smaller version.`,
+            );
+            setFileName("Upload too large");
+            setState((prevState) => ({ ...prevState, value: null }));
             return;
           }
 
@@ -153,7 +168,7 @@ export default function UploadButton({
 
           setState((prevState) => ({
             ...prevState,
-            value: [`https://drive.google.com/open?id=${id}`, file.size],
+            value: `https://drive.google.com/open?id=${id}`,
           }));
         }}
       >
