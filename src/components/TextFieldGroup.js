@@ -11,9 +11,10 @@ export default function TextFieldGroup({
   return (
     <View
       onLayout={(event) => {
+        const y = event.nativeEvent.layout.y;
         setState((prevState) => ({
           ...prevState,
-          y: event.nativeEvent.layout.y,
+          y,
         }));
       }}
     >

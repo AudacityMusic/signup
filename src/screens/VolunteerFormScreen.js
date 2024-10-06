@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef } from "react";
 
 import {
   Dimensions,
@@ -38,7 +38,7 @@ function getForm(title, date, location, navigation, scrollRef) {
 
 export default function VolunteerFormScreen({ navigation, route }) {
   const { title, location, date } = route.params;
-  const [scrollRef, setScrollRef] = useState(null);
+  const scrollRef = useRef(null);
 
   const form = getForm(title, date, location, navigation, scrollRef);
 
@@ -54,7 +54,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
         ]}
         behavior="height"
       >
-        <PersistScrollView setScrollRef={setScrollRef}>
+        <PersistScrollView scrollRef={scrollRef}>
           <View style={styles.questions}>
             <View style={styles.header}>
               <Text style={[styles.headerText, { fontWeight: "bold" }]}>

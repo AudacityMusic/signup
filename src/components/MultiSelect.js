@@ -17,9 +17,10 @@ export default function MultiSelect({
   return (
     <View
       onLayout={(event) => {
+        const y = event.nativeEvent.layout.y;
         setState((prevState) => ({
           ...prevState,
-          y: event.nativeEvent.layout.y,
+          y,
         }));
       }}
       style={styles.container}

@@ -50,9 +50,10 @@ export default function UploadButton({
   return (
     <View
       onLayout={(event) => {
+        const y = event.nativeEvent.layout.y;
         setState((prevState) => ({
           ...prevState,
-          y: event.nativeEvent.layout.y,
+          y,
         }));
       }}
     >

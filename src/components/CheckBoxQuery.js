@@ -8,9 +8,10 @@ export default function CheckBoxQuery({ question, state, setState }) {
     <View
       style={styles.container}
       onLayout={(event) => {
+        const y = event.nativeEvent.layout.y;
         setState((prevState) => ({
           ...prevState,
-          y: event.nativeEvent.layout.y,
+          y,
         }));
       }}
     >

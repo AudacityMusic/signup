@@ -142,7 +142,6 @@ export class TimeSlot {
           </Pressable>
         </View>
         <RemoveButton
-          // @ts-expect-error
           key={index * 10 + 7}
           state={state}
           setState={setState}
@@ -225,7 +224,6 @@ export function Select({
   let end = state.value[index].end;
 
   return (
-    // @ts-expect-error
     <DatePicker
       modal
       open={isOpen}
@@ -328,9 +326,10 @@ export default function TimeSlotList({ title, state, setState }) {
     <View
       style={styles.container}
       onLayout={(event) => {
+        const y = event.nativeEvent.layout.y;
         setState((prevState) => ({
           ...prevState,
-          y: event.nativeEvent.layout.y,
+          y,
         }));
       }}
     >

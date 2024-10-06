@@ -11,7 +11,7 @@ export default function HomeHeader({ navigation }) {
 
   useEffect(() => {
     getUser(true).then(setUser);
-  });
+  }, []);
 
   return (
     <LinearGradient

@@ -35,7 +35,7 @@ export default function App() {
         setLoading(false);
       }
     })();
-  });
+  }, []);
 
   if (loading) {
     return <ActivityIndicator size="large" />;

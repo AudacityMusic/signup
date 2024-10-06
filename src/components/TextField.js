@@ -14,9 +14,10 @@ export default function TextField({
   return (
     <View
       onLayout={(event) => {
+        const y = event.nativeEvent.layout.y;
         setState((prevState) => ({
           ...prevState,
-          y: event.nativeEvent.layout.y,
+          y,
         }));
       }}
     >
@@ -49,6 +50,7 @@ export default function TextField({
         }}
         value={state.value}
         maxLength={maxLength}
+        // @ts-expect-error
         keyboardType={keyboardType}
       />
     </View>
