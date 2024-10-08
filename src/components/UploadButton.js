@@ -143,6 +143,23 @@ export default function UploadButton({
                 "File upload aborted",
                 "Your file could not be uploaded due to a connection error. Please check your Internet connection and try again.",
               );
+            } else if (error.__response?.status == 401) {
+              Alert.alert(
+                "Invalid Session",
+                "Your authentication session is malformed, most likely because your device has old data that is not compatible with the current version of the app. To fix this issue, please go to your profile, clear your data, and log in again with your Google account. We apologize for the inconvenience.",
+                [
+                  {
+                    text: "Go to Profile",
+                    onPress: () => {
+                      navigation.navigate("Account");
+                    },
+                  },
+                  {
+                    text: "Cancel",
+                    isPreferred: true,
+                  },
+                ],
+              );
             } else if (error.__response?.status == 403) {
               Alert.alert(
                 "Permission Denied",
