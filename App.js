@@ -82,7 +82,7 @@ export default function App() {
             },
           }}
         />
-        <Stack.Screen name="Volunteer Form" component={VolunteerFormScreen} />
+        <Stack.Screen name="Sign Up Form" component={VolunteerFormScreen} />
         <Stack.Screen name="Google Forms" component={EmbeddedFormScreen} />
         <Stack.Screen
           name="End"

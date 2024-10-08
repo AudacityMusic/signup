@@ -91,7 +91,7 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
             <Pressable
               onPress={() =>
                 formURL == null
-                  ? navigation.navigate("Volunteer Form", {
+                  ? navigation.navigate("Sign Up Form", {
                       title,
                       location,
                       date,

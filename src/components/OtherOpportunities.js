@@ -15,7 +15,7 @@ export default function OtherOpportunities({ navigation }) {
       <Pressable
         style={[styles.card, styles.first]}
         onPress={() =>
-          navigation.navigate("Volunteer Form", {
+          navigation.navigate("Sign Up Form", {
             title: "Request a Concert",
             location: null,
             date: null,
@@ -40,7 +40,7 @@ export default function OtherOpportunities({ navigation }) {
       <Pressable
         style={styles.card}
         onPress={() =>
-          navigation.navigate("Volunteer Form", {
+          navigation.navigate("Sign Up Form", {
             title: "Audacity Dance Club",
             location: null,
             date: null,
