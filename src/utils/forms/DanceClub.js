@@ -147,6 +147,7 @@ export default class DanceClub extends Form {
             key="consent"
             state={this.consent[0]}
             setState={this.consent[1]}
+            showNo={false}
           />
         ),
         validate: (value) => value == "Yes",
@@ -168,6 +169,7 @@ export default class DanceClub extends Form {
             key="recording"
             state={this.recording[0]}
             setState={this.recording[1]}
+            showNo={false}
           />
         ),
         validate: (value) => value == "Yes",

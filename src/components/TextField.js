@@ -9,7 +9,6 @@ export default function TextField({
   state,
   setState,
   extraMargin = true,
-  valid = null,
 }) {
   return (
     <View
@@ -24,7 +23,7 @@ export default function TextField({
       <Text style={styles.heading}>
         <Text
           style={{
-            color: !state.valid || valid == false ? colors.danger : "black",
+            color: !state.valid ? colors.danger : "black",
           }}
         >
           {title}

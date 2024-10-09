@@ -244,6 +244,7 @@ export default class LibraryMusicHour extends Form {
             key="parentalConsent"
             state={this.parentalConsent[0]}
             setState={this.parentalConsent[1]}
+            showNo={false}
           />
         ),
         validate: (value) => value == "Yes",

@@ -3,7 +3,12 @@ import { StyleSheet, Text, View } from "react-native";
 
 import colors from "../constants/colors";
 
-export default function CheckBoxQuery({ question, state, setState }) {
+export default function CheckBoxQuery({
+  question,
+  state,
+  setState,
+  showNo = true,
+}) {
   return (
     <View
       style={styles.container}
@@ -44,26 +49,29 @@ export default function CheckBoxQuery({ question, state, setState }) {
         >
           Yes
         </Text>
-        <Text> </Text>
-        <Checkbox
-          color={colors.blue}
-          value={state.value == "No"}
-          onValueChange={() => {
-            setState((prevState) => ({
-              ...prevState,
-              value: "No",
-            }));
-          }}
-          style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
-        />
-        <Text
-          style={[
-            styles.text,
-            { color: state.valid ? "black" : colors.danger },
-          ]}
-        >
-          No
-        </Text>
+        {showNo ? (
+          <>
+            <Checkbox
+              color={colors.blue}
+              value={state.value == "No"}
+              onValueChange={() => {
+                setState((prevState) => ({
+                  ...prevState,
+                  value: "No",
+                }));
+              }}
+              style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
+            />
+            <Text
+              style={[
+                styles.text,
+                { color: state.valid ? "black" : colors.danger },
+              ]}
+            >
+              No
+            </Text>
+          </>
+        ) : null}
       </View>
     </View>
   );

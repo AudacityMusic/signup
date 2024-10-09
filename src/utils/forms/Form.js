@@ -66,6 +66,16 @@ export default class Form {
     let minInvalidY = Infinity;
 
     for (const question of this.questions()) {
+      const isVisible = question.isVisible();
+      if (!isVisible) {
+        question.setState((prevState) => ({
+          ...prevState,
+          value: null,
+          valid: true,
+        }));
+        continue;
+      }
+
       const isValid = question.validate();
       question.setState((prevState) => ({
         ...prevState,
@@ -117,7 +127,7 @@ export default class Form {
     }
 
     for (const question of this.questions()) {
-      const value = this[question.name][0].value;
+      const value = question.state.value;
       formData.append(
         form[question.name],
         value == null
