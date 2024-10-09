@@ -1,5 +1,4 @@
-import { useRef } from "react";
-
+import { useRef, useState } from "react";
 import {
   Dimensions,
   KeyboardAvoidingView,
@@ -40,6 +39,7 @@ function getForm(title, date, location, navigation, scrollRef) {
 export default function VolunteerFormScreen({ navigation, route }) {
   const { title, location, date } = route.params;
   const scrollRef = useRef(null);
+  const [buttonText, setButtonText] = useState("Submit");
 
   const form = getForm(
     title.trim().toUpperCase(),
@@ -86,9 +86,13 @@ export default function VolunteerFormScreen({ navigation, route }) {
             </View>
             <Pressable
               style={styles.submitButton}
-              onPress={() => form.submit()}
+              onPress={async () => {
+                setButtonText("Submitting...");
+                await form.submit();
+                setButtonText("Submit");
+              }}
             >
-              <NextButton>Submit</NextButton>
+              <NextButton>{buttonText}</NextButton>
             </Pressable>
           </View>
         </PersistScrollView>
