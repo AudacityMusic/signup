@@ -1,7 +1,7 @@
 import { Dimensions } from "react-native";
 import WebView from "react-native-webview";
 
-export default function EmbeddedFormScreen({ route, navigation }) {
+export default function EmbeddedFormScreen({ route }) {
   const { formURL } = route.params;
 
   return (

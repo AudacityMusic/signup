@@ -21,21 +21,15 @@ export default function CarouselSection({ navigation, data, onRefresh }) {
               location={component.Location}
               date={formatDate(component.Date)}
               image={component.Image}
-              description={
-                component.Description == undefined ? "" : component.Description
-              }
+              description={component.Description ?? ""}
               tags={
-                component.Tags == undefined
+                component.Tags == null
                   ? []
                   : component.Tags.split(",")
                       .map((str) => str.trim())
                       .filter((str) => str.length > 0)
               }
-              formURL={
-                component["Form Link"] == undefined
-                  ? null
-                  : component["Form Link"]
-              }
+              formURL={component["Form Link"] ?? null}
               isSubmitted={component.isSubmitted}
               key={index}
             />

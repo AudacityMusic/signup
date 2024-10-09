@@ -20,27 +20,38 @@ import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
 import RequestConcert from "../utils/forms/RequestConcert";
 
 function getForm(title, date, location, navigation, scrollRef) {
-  if (title == "Library Music Hour") {
+  if (title == "LIBRARY MUSIC HOUR") {
     return new LibraryMusicHour(date, location, navigation, scrollRef);
   }
-  if (title == "Music by the Tracks") {
+  if (title == "MUSIC BY THE TRACKS") {
     return new MusicByTheTracks(date, location, navigation, scrollRef);
   }
-  if (title == "Request a Concert") {
+  if (title == "REQUEST A CONCERT") {
     return new RequestConcert(date, location, navigation, scrollRef);
   }
-  if (title == "Audacity Dance Club") {
+  if (title == "AUDACITY DANCE CLUB") {
     return new DanceClub(date, location, navigation, scrollRef);
   }
 
   alertError(`Unknown form title ${title} in getForm`);
+  return null;
 }
 
 export default function VolunteerFormScreen({ navigation, route }) {
   const { title, location, date } = route.params;
   const scrollRef = useRef(null);
 
-  const form = getForm(title, date, location, navigation, scrollRef);
+  const form = getForm(
+    title.trim().toUpperCase(),
+    date,
+    location,
+    navigation,
+    scrollRef,
+  );
+  if (form == null) {
+    navigation.navigate("Home", { forceRerender: true });
+    return;
+  }
 
   return (
     <SafeAreaView style={styles.container}>

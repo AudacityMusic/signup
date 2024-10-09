@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { Alert } from "react-native";
 import { alertError, getUser, hashForm, request } from "..";
 import formIDs from "../../constants/formIDs";
 
@@ -61,7 +62,7 @@ export default class Form {
   }
 
   validate() {
-    let allValid = true;
+    let invalidResponses = 0;
     let minInvalidY = Infinity;
 
     for (const question of this.questions()) {
@@ -72,27 +73,31 @@ export default class Form {
       }));
 
       if (!isValid) {
-        allValid = false;
+        invalidResponses++;
         if (question.y < minInvalidY) {
           minInvalidY = question.y;
         }
       }
     }
 
-    if (!allValid) {
+    if (invalidResponses > 0) {
       this.scrollRef.current?.scrollTo({
         x: 0,
         y: minInvalidY,
         animated: true,
       });
-      return false;
     }
 
-    return true;
+    return invalidResponses;
   }
 
   async submit() {
-    if (!this.validate()) {
+    const invalidResponses = this.validate();
+    if (invalidResponses > 0) {
+      Alert.alert(
+        "Error",
+        `${invalidResponses} questions have invalid or missing required responses. Please fix all responses that are highlighted in red to submit this form.`,
+      );
       return;
     }
 

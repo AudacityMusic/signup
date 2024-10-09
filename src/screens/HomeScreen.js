@@ -68,10 +68,17 @@ export default function HomeScreen({ navigation, route }) {
     const newData = [];
     const user = await getUser();
 
+    const currentDate = new Date();
+
+    const twoMonthsLater = new Date();
+    twoMonthsLater.setMonth(currentDate.getMonth() + 2);
+
     for (let i = 0; i < unparsedData.length; i++) {
       const opportunity = unparsedData[i];
-      opportunity.Date = strToDate(opportunity.Date);
-      if (opportunity.Date < new Date()) {
+      opportunity.Title ??= "Untitled Event";
+      opportunity.Location ??= "Unknown Location";
+      opportunity.Date = strToDate(opportunity.Date) ?? new Date(0);
+      if (opportunity.Date < currentDate || opportunity.Date > twoMonthsLater) {
         continue;
       }
       const hash = hashForm(
@@ -81,9 +88,6 @@ export default function HomeScreen({ navigation, route }) {
         formatDate(opportunity.Date),
       );
       opportunity.isSubmitted = submittedForms.includes(hash);
-      if (!("Image" in opportunity)) {
-        opportunity.Image = "https://placehold.co/600x400";
-      }
       newData.push(opportunity);
     }
 
@@ -113,6 +117,7 @@ export default function HomeScreen({ navigation, route }) {
     </PersistScrollView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     margin: 15,
