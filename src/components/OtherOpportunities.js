@@ -1,6 +1,6 @@
 import Constants from "expo-constants";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { maybeOpenURL, openURL } from "../utils";
+import { openURL } from "../utils";
 
 import Entypo from "@expo/vector-icons/Entypo";
 import Feather from "@expo/vector-icons/Feather";
@@ -85,12 +85,10 @@ export default function OtherOpportunities({ navigation }) {
 
       <Pressable
         style={[styles.card, styles.last]}
-        onPress={() =>
-          maybeOpenURL("zelle://", "zelle", "1260755201", "com.zellepay.zelle")
-        }
+        onPress={() => openURL("https://funyouth.us/donate")}
       >
         <Ionicons name="gift" size={18} color="black" style={styles.icon} />
-        <Text style={styles.text}>Donate to admin@funyouth.us on Zelle</Text>
+        <Text style={styles.text}>Donate to FUN Youth</Text>
         <Feather
           name="external-link"
           size={21}

@@ -56,7 +56,7 @@ export default function Websites() {
           />
         </Pressable>
         <Pressable
-          style={[styles.card, styles.last]}
+          style={styles.card}
           onPress={() => openURL("https://funyouth.us/")}
         >
           <Image
@@ -64,6 +64,22 @@ export default function Websites() {
             source={require("./../assets/fun-youth.png")}
           />
           <Text style={styles.text}>FUN Youth</Text>
+          <Feather
+            name="external-link"
+            size={21}
+            color="black"
+            style={styles.external}
+          />
+        </Pressable>
+        <Pressable
+          style={[styles.card, styles.last]}
+          onPress={() => openURL("https://eternityband.org/dance/")}
+        >
+          <Image
+            style={styles.icon}
+            source={require("./../assets/audacity-dance-club.png")}
+          />
+          <Text style={styles.text}>Audacity Dance Club</Text>
           <Feather
             name="external-link"
             size={21}
