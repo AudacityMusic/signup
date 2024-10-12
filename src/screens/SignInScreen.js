@@ -80,7 +80,7 @@ export default function SignInScreen({ navigation }) {
         {AppleAuth.isAvailableAsync() ? (
           <AppleAuth.AppleAuthenticationButton
             buttonType={AppleAuth.AppleAuthenticationButtonType.SIGN_IN}
-            buttonStyle={AppleAuth.AppleAuthenticationButtonStyle.BLACK}
+            buttonStyle={[AppleAuth.AppleAuthenticationButtonStyle.BLACK, styles.OAuthLogo]}
             cornerRadius={5}
             style={styles.OAuth}
             onPress={async () => {
