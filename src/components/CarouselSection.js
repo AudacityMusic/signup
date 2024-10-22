@@ -3,7 +3,6 @@ import { Dimensions, StyleSheet, View } from "react-native";
 import AnimatedDotsCarousel from "react-native-animated-dots-carousel";
 import Carousel from "react-native-reanimated-carousel";
 
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { formatDate } from "../utils";
 import Heading from "./Heading";
 import RefreshButton from "./RefreshButton";
@@ -46,15 +45,13 @@ export default function CarouselSection({ navigation, data, onRefresh }) {
         <Heading>Volunteer Opportunities</Heading>
         <RefreshButton onRefresh={onRefresh} />
       </View>
-      <GestureHandlerRootView>
-        <Carousel
-          width={Dimensions.get("window").width - 20}
-          height={280}
-          data={data}
-          renderItem={renderItem}
-          onSnapToItem={(index) => setDotIndex(index)}
-        />
-      </GestureHandlerRootView>
+      <Carousel
+        width={Dimensions.get("window").width - 20}
+        height={280}
+        data={data}
+        renderItem={renderItem}
+        onSnapToItem={(index) => setDotIndex(index)}
+      />
       <View style={styles.container}>
         <AnimatedDotsCarousel
           length={data.length}

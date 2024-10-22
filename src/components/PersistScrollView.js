@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { ScrollView } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function PersistScrollView({
   children,
@@ -13,8 +14,10 @@ export default function PersistScrollView({
   }, []);
 
   return (
-    <ScrollView style={style} ref={scrollRef} persistentScrollbar={true}>
-      {children}
-    </ScrollView>
+    <GestureHandlerRootView>
+      <ScrollView style={style} ref={scrollRef} persistentScrollbar={true}>
+        {children}
+      </ScrollView>
+    </GestureHandlerRootView>
   );
 }
