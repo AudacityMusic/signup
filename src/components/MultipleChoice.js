@@ -19,7 +19,7 @@ export default function MultipleChoice({
         }));
       }}
     >
-      <Text style={styles.title}>
+      <Text style={styles.title} selectable={true}>
         <Text style={{ color: state.valid ? "black" : colors.danger }}>
           {title}
         </Text>

@@ -47,7 +47,7 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
             },
           ]}
         >
-          <Text style={styles.headerText}>{title}</Text>
+          <Text style={styles.headerText} selectable={true}>{title}</Text>
         </View>
       </View>
       <PersistScrollView style={styles.scrollContainer}>
@@ -59,7 +59,7 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
                 size={20}
                 color={colors.black}
               />
-              <Text style={styles.detailsText}>{date}</Text>
+              <Text style={styles.detailsText} selectable={true}>{date}</Text>
             </View>
             <View style={styles.icon}>
               <SimpleLineIcons
@@ -67,13 +67,13 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
                 size={20}
                 color={colors.black}
               />
-              <Text style={styles.detailsText}>{location}</Text>
+              <Text style={styles.detailsText} selectable={true}>{location}</Text>
             </View>
           </View>
           {description != "" ? (
             <View style={styles.about}>
               <Heading>About</Heading>
-              <Text style={{ fontSize: 14 }}>{description}</Text>
+              <Text style={{ fontSize: 14 }} selectable={true}>{description}</Text>
             </View>
           ) : null}
           {tags.length > 0 ? (
@@ -84,7 +84,7 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
           ) : null}
           <View style={styles.lowerRight}>
             {isSubmitted ? (
-              <Text style={styles.alreadySubmitted}>
+              <Text style={styles.alreadySubmitted} selectable={true}>
                 Warning: You have already submitted this form.
               </Text>
             ) : null}

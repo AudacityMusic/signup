@@ -12,7 +12,7 @@ export default function EndScreen({ route, navigation }) {
         color={isSuccess ? "green" : "red"}
         style={styles.icon}
       />
-      <Text style={styles.message}>
+      <Text style={styles.message} selectable={true}>
         {isSuccess
           ? "Form submitted successfully"
           : "Error: Form submission was unsuccessful. Please contact the IT team for assistance."}

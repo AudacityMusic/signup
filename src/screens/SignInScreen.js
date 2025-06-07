@@ -37,7 +37,7 @@ export default function SignInScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.body}>
-        <Text style={styles.paragraph}>
+        <Text style={styles.paragraph} selectable={true}>
           Thank you for choosing to help make our volunteer opportunities and
           concerts across the Bay Area a success! To begin, please sign in.
         </Text>
@@ -74,7 +74,7 @@ export default function SignInScreen({ navigation }) {
             style={styles.OAuthLogo}
             source={require("../assets/google.png")}
           />
-          <Text style={[styles.OAuthText]}> Sign in with Google</Text>
+          <Text style={[styles.OAuthText]} selectable={true}> Sign in with Google</Text>
         </Pressable>
 
         {AppleAuth.isAvailableAsync() ? (

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 export default function Tag(props) {
   return (
     <View style={styles.container}>
-      <Text style={styles.tagText}>{props.text}</Text>
+      <Text style={styles.tagText} selectable={true}>{props.text}</Text>
     </View>
   );
 }

@@ -25,7 +25,7 @@ export default function MultiSelect({
       }}
       style={styles.container}
     >
-      <Text style={styles.heading}>
+      <Text style={styles.heading} selectable={true}>
         <Text style={{ color: state.valid ? "black" : "red" }}>{title}</Text>
         {required ? <Text style={{ color: "red" }}> *</Text> : null}
       </Text>
