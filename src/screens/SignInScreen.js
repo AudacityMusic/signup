@@ -74,7 +74,10 @@ export default function SignInScreen({ navigation }) {
             style={styles.OAuthLogo}
             source={require("../assets/google.png")}
           />
-          <Text style={[styles.OAuthText]} selectable={true}> Sign in with Google</Text>
+          <Text style={[styles.OAuthText]} selectable={true}>
+            {" "}
+            Sign in with Google
+          </Text>
         </Pressable>
 
         {AppleAuth.isAvailableAsync() ? (

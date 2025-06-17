@@ -1,7 +1,11 @@
 import { StyleSheet, Text } from "react-native";
 
 export default function Heading({ children }) {
-  return <Text style={styles.container} selectable={true}>{children}</Text>;
+  return (
+    <Text style={styles.container} selectable={true}>
+      {children}
+    </Text>
+  );
 }
 
 const styles = StyleSheet.create({

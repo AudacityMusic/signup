@@ -36,8 +36,12 @@ export default function Profile() {
         />
       )}
       <View>
-        <Text style={styles.name} selectable={true}>{name}</Text>
-        <Text style={styles.email} selectable={true}>{email}</Text>
+        <Text style={styles.name} selectable={true}>
+          {name}
+        </Text>
+        <Text style={styles.email} selectable={true}>
+          {email}
+        </Text>
       </View>
     </View>
   );

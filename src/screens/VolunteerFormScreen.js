@@ -70,14 +70,21 @@ export default function VolunteerFormScreen({ navigation, route }) {
         <PersistScrollView scrollRef={scrollRef}>
           <View style={styles.questions}>
             <View style={styles.header}>
-              <Text style={[styles.headerText, { fontWeight: "bold" }]} selectable={true}>
+              <Text
+                style={[styles.headerText, { fontWeight: "bold" }]}
+                selectable={true}
+              >
                 {title}
               </Text>
               {date == null ? null : (
-                <Text style={styles.headerText} selectable={true}>{date}</Text>
+                <Text style={styles.headerText} selectable={true}>
+                  {date}
+                </Text>
               )}
               {location == null ? null : (
-                <Text style={styles.headerText} selectable={true}>{location}</Text>
+                <Text style={styles.headerText} selectable={true}>
+                  {location}
+                </Text>
               )}
             </View>
             <View style={styles.form}>

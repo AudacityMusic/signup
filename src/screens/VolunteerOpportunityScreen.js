@@ -47,7 +47,9 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
             },
           ]}
         >
-          <Text style={styles.headerText} selectable={true}>{title}</Text>
+          <Text style={styles.headerText} selectable={true}>
+            {title}
+          </Text>
         </View>
       </View>
       <PersistScrollView style={styles.scrollContainer}>
@@ -59,7 +61,9 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
                 size={20}
                 color={colors.black}
               />
-              <Text style={styles.detailsText} selectable={true}>{date}</Text>
+              <Text style={styles.detailsText} selectable={true}>
+                {date}
+              </Text>
             </View>
             <View style={styles.icon}>
               <SimpleLineIcons
@@ -67,13 +71,17 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
                 size={20}
                 color={colors.black}
               />
-              <Text style={styles.detailsText} selectable={true}>{location}</Text>
+              <Text style={styles.detailsText} selectable={true}>
+                {location}
+              </Text>
             </View>
           </View>
           {description != "" ? (
             <View style={styles.about}>
               <Heading>About</Heading>
-              <Text style={{ fontSize: 14 }} selectable={true}>{description}</Text>
+              <Text style={{ fontSize: 14 }} selectable={true}>
+                {description}
+              </Text>
             </View>
           ) : null}
           {tags.length > 0 ? (

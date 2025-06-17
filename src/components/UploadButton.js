@@ -59,7 +59,9 @@ export default function UploadButton({
         {required ? <Text style={{ color: "red" }}> *</Text> : null}
       </Text>
       {fileName == null ? null : (
-        <Text style={styles.otherInfo} selectable={true}>{fileName}</Text>
+        <Text style={styles.otherInfo} selectable={true}>
+          {fileName}
+        </Text>
       )}
       <Pressable
         style={styles.upload}
