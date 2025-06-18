@@ -25,6 +25,7 @@ export default function CheckBoxQuery({
           styles.header,
           { color: state.valid ? "black" : colors.danger },
         ]}
+        selectable={true}
       >
         {question}
         <Text style={{ color: "red" }}>{" *"}</Text>

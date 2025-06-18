@@ -19,20 +19,22 @@ import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
 import RequestConcert from "../utils/forms/RequestConcert";
 
 function getForm(title, date, location, navigation, scrollRef) {
-  if (title == "LIBRARY MUSIC HOUR") {
+  const eventTitle = title.trim().toUpperCase();
+
+  if (eventTitle == "LIBRARY MUSIC HOUR") {
     return new LibraryMusicHour(date, location, navigation, scrollRef);
   }
-  if (title == "MUSIC BY THE TRACKS") {
+  if (eventTitle == "MUSIC BY THE TRACKS") {
     return new MusicByTheTracks(date, location, navigation, scrollRef);
   }
-  if (title == "REQUEST A CONCERT") {
+  if (eventTitle == "REQUEST A CONCERT") {
     return new RequestConcert(date, location, navigation, scrollRef);
   }
-  if (title == "AUDACITY DANCE CLUB") {
+  if (eventTitle == "AUDACITY DANCE CLUB") {
     return new DanceClub(date, location, navigation, scrollRef);
   }
 
-  alertError(`Unknown form title ${title} in getForm`);
+  alertError(`Unknown form title ${eventTitle} in getForm`);
   return null;
 }
 
@@ -68,14 +70,21 @@ export default function VolunteerFormScreen({ navigation, route }) {
         <PersistScrollView scrollRef={scrollRef}>
           <View style={styles.questions}>
             <View style={styles.header}>
-              <Text style={[styles.headerText, { fontWeight: "bold" }]}>
+              <Text
+                style={[styles.headerText, { fontWeight: "bold" }]}
+                selectable={true}
+              >
                 {title}
               </Text>
               {date == null ? null : (
-                <Text style={styles.headerText}>{date}</Text>
+                <Text style={styles.headerText} selectable={true}>
+                  {date}
+                </Text>
               )}
               {location == null ? null : (
-                <Text style={styles.headerText}>{location}</Text>
+                <Text style={styles.headerText} selectable={true}>
+                  {location}
+                </Text>
               )}
             </View>
             <View style={styles.form}>

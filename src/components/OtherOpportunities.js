@@ -28,7 +28,9 @@ export default function OtherOpportunities({ navigation }) {
           color="black"
           style={styles.icon}
         />
-        <Text style={styles.text}>Request a Concert</Text>
+        <Text style={styles.text} selectable={true}>
+          Request a Concert
+        </Text>
         <FontAwesome
           name="chevron-right"
           size={20}
@@ -53,7 +55,9 @@ export default function OtherOpportunities({ navigation }) {
           color="black"
           style={styles.icon}
         />
-        <Text style={styles.text}>Sign Up for Audacity Dance Club</Text>
+        <Text style={styles.text} selectable={true}>
+          Sign Up for Audacity Dance Club
+        </Text>
         <FontAwesome
           name="chevron-right"
           size={20}
@@ -74,6 +78,7 @@ export default function OtherOpportunities({ navigation }) {
         />
         <Text
           style={styles.text}
+          selectable={true}
         >{`Send feedback to ${Constants.expoConfig.extra.email}`}</Text>
         <Feather
           name="external-link"
@@ -88,7 +93,9 @@ export default function OtherOpportunities({ navigation }) {
         onPress={() => openURL("https://funyouth.us/donate")}
       >
         <Ionicons name="gift" size={18} color="black" style={styles.icon} />
-        <Text style={styles.text}>Donate to FUN Youth</Text>
+        <Text style={styles.text} selectable={true}>
+          Donate to FUN Youth
+        </Text>
         <Feather
           name="external-link"
           size={21}

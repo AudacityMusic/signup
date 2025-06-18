@@ -333,7 +333,7 @@ export default function TimeSlotList({ title, state, setState }) {
         }));
       }}
     >
-      <Text style={styles.title}>
+      <Text style={styles.title} selectable={true}>
         {title}
         <Text style={{ color: "red" }}> *</Text>
       </Text>
@@ -342,6 +342,7 @@ export default function TimeSlotList({ title, state, setState }) {
           styles.requirements,
           { color: state.valid ? "black" : colors.danger },
         ]}
+        selectable={true}
       >
         {
           "Each time slot must start between 10:30 am and 5 pm and end before 6 pm."

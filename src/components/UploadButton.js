@@ -54,12 +54,14 @@ export default function UploadButton({
         }));
       }}
     >
-      <Text style={styles.title}>
+      <Text style={styles.title} selectable={true}>
         {title}
         {required ? <Text style={{ color: "red" }}> *</Text> : null}
       </Text>
       {fileName == null ? null : (
-        <Text style={styles.otherInfo}>{fileName}</Text>
+        <Text style={styles.otherInfo} selectable={true}>
+          {fileName}
+        </Text>
       )}
       <Pressable
         style={styles.upload}
@@ -215,6 +217,7 @@ export default function UploadButton({
             marginBottom: 20,
           },
         ]}
+        selectable={true}
       >
         PDF only - 100MB Limit
       </Text>

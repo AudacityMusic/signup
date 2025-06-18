@@ -41,10 +41,10 @@ export default function VolunteerOpportunity({
           cachePolicy="memory"
         />
         <View style={{ flexDirection: "column", alignSelf: "center" }}>
-          <Text style={styles.title}>
+          <Text style={styles.title} selectable={true}>
             {title.length <= 19 ? title : title.slice(0, 16) + "..."}
           </Text>
-          <Text style={styles.info}>
+          <Text style={styles.info} selectable={true}>
             <MaterialCommunityIcons
               name="clock-time-five-outline"
               size={10}
@@ -54,7 +54,7 @@ export default function VolunteerOpportunity({
             {"  "}
             {date}
           </Text>
-          <Text style={styles.info}>
+          <Text style={styles.info} selectable={true}>
             <SimpleLineIcons
               name="location-pin"
               size={10}

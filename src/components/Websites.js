@@ -15,7 +15,9 @@ export default function Websites() {
             style={styles.icon}
             source={require("./../assets/eternity-band.png")}
           />
-          <Text style={styles.text}>Eternity Band</Text>
+          <Text style={styles.text} selectable={true}>
+            Eternity Band
+          </Text>
           <Feather
             name="external-link"
             size={21}
@@ -31,7 +33,9 @@ export default function Websites() {
             style={styles.icon}
             source={require("./../assets/audacity-workshop.png")}
           />
-          <Text style={styles.text}>Audacity Workshop</Text>
+          <Text style={styles.text} selectable={true}>
+            Audacity Workshop
+          </Text>
           <Feather
             name="external-link"
             size={21}
@@ -47,7 +51,9 @@ export default function Websites() {
             style={styles.icon}
             source={require("./../assets/colorvision.png")}
           />
-          <Text style={styles.text}>ColorVision</Text>
+          <Text style={styles.text} selectable={true}>
+            ColorVision
+          </Text>
           <Feather
             name="external-link"
             size={21}
@@ -63,7 +69,9 @@ export default function Websites() {
             style={styles.icon}
             source={require("./../assets/fun-youth.png")}
           />
-          <Text style={styles.text}>FUN Youth</Text>
+          <Text style={styles.text} selectable={true}>
+            FUN Youth
+          </Text>
           <Feather
             name="external-link"
             size={21}
@@ -79,7 +87,9 @@ export default function Websites() {
             style={styles.icon}
             source={require("./../assets/audacity-dance-club.png")}
           />
-          <Text style={styles.text}>Audacity Dance Club</Text>
+          <Text style={styles.text} selectable={true}>
+            Audacity Dance Club
+          </Text>
           <Feather
             name="external-link"
             size={21}

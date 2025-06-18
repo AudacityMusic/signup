@@ -18,7 +18,7 @@ export default function TextFieldGroup({
         }));
       }}
     >
-      <Text style={styles.heading}>
+      <Text style={styles.heading} selectable={true}>
         <Text
           style={{
             color: state.valid ? "black" : colors.danger,

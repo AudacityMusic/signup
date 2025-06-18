@@ -19,7 +19,9 @@ export default function HomeHeader({ navigation, route }) {
       style={styles.container}
     >
       <SafeAreaView style={styles.subcontainer}>
-        <Text style={styles.headerText}>Audacity Sign Up</Text>
+        <Text style={styles.headerText} selectable={true}>
+          Audacity Sign Up
+        </Text>
         <Pressable onPress={() => navigation.navigate("Account")}>
           {user?.photo ? (
             <Image

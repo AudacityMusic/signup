@@ -20,7 +20,7 @@ export default function TextField({
         }));
       }}
     >
-      <Text style={styles.heading}>
+      <Text style={styles.heading} selectable={true}>
         <Text
           style={{
             color: !state.valid ? colors.danger : "black",
@@ -32,7 +32,9 @@ export default function TextField({
           <Text style={{ color: "red" }}> *</Text>
         )}
       </Text>
-      <Text style={styles.subtitle}>{subtitle}</Text>
+      <Text style={styles.subtitle} selectable={true}>
+        {subtitle}
+      </Text>
       <TextInput
         style={[
           styles.inputField,
