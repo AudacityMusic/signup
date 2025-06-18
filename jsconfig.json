@@ -1,7 +1,7 @@
 {
-    "compilerOptions": {
-        "checkJs": true,
-        "jsx": "react-native",
-    },
-    "exclude": ["dist", "node_modules"],
+  "compilerOptions": {
+    "checkJs": true,
+    "jsx": "react-native"
+  },
+  "exclude": ["dist", "node_modules"]
 }

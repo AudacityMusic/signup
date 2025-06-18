@@ -78,7 +78,11 @@ export default function HomeScreen({ navigation, route }) {
       opportunity.Title ??= "Untitled Event";
       opportunity.Location ??= "Unknown Location";
       opportunity.Date = strToDate(opportunity.Date) ?? new Date(0);
-      if (opportunity.Date < currentDate || opportunity.Date > twoMonthsLater) {
+
+      const event_midnight = new Date(opportunity.Date);
+      event_midnight.setHours(23, 59, 59, 999);
+
+      if (event_midnight < currentDate || opportunity.Date > twoMonthsLater) {
         continue;
       }
       const hash = hashForm(
