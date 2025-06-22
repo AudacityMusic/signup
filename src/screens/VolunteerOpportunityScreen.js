@@ -9,6 +9,7 @@ import NextButton from "../components/NextButton";
 import PersistScrollView from "../components/PersistScrollView";
 import Tag from "../components/Tag";
 import colors from "../constants/colors";
+import { openInMaps } from "../utils";
 
 export default function VolunteerOpportunityScreen({ route, navigation }) {
   const {
@@ -71,9 +72,14 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
                 size={20}
                 color={colors.black}
               />
-              <Text style={styles.detailsText} selectable={true}>
-                {location}
-              </Text>
+              <Pressable onPress={() => openInMaps(location)}>
+                <Text
+                  style={[styles.detailsText, styles.locationText]}
+                  selectable={true}
+                >
+                  {location}
+                </Text>
+              </Pressable>
             </View>
           </View>
           {description != "" ? (
@@ -177,5 +183,9 @@ const styles = StyleSheet.create({
   },
   detailsText: {
     fontSize: 18,
+  },
+  locationText: {
+    textDecorationLine: "underline",
+    color: colors.primary,
   },
 });

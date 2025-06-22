@@ -12,11 +12,12 @@ import {
 import NextButton from "../components/NextButton";
 import PersistScrollView from "../components/PersistScrollView";
 
-import { alertError } from "../utils";
+import { alertError, openInMaps } from "../utils";
 import DanceClub from "../utils/forms/DanceClub";
 import LibraryMusicHour from "../utils/forms/LibraryMusicHour";
 import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
 import RequestConcert from "../utils/forms/RequestConcert";
+import colors from "../constants/colors";
 
 function getForm(title, date, location, navigation, scrollRef) {
   const eventTitle = title.trim().toUpperCase();
@@ -82,9 +83,14 @@ export default function VolunteerFormScreen({ navigation, route }) {
                 </Text>
               )}
               {location == null ? null : (
-                <Text style={styles.headerText} selectable={true}>
-                  {location}
-                </Text>
+                <Pressable onPress={() => openInMaps(location)}>
+                  <Text
+                    style={[styles.headerText, styles.locationText]}
+                    selectable={true}
+                  >
+                    {location}
+                  </Text>
+                </Pressable>
               )}
             </View>
             <View style={styles.form}>
@@ -157,5 +163,9 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     justifyContent: "flex-end",
     marginBottom: 50,
+  },
+  locationText: {
+    textDecorationLine: "underline",
+    color: colors.primary,
   },
 });
