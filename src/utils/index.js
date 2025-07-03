@@ -142,3 +142,21 @@ export const isExactly = (value, len) =>
 export function hashForm(userID, title, location, date) {
   return `${userID}&&&${title}&&&${location}&&&${date}`;
 }
+
+export function openInMaps(location) {
+  const encodedLocation = encodeURIComponent(location);
+  const url = Platform.select({
+    ios: `maps://maps.apple.com/?q=${encodedLocation}`,
+    android: `https://www.google.com/maps/search/?api=1&query=${encodedLocation}`,
+  });
+  Linking.canOpenURL(url).then((supported) => {
+    if (supported) {
+      Linking.openURL(url);
+    } else {
+      // Fallback to Google Maps web URL
+      Linking.openURL(
+        `https://www.google.com/maps/search/?api=1&query=${encodedLocation}`,
+      );
+    }
+  });
+}
