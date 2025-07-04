@@ -17,9 +17,27 @@ import {
   strToDate,
 } from "../utils";
 import PublicGoogleSheetsParser from "../utils/PublicGoogleSheetsParser";
+import {
+  initNotificationHandling,
+  scheduleEventNotifications,
+  cancelAllScheduled,
+} from "../utils/notifications";
 
 export default function HomeScreen({ navigation, route }) {
   const [data, setData] = useState([]);
+
+  // Initialize notifications
+  useEffect(() => {
+    initNotificationHandling();
+  }, []);
+
+  // Schedule notifications whenever data changes
+  useEffect(() => {
+    cancelAllScheduled();
+    data.forEach((event) => {
+      scheduleEventNotifications(event);
+    });
+  }, [data]);
 
   function formatData(data) {
     let formattedArray = [];
