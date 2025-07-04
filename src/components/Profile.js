@@ -1,3 +1,8 @@
+/**
+ * Profile.js
+ * Displays logged-in user's name, email, and profile image or icon.
+ * Retrieves user info from AsyncStorage on mount.
+ */
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
@@ -5,28 +10,28 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import { getUser } from "../utils";
 
 export default function Profile() {
+  // Local user state
   const [user, setUser] = useState(null);
 
+  // Load user data on mount
   useEffect(() => {
     getUser().then(setUser);
   }, []);
 
+  // Default display values while loading or empty
   let name = user?.name ?? "Loading";
-  if (name == "") {
-    name = "Anonymous Apple User";
-  }
+  if (name === "") name = "Anonymous Apple User";
   let email = user?.email ?? "Loading";
-  if (email == "") {
-    email = "apple.com";
-  }
+  if (email === "") email = "apple.com";
 
   return (
     <View style={styles.container}>
-      {user?.photo != null ? (
+      {/* User photo if available, else default icon */}
+      {user?.photo ? (
         <Image
           style={styles.image}
-          source={{ width: 0, height: 0, uri: user.photo }} // size doesn't matter
-        ></Image>
+          source={{ uri: user.photo, width: 60, height: 60 }}
+        />
       ) : (
         <FontAwesome
           name="user-circle"
@@ -35,11 +40,12 @@ export default function Profile() {
           style={styles.image}
         />
       )}
+      {/* Name and email text */}
       <View>
-        <Text style={styles.name} selectable={true}>
+        <Text style={styles.name} selectable>
           {name}
         </Text>
-        <Text style={styles.email} selectable={true}>
+        <Text style={styles.email} selectable>
           {email}
         </Text>
       </View>

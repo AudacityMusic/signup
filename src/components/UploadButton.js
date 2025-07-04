@@ -1,3 +1,18 @@
+/**
+ * UploadButton.js
+ * Provides a PDF upload button using Google Drive API:
+ * - Selects a PDF file
+ * - Uploads to Google Drive
+ * - Sets sharing to public
+ * - Updates form state with Drive URL
+ * Props:
+ *  - title: label text for the upload field
+ *  - state: { value: url|string, y: number, valid: boolean }
+ *  - setState: setter to update component state
+ *  - navigation: React Navigation prop for redirection
+ *  - required: whether a file is mandatory
+ */
+
 import Feather from "@expo/vector-icons/Feather";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -12,6 +27,7 @@ import * as fs from "react-native-fs";
 import colors from "../constants/colors";
 import { alertError } from "../utils";
 
+// Helper: launch document picker for PDF selection
 const selectFile = async () => {
   try {
     const file = await DocumentPicker.pickSingle({
@@ -26,6 +42,7 @@ const selectFile = async () => {
   }
 };
 
+// Helper: retrieve stored Google access token for API calls
 async function getAccessToken() {
   try {
     const accessToken = await AsyncStorage.getItem("access-token");
@@ -42,51 +59,52 @@ export default function UploadButton({
   navigation,
   required = false,
 }) {
+  // Local UI state for showing selected file name
   const [fileName, setFileName] = useState(null);
 
   return (
     <View
       onLayout={(event) => {
+        // Capture Y position for scroll-to-error behavior
         const y = event.nativeEvent.layout.y;
-        setState((prevState) => ({
-          ...prevState,
-          y,
-        }));
+        setState((prev) => ({ ...prev, y }));
       }}
     >
-      <Text style={styles.title} selectable={true}>
+      {/* Field title and required marker */}
+      <Text style={styles.title} selectable>
         {title}
-        {required ? <Text style={{ color: "red" }}> *</Text> : null}
+        {required && <Text style={{ color: "red" }}> *</Text>}
       </Text>
-      {fileName == null ? null : (
-        <Text style={styles.otherInfo} selectable={true}>
+      {/* Display chosen file name */}
+      {fileName && (
+        <Text style={styles.otherInfo} selectable>
           {fileName}
         </Text>
       )}
+
+      {/* Upload button triggers file selection and upload flow */}
       <Pressable
         style={styles.upload}
         onPress={async () => {
+          // Retrieve access token
           const accessToken = await getAccessToken();
-          if (accessToken == null) {
+          if (!accessToken) {
+            // Prompt user to re-login on failure
             Alert.alert(
               "File upload is unavailable",
-              "The upload feature uses Google Drive to share your file with Audacity Sign Up. Your session may have expired or you may be using an unsupported Apple account. Please log out and log in with a Google account to use this feature.",
+              "Please log in with a Google account.",
               [
                 {
                   text: "Go to Profile",
-                  onPress: () => {
-                    navigation.navigate("Account");
-                  },
+                  onPress: () => navigation.navigate("Account"),
                 },
-                {
-                  text: "Cancel",
-                  isPreferred: true,
-                },
+                { text: "Cancel", style: "cancel" },
               ],
             );
             return;
           }
-          setState((prevState) => ({ ...prevState, value: "Uploading" }));
+          // Indicate uploading state
+          setState((prev) => ({ ...prev, value: "Uploading" }));
 
           const googleDrive = new GDrive();
           googleDrive.accessToken = accessToken;
@@ -206,9 +224,12 @@ export default function UploadButton({
           }));
         }}
       >
+        {/* Upload icon and label */}
         <Feather name="upload" size={25} color="black" />
         <Text style={styles.uploadText}>Upload</Text>
       </Pressable>
+
+      {/* PDF-only notice and validation info */}
       <Text
         style={[
           styles.otherInfo,

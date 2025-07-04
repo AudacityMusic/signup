@@ -1,3 +1,11 @@
+/**
+ * PublicGoogleSheetsParser.js
+ * Utility class to fetch and parse public Google Sheets data via the GViz API.
+ * Usage:
+ *   const parser = new PublicGoogleSheetsParser(sheetId, { sheetName });
+ *   const rows = await parser.parse();
+ */
+
 // From https://github.com/fureweb-com/public-google-sheets-parser
 // Copyright (c) 2020 Jihwan Oh
 // MIT License
@@ -5,12 +13,21 @@
 import { alertError } from ".";
 
 export default class PublicGoogleSheetsParser {
+  /**
+   * @param {string} spreadsheetId - Google Spreadsheet ID
+   * @param {object|string} option - sheetName string or config object
+   */
   constructor(spreadsheetId, option) {
     this.id = spreadsheetId;
     this.setOption(option);
   }
 
+  /**
+   * Configure sheet name/id and parsing options.
+   * @param {object|string|null} option
+   */
   setOption(option) {
+    // Preserve existing options if undefined
     if (!option) {
       this.sheetName = this.sheetName || null;
       this.sheetId = this.sheetId || null;
@@ -20,6 +37,7 @@ export default class PublicGoogleSheetsParser {
       this.sheetName = option;
       this.sheetId = this.sheetId || null;
     } else if (typeof option === "object") {
+      // Set from object with fallback
       this.sheetName = option.sheetName || this.sheetName;
       this.sheetId = option.sheetId || this.sheetId;
       this.useFormattedDate = option.hasOwnProperty("useFormattedDate")
@@ -31,12 +49,21 @@ export default class PublicGoogleSheetsParser {
     }
   }
 
+  /**
+   * Check if a cell value is a serialized date string from Sheets.
+   * @param {string} date
+   * @returns {boolean}
+   */
   isDate(date) {
     return (
       date && typeof date === "string" && /Date\((\d+),(\d+),(\d+)\)/.test(date)
     );
   }
 
+  /**
+   * Fetch raw GViz response text from the Sheets API.
+   * @returns {Promise<string|null>}
+   */
   async getSpreadsheetDataUsingFetch() {
     if (!this.id) return null;
 
@@ -53,12 +80,19 @@ export default class PublicGoogleSheetsParser {
     return response.text();
   }
 
+  /**
+   * Normalize row cells, converting nulls to empty objects.
+   * @param {array} rows
+   */
   normalizeRow(rows) {
     return rows.map((row) =>
       row && row.v !== null && row.v !== undefined ? row : {},
     );
   }
 
+  /**
+   * Map header columns to row values, constructing object per row.
+   */
   applyHeaderIntoRows(header, rows) {
     return rows
       .map(({ c: row }) => this.normalizeRow(row))
@@ -79,6 +113,11 @@ export default class PublicGoogleSheetsParser {
       );
   }
 
+  /**
+   * Extract items array of objects from raw response text.
+   * @param {string} spreadsheetResponse
+   * @returns {array} parsed rows
+   */
   getItems(spreadsheetResponse) {
     let rows = [];
 
@@ -107,6 +146,12 @@ export default class PublicGoogleSheetsParser {
     return rows;
   }
 
+  /**
+   * Main parse entrypoint: fetch and return row objects.
+   * @param {string} [spreadsheetId]
+   * @param {object|string} [option]
+   * @returns {Promise<array|null>}
+   */
   async parse(spreadsheetId, option) {
     if (spreadsheetId) this.id = spreadsheetId;
     if (option) this.setOption(option);
