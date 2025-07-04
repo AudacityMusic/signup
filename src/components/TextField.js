@@ -1,3 +1,16 @@
+/**
+ * TextField.js
+ * Renders a labeled text input field with optional subtitle and validation styling.
+ * Props:
+ *  - title: label text displayed above the input
+ *  - subtitle: optional explanatory text below the label
+ *  - keyboardType: type of keyboard to display (default 'default')
+ *  - maxLength: maximum number of characters allowed
+ *  - state: { value: string, y: number, valid: boolean }
+ *  - setState: setter to update component state
+ *  - extraMargin: whether to add bottom margin after input
+ */
+
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import colors from "../constants/colors";
 
@@ -12,29 +25,27 @@ export default function TextField({
 }) {
   return (
     <View
+      // Capture layout Y position for scroll-to-error support
       onLayout={(event) => {
         const y = event.nativeEvent.layout.y;
-        setState((prevState) => ({
-          ...prevState,
-          y,
-        }));
+        setState((prev) => ({ ...prev, y }));
       }}
     >
-      <Text style={styles.heading} selectable={true}>
-        <Text
-          style={{
-            color: !state.valid ? colors.danger : "black",
-          }}
-        >
+      {/* Heading and optional required marker */}
+      <Text style={styles.heading} selectable>
+        <Text style={{ color: state.valid ? "black" : colors.danger }}>
           {title}
         </Text>
-        {title == "" || title.slice(-10) == "(optional)" ? null : (
+        {/* Show '*' if field is required */}
+        {title === "" || title.endsWith("(optional)") ? null : (
           <Text style={{ color: "red" }}> *</Text>
         )}
       </Text>
-      <Text style={styles.subtitle} selectable={true}>
+      {/* Subtitle text */}
+      <Text style={styles.subtitle} selectable>
         {subtitle}
       </Text>
+      {/* Text input with validation border color */}
       <TextInput
         style={[
           styles.inputField,
@@ -43,12 +54,7 @@ export default function TextField({
             marginBottom: extraMargin ? 20 : 0,
           },
         ]}
-        onChangeText={(text) => {
-          setState((prevState) => ({
-            ...prevState,
-            value: text,
-          }));
-        }}
+        onChangeText={(text) => setState((prev) => ({ ...prev, value: text }))}
         value={state.value}
         maxLength={maxLength}
         // @ts-expect-error

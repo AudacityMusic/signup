@@ -1,3 +1,11 @@
+/**
+ * VolunteerFormScreen.js
+ * Renders a dynamic sign-up form based on the event type.
+ * - Chooses the correct form class via getForm()
+ * - Displays questions with automatic scroll-to-error support
+ * - Handles submission and updates button state
+ */
+
 import { useRef, useState } from "react";
 import {
   Dimensions,
@@ -19,6 +27,7 @@ import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
 import RequestConcert from "../utils/forms/RequestConcert";
 import colors from "../constants/colors";
 
+// Factory: choose form class by event title
 function getForm(title, date, location, navigation, scrollRef) {
   const eventTitle = title.trim().toUpperCase();
 
@@ -40,10 +49,12 @@ function getForm(title, date, location, navigation, scrollRef) {
 }
 
 export default function VolunteerFormScreen({ navigation, route }) {
+  // Extract parameters from navigation
   const { title, location, date } = route.params;
   const scrollRef = useRef(null);
   const [buttonText, setButtonText] = useState("Submit");
 
+  // Initialize form instance based on title
   const form = getForm(
     title.trim().toUpperCase(),
     date,
@@ -51,13 +62,15 @@ export default function VolunteerFormScreen({ navigation, route }) {
     navigation,
     scrollRef,
   );
-  if (form == null) {
+  if (!form) {
+    // If unknown, return to Home screen
     navigation.navigate("Home", { forceRerender: true });
-    return;
+    return null;
   }
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Keyboard-aware container to avoid hiding inputs */}
       <KeyboardAvoidingView
         style={[
           styles.body,
@@ -68,8 +81,10 @@ export default function VolunteerFormScreen({ navigation, route }) {
         ]}
         behavior="height"
       >
+        {/* Scrollable form questions area */}
         <PersistScrollView scrollRef={scrollRef}>
           <View style={styles.questions}>
+            {/* Event title, date, and optional location with map link */}
             <View style={styles.header}>
               <Text
                 style={[styles.headerText, { fontWeight: "bold" }]}
@@ -93,12 +108,14 @@ export default function VolunteerFormScreen({ navigation, route }) {
                 </Pressable>
               )}
             </View>
+            {/* Render each question component from form */}
             <View style={styles.form}>
               {form
                 .questions()
                 .filter((question) => question?.isVisible())
                 .map((question) => question.component)}
             </View>
+            {/* Submit button triggers form.submit() */}
             <Pressable
               style={styles.submitButton}
               onPress={async () => {

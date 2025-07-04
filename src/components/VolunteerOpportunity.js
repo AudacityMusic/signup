@@ -1,3 +1,19 @@
+/**
+ * VolunteerOpportunity.js
+ * Displays a preview card for a volunteer event, showing image, title, date, and location.
+ * Navigates to detailed opportunity screen on press.
+ * Props:
+ *  - navigation: React Navigation prop for navigation
+ *  - title: event title string
+ *  - location: event location string
+ *  - date: formatted date string
+ *  - image: image URI string
+ *  - description: event description text
+ *  - tags: array of tag strings
+ *  - formURL: URL string for sign-up form
+ *  - isSubmitted: boolean indicating if the user has signed up
+ */
+
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
@@ -19,6 +35,7 @@ export default function VolunteerOpportunity({
   return (
     <TouchableOpacity
       style={styles.container}
+      // On press, navigate to detailed opportunity screen with all data
       onPress={() =>
         navigation.navigate("Volunteer Opportunity", {
           title,
@@ -32,19 +49,22 @@ export default function VolunteerOpportunity({
         })
       }
     >
+      {/* Thumbnail image and basic info */}
       <View style={{ flexDirection: "row" }}>
         <Image
           style={styles.image}
-          source={{ width: 0, height: 0, uri: image }}
+          source={{ uri: image, width: 0, height: 0 }}
           placeholder={{ blurhash: "LT9Hq#RPVrt8%%RjWCkCR:WWtSWB" }}
           transition={500}
           cachePolicy="memory"
         />
         <View style={{ flexDirection: "column", alignSelf: "center" }}>
-          <Text style={styles.title} selectable={true}>
+          {/* Event title (truncate if too long) */}
+          <Text style={styles.title} selectable>
             {title.length <= 19 ? title : title.slice(0, 16) + "..."}
           </Text>
-          <Text style={styles.info} selectable={true}>
+          {/* Date info with icon */}
+          <Text style={styles.info} selectable>
             <MaterialCommunityIcons
               name="clock-time-five-outline"
               size={10}
@@ -54,7 +74,8 @@ export default function VolunteerOpportunity({
             {"  "}
             {date}
           </Text>
-          <Text style={styles.info} selectable={true}>
+          {/* Location info with icon */}
+          <Text style={styles.info} selectable>
             <SimpleLineIcons
               name="location-pin"
               size={10}
@@ -66,6 +87,7 @@ export default function VolunteerOpportunity({
           </Text>
         </View>
       </View>
+      {/* Right-side indicator: checkmark if submitted, else chevron */}
       <FontAwesome
         name={isSubmitted ? "check" : "chevron-right"}
         size={25}

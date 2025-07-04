@@ -1,3 +1,10 @@
+/**
+ * OtherOpportunities.js
+ * Displays a list of auxiliary actions/cards: sign-up links, feedback, and donation.
+ * Props:
+ *  - navigation: React Navigation prop for screen transitions
+ */
+
 import Constants from "expo-constants";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { openURL } from "../utils";
@@ -12,6 +19,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 export default function OtherOpportunities({ navigation }) {
   return (
     <View style={styles.container}>
+      {/* Request a Concert card */}
       <Pressable
         style={[styles.card, styles.first]}
         onPress={() =>
@@ -22,13 +30,14 @@ export default function OtherOpportunities({ navigation }) {
           })
         }
       >
+        {/* Icon, text, and arrow */}
         <Entypo
           name="beamed-note"
           size={18}
           color="black"
           style={styles.icon}
         />
-        <Text style={styles.text} selectable={true}>
+        <Text style={styles.text} selectable>
           Request a Concert
         </Text>
         <FontAwesome
@@ -39,6 +48,7 @@ export default function OtherOpportunities({ navigation }) {
         />
       </Pressable>
 
+      {/* Audacity Dance Club sign-up */}
       <Pressable
         style={styles.card}
         onPress={() =>
@@ -55,7 +65,7 @@ export default function OtherOpportunities({ navigation }) {
           color="black"
           style={styles.icon}
         />
-        <Text style={styles.text} selectable={true}>
+        <Text style={styles.text} selectable>
           Sign Up for Audacity Dance Club
         </Text>
         <FontAwesome
@@ -66,6 +76,7 @@ export default function OtherOpportunities({ navigation }) {
         />
       </Pressable>
 
+      {/* Send feedback via email */}
       <Pressable
         style={styles.card}
         onPress={() => openURL(`mailto:${Constants.expoConfig.extra.email}`)}
@@ -78,7 +89,7 @@ export default function OtherOpportunities({ navigation }) {
         />
         <Text
           style={styles.text}
-          selectable={true}
+          selectable
         >{`Send feedback to ${Constants.expoConfig.extra.email}`}</Text>
         <Feather
           name="external-link"
@@ -88,12 +99,13 @@ export default function OtherOpportunities({ navigation }) {
         />
       </Pressable>
 
+      {/* Donation link */}
       <Pressable
         style={[styles.card, styles.last]}
         onPress={() => openURL("https://funyouth.us/donate")}
       >
         <Ionicons name="gift" size={18} color="black" style={styles.icon} />
-        <Text style={styles.text} selectable={true}>
+        <Text style={styles.text} selectable>
           Donate to FUN Youth
         </Text>
         <Feather

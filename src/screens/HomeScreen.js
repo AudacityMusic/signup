@@ -1,3 +1,11 @@
+/**
+ * HomeScreen.js
+ * Main screen showing upcoming events in a carousel, plus extra resources.
+ * - Fetches data from Google Sheets via PublicGoogleSheetsParser
+ * - Filters events by date range and submission status
+ * - Manages push notifications for each event
+ */
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -23,41 +31,60 @@ import {
   cancelAllScheduled,
 } from "../utils/notifications";
 
+/**
+ * HomeScreen: displays upcoming events in a carousel, other opportunities, and websites.
+ * - Fetches event data from Google Sheets
+ * - Filters events by date range
+ * - Manages notification scheduling for each event
+ */
 export default function HomeScreen({ navigation, route }) {
+  // State: array of event objects
   const [data, setData] = useState([]);
 
-  // Initialize notifications
+  // Request notification permissions and set up channel on mount
   useEffect(() => {
     initNotificationHandling();
   }, []);
 
-  // Schedule notifications whenever data changes
+  // Whenever event data changes, clear and reschedule notifications
   useEffect(() => {
     cancelAllScheduled();
-    data.forEach((event) => {
-      scheduleEventNotifications(event);
-    });
+    (async () => {
+      try {
+        // Await all scheduled notifications to catch errors
+        await Promise.all(
+          data.map((event) => scheduleEventNotifications(event)),
+        );
+      } catch (err) {
+        console.error("Failed to schedule notifications:", err);
+      }
+    })();
   }, [data]);
 
-  function formatData(data) {
-    let formattedArray = [];
-    let tempArray = [];
-
-    for (const opportunity of data) {
-      tempArray.push(opportunity);
-
-      if (tempArray.length === 3) {
-        formattedArray.push(tempArray);
-        tempArray = [];
+  /**
+   * Group flat event list into rows of 3 for the carousel layout.
+   * @param {Array} rawData - flat list of event objects
+   * @returns {Array[]} array of rows, each an array of up to 3 events
+   */
+  function formatData(rawData) {
+    const formatted = [];
+    let row = [];
+    rawData.forEach((item) => {
+      row.push(item);
+      if (row.length === 3) {
+        formatted.push(row);
+        row = [];
       }
-    }
-
-    if (tempArray.length > 0) {
-      formattedArray.push(tempArray);
-    }
-    return formattedArray;
+    });
+    if (row.length) formatted.push(row);
+    return formatted;
   }
 
+  /**
+   * Fetch events from Google Sheets, filter by date and submission status,
+   * then update state for display and scheduling.
+   * @returns {Promise<number|null>} number of events loaded or null on failure
+   */
   async function onRefresh() {
     const parser = new PublicGoogleSheetsParser(
       process.env.EXPO_PUBLIC_SHEET_ID ??
@@ -79,6 +106,7 @@ export default function HomeScreen({ navigation, route }) {
       alertError("In onRefresh: " + error);
     }
 
+    // Fetch raw data with retry logic via request()
     const unparsedData = await request(() => parser.parse());
     if (unparsedData == null) {
       return null;
@@ -91,6 +119,12 @@ export default function HomeScreen({ navigation, route }) {
     const twoMonthsLater = new Date();
     twoMonthsLater.setMonth(currentDate.getMonth() + 2);
 
+    // Transform and filter each record:
+    // - Provide default Title/Location
+    // - Convert date string to Date
+    // - Exclude past events and events beyond two months ahead
+    // - Mark isSubmitted based on stored hashes
+    // - Collect valid events
     for (let i = 0; i < unparsedData.length; i++) {
       const opportunity = unparsedData[i];
       opportunity.Title ??= "Untitled Event";
@@ -113,14 +147,19 @@ export default function HomeScreen({ navigation, route }) {
       newData.push(opportunity);
     }
 
+    // Sort events chronologically
     newData.sort((a, b) => a.Date - b.Date);
+
+    // Update state to re-render and trigger scheduling
     setData(newData);
 
+    // Return count for pull-to-refresh control
     return newData.length;
   }
 
+  // Trigger data load on screen focus or route change
   useEffect(() => {
-    onRefresh();
+    onRefresh().catch((err) => console.error("Error refreshing events:", err));
   }, [route]);
 
   return (
@@ -140,6 +179,7 @@ export default function HomeScreen({ navigation, route }) {
   );
 }
 
+// Styles for HomeScreen
 const styles = StyleSheet.create({
   container: {
     margin: 15,

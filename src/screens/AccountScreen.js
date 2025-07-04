@@ -1,3 +1,10 @@
+/**
+ * AccountScreen.js
+ * Allows the user to clear all app data or log out of their account.
+ * - Presents Profile component
+ * - Provides buttons to clear local storage or log out
+ */
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import Constants from "expo-constants";
@@ -12,7 +19,10 @@ import { alertError } from "../utils/index.js";
 export default function AccountScreen({ navigation }) {
   return (
     <View style={styles.container}>
+      {/* User profile summary */}
       <Profile />
+
+      {/* Clear all local data and sign out */}
       <FullWidthButton
         buttonStyle={styles.clearDataButton}
         textStyle={styles.clearDataText}
@@ -53,6 +63,8 @@ export default function AccountScreen({ navigation }) {
       >
         Clear Data
       </FullWidthButton>
+
+      {/* Log out of Google or local user */}
       <FullWidthButton
         buttonStyle={styles.logOutButton}
         textStyle={styles.logOutText}
@@ -90,6 +102,7 @@ export default function AccountScreen({ navigation }) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     height: "100%",

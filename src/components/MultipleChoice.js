@@ -1,3 +1,14 @@
+/**
+ * MultipleChoice.js
+ * Renders a group of mutually-exclusive options (radio buttons).
+ * Props:
+ *  - title: question title text
+ *  - options: array of option strings
+ *  - onSelect: callback when an option is selected
+ *  - state: { value: chosenOption, y: layoutY, valid: boolean }
+ *  - setState: setter to update component state
+ */
+
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import colors from "../constants/colors";
 
@@ -11,20 +22,20 @@ export default function MultipleChoice({
   return (
     <View
       style={{ marginBottom: 20 }}
+      // Capture layout position for scroll-to-error support
       onLayout={(event) => {
         const y = event.nativeEvent.layout.y;
-        setState((prevState) => ({
-          ...prevState,
-          y,
-        }));
+        setState((prev) => ({ ...prev, y }));
       }}
     >
-      <Text style={styles.title} selectable={true}>
+      {/* Question title with required marker */}
+      <Text style={styles.title} selectable>
         <Text style={{ color: state.valid ? "black" : colors.danger }}>
           {title}
         </Text>
         <Text style={{ color: "red" }}> *</Text>
       </Text>
+      {/* Render each option as pressable radio button */}
       {options.map((value) => (
         <Pressable
           key={value}
