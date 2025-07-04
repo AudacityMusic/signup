@@ -85,10 +85,6 @@ export async function scheduleEventNotifications(event) {
       });
     }
   }
-
-  // Debug: list all scheduled notifications in console
-  const scheduled = await Notifications.getAllScheduledNotificationsAsync();
-  console.log("All scheduled notifications:", scheduled);
 }
 
 /**
