@@ -322,29 +322,6 @@ export default class LibraryMusicHour extends Form {
       }),
     ];
 
-    // Add performanceType question only for Library Music Hour
-    if (this.title === "Library Music Hour") {
-      questions.push(
-        new Question({
-          name: "performanceType",
-          component: (
-            <MultipleChoice
-              title="Performance Type"
-              options={Object.keys(this.performanceOptions)}
-              onSelect={(option) => {
-                this.performanceType[1]((prev) => ({ ...prev, value: option }));
-                this.timeLimit[1](this.performanceOptions[option]);
-              }}
-              key="performanceType"
-              state={this.performanceType[0]}
-              setState={this.performanceType[1]}
-            />
-          ),
-          validate: isNotEmpty,
-        }),
-      );
-    }
-
     return questions.filter((question) => question != null);
   }
 }
