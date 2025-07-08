@@ -1,9 +1,20 @@
+/**
+ * Form.js
+ * Base form handling utilities for dynamic Google Forms submission:
+ * - FormString: constructs URL-encoded form data string
+ * - submitForm: sends POST request to Google Forms endpoint
+ * - Form: abstract class to define questions, validation, and submission flow
+ */
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { Alert } from "react-native";
 import { alertError, getUser, hashForm, request } from "..";
 import formIDs from "../../constants/formIDs";
 
+/**
+ * Helper class to build form-urlencoded data and logging representation.
+ */
 class FormString {
   constructor() {
     this.string = "";
@@ -29,6 +40,13 @@ class FormString {
   }
 }
 
+/**
+ * Send form data to Google Forms 'formResponse' endpoint via POST.
+ * Retries using request wrapper; on failure shows an alert.
+ * @param {string} formId - Google Forms entry ID
+ * @param {FormString} formData - encoded form data
+ * @returns {Promise<boolean>} success status
+ */
 async function submitForm(formId, formData) {
   const formUrl = `https://docs.google.com/forms/d/e/${formId}/formResponse`;
   const response = await request(() =>
@@ -47,7 +65,18 @@ async function submitForm(formId, formData) {
   return false;
 }
 
+/**
+ * Base class for building and submitting custom forms.
+ * Subclasses should implement questions() to return array of Question objects.
+ */
 export default class Form {
+  /**
+   * @param {string} title - form title matching constants/formIDs
+   * @param {string} date - event date string
+   * @param {string} location - event location string
+   * @param {object} navigation - React Navigation prop
+   * @param {object} scrollRef - ref for scroll-to-error behavior
+   */
   constructor(title, date, location, navigation, scrollRef) {
     this.title = title;
     this.date = date;
@@ -56,11 +85,19 @@ export default class Form {
     this.scrollRef = scrollRef;
   }
 
+  /**
+   * Must be overridden by subclasses to define form fields.
+   * @returns {Array} array of question definition objects
+   */
   questions() {
     alertError("questions() cannot be called on the Form base class");
     return [];
   }
 
+  /**
+   * Validate all visible questions; scrolls to first invalid field.
+   * @returns {number} count of invalid responses
+   */
   validate() {
     let invalidResponses = 0;
     let minInvalidY = Infinity;
@@ -101,6 +138,9 @@ export default class Form {
     return invalidResponses;
   }
 
+  /**
+   * Perform validation, build form data, submit to Google Forms, track submissions, and navigate outcome.
+   */
   async submit() {
     const invalidResponses = this.validate();
     if (invalidResponses > 0) {

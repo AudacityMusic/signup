@@ -1,3 +1,11 @@
+/**
+ * SignInScreen.js
+ * Handles user authentication via Google and Apple sign-in.
+ * - Configures GoogleSignin on load
+ * - Provides buttons for Google and Apple login
+ * - Stores user info and access token in AsyncStorage
+ */
+
 import {
   Image,
   Pressable,
@@ -17,6 +25,7 @@ import * as AppleAuth from "expo-apple-authentication";
 
 import { alertError } from "../utils";
 
+// Initialize Google Sign-In configuration
 GoogleSignin.configure({
   webClientId:
     process.env.EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID ??
@@ -37,17 +46,20 @@ export default function SignInScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.body}>
-        <Text style={styles.paragraph} selectable={true}>
+        {/* Introductory text */}
+        <Text style={styles.paragraph} selectable>
           Thank you for choosing to help make our volunteer opportunities and
           concerts across the Bay Area a success! To begin, please sign in.
         </Text>
 
+        {/* Google Sign-In button */}
         <Pressable
           style={[styles.OAuth, styles.GoogleOAuth]}
           onPress={async () => {
             try {
               await GoogleSignin.hasPlayServices();
               const userInfo = await GoogleSignin.signIn();
+              // Save user profile and access token
               await AsyncStorage.setItem("user", JSON.stringify(userInfo.user));
               await AsyncStorage.setItem(
                 "access-token",
@@ -55,6 +67,7 @@ export default function SignInScreen({ navigation }) {
               );
               navigation.navigate("Home", { forceRerender: true });
             } catch (error) {
+              // Handle known Google sign-in errors
               if (isErrorWithCode(error)) {
                 if (error.code == statusCodes.SIGN_IN_CANCELLED) {
                   return;
@@ -70,6 +83,7 @@ export default function SignInScreen({ navigation }) {
             }
           }}
         >
+          {/* Google logo and label */}
           <Image
             style={styles.OAuthLogo}
             source={require("../assets/google.png")}
@@ -80,6 +94,7 @@ export default function SignInScreen({ navigation }) {
           </Text>
         </Pressable>
 
+        {/* Apple Sign-In button, shown only if available */}
         {AppleAuth.isAvailableAsync() ? (
           <AppleAuth.AppleAuthenticationButton
             buttonType={AppleAuth.AppleAuthenticationButtonType.SIGN_IN}
@@ -94,6 +109,7 @@ export default function SignInScreen({ navigation }) {
                     AppleAuth.AppleAuthenticationScope.EMAIL,
                   ],
                 });
+                // Store placeholder user for Apple (limited data)
                 await AsyncStorage.setItem(
                   "user",
                   JSON.stringify({

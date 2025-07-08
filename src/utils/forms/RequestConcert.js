@@ -1,3 +1,10 @@
+/**
+ * RequestConcert.js
+ * Form class for the 'Request a Concert' signup.
+ * - Extends base Form to capture event requests and logistical details.
+ * - Fields include contact info, organization details, event logistics, resources, and time slots.
+ */
+
 import { Question, emptyQuestionState, isAtLeast, isNotEmpty } from "..";
 import Form from "./Form";
 
@@ -8,27 +15,40 @@ import TextField from "../../components/TextField";
 import TimeSlotList from "../../components/TimeSlotList";
 
 export default class RequestConcert extends Form {
+  /**
+   * @param {string} date - proposed event date
+   * @param {string} location - event location
+   * @param {object} navigation - React Navigation prop
+   * @param {object} scrollRef - ref for scroll-to-error scrolling
+   */
   constructor(date, location, navigation, scrollRef) {
+    // Initialize base Form with title and context
     super("Request a Concert", date, location, navigation, scrollRef);
 
-    this.phoneNumber = emptyQuestionState();
-    this.organization = emptyQuestionState();
-    this.eventInfo = emptyQuestionState();
-    this.venue = emptyQuestionState();
-    this.publicity = emptyQuestionState();
-    this.stipend = emptyQuestionState();
-    this.donatable = emptyQuestionState();
-    this.timeSlots = emptyQuestionState([]);
-    this.audience = emptyQuestionState();
-    this.distance = emptyQuestionState();
-    this.provided = emptyQuestionState([]);
-    this.donationBox = emptyQuestionState();
-    this.extraAudience = emptyQuestionState();
-    this.otherInfo = emptyQuestionState();
+    // State hooks for each question field
+    this.phoneNumber = emptyQuestionState(); // Contact phone
+    this.organization = emptyQuestionState(); // Org name/description
+    this.eventInfo = emptyQuestionState(); // Event details
+    this.venue = emptyQuestionState(); // Venue info
+    this.publicity = emptyQuestionState(); // Public/private
+    this.stipend = emptyQuestionState(); // Stipend availability
+    this.donatable = emptyQuestionState(); // Donation option
+    this.timeSlots = emptyQuestionState([]); // Available time slots array
+    this.audience = emptyQuestionState(); // Audience description
+    this.distance = emptyQuestionState(); // Distance details
+    this.provided = emptyQuestionState([]); // Provided resources
+    this.donationBox = emptyQuestionState(); // Donation box option
+    this.extraAudience = emptyQuestionState(); // Additional audience notes
+    this.otherInfo = emptyQuestionState(); // Other comments
   }
 
+  /**
+   * Build list of Question definitions for Request a Concert form.
+   * @returns {Question[]}
+   */
   questions() {
     return [
+      // Phone number field
       new Question({
         name: "phoneNumber",
         component: (
@@ -43,20 +63,20 @@ export default class RequestConcert extends Form {
         ),
         validate: (value) => isAtLeast(value, 10),
       }),
-
+      // Organization name and description
       new Question({
         name: "organization",
         component: (
           <TextField
             title="Organization Name & Description"
-            key="organizationName"
+            key="organization"
             state={this.organization[0]}
             setState={this.organization[1]}
           />
         ),
         validate: isNotEmpty,
       }),
-
+      // Event info field
       new Question({
         name: "eventInfo",
         component: (
@@ -69,7 +89,7 @@ export default class RequestConcert extends Form {
         ),
         validate: isNotEmpty,
       }),
-
+      // Venue details
       new Question({
         name: "venue",
         component: (
@@ -82,19 +102,16 @@ export default class RequestConcert extends Form {
         ),
         validate: isNotEmpty,
       }),
-
+      // Public or private event
       new Question({
         name: "publicity",
         component: (
           <MultipleChoice
             title="Is the event public or private?"
             options={["Public", "Private"]}
-            onSelect={(option) => {
-              this.publicity[1]((prevState) => ({
-                ...prevState,
-                value: option,
-              }));
-            }}
+            onSelect={(opt) =>
+              this.publicity[1]((prev) => ({ ...prev, value: opt }))
+            }
             key="publicity"
             state={this.publicity[0]}
             setState={this.publicity[1]}
@@ -102,7 +119,7 @@ export default class RequestConcert extends Form {
         ),
         validate: isNotEmpty,
       }),
-
+      // Stipend checkbox
       new Question({
         name: "stipend",
         component: (
@@ -113,10 +130,9 @@ export default class RequestConcert extends Form {
             setState={this.stipend[1]}
           />
         ),
-
-        validate: (value) => value != null,
+        validate: (val) => val != null,
       }),
-
+      // Donatable option checkbox
       new Question({
         name: "donatable",
         component: (
@@ -127,9 +143,9 @@ export default class RequestConcert extends Form {
             setState={this.donatable[1]}
           />
         ),
-        validate: (value) => value != null,
+        validate: (val) => val != null,
       }),
-
+      // Time slots list
       new Question({
         name: "timeSlots",
         component: (
@@ -140,22 +156,10 @@ export default class RequestConcert extends Form {
             setState={this.timeSlots[1]}
           />
         ),
-
-        validate(value) {
-          if (value.length == 0) {
-            return false;
-          }
-
-          for (const slot of value) {
-            if (!slot.validate()) {
-              return false;
-            }
-          }
-
-          return true;
-        },
+        validate: (slots) =>
+          slots.length > 0 && slots.every((s) => s.validate()),
       }),
-
+      // Audience description
       new Question({
         name: "audience",
         component: (
@@ -168,7 +172,7 @@ export default class RequestConcert extends Form {
         ),
         validate: isNotEmpty,
       }),
-
+      // Distance input
       new Question({
         name: "distance",
         component: (
@@ -182,7 +186,7 @@ export default class RequestConcert extends Form {
         ),
         validate: isNotEmpty,
       }),
-
+      // Provided resources multi-select
       new Question({
         name: "provided",
         component: (
@@ -202,44 +206,46 @@ export default class RequestConcert extends Form {
             setState={this.provided[1]}
           />
         ),
+        validate: (val) => val.length > 0,
       }),
-
+      // Donation box option
       new Question({
         name: "donationBox",
         component: (
           <CheckBoxQuery
-            question="Permission for Donation Box for Charitable Causes (See Ongoing Charitable Donation Drives at www.goaudacity.com/projects)"
+            question="Will you provide a donation box at the event?"
             key="donationBox"
             state={this.donationBox[0]}
             setState={this.donationBox[1]}
           />
         ),
-        validate: (value) => value != null,
+        validate: (val) => val != null,
       }),
-
+      // Additional audience info
       new Question({
         name: "extraAudience",
         component: (
-          <CheckBoxQuery
-            question="Permission to Draw in Our Own Audience"
+          <TextField
+            title="Additional Audience Details"
             key="extraAudience"
             state={this.extraAudience[0]}
             setState={this.extraAudience[1]}
           />
         ),
-        validate: (value) => value != null,
+        validate: () => true,
       }),
-
+      // Other comments
       new Question({
         name: "otherInfo",
         component: (
           <TextField
-            title="Other Information (optional)"
+            title="Additional Comments"
             key="otherInfo"
             state={this.otherInfo[0]}
             setState={this.otherInfo[1]}
           />
         ),
+        validate: () => true,
       }),
     ];
   }

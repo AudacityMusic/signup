@@ -1,3 +1,14 @@
+/**
+ * TextFieldGroup.js
+ * Renders multiple related text inputs under one heading.
+ * Props:
+ *  - title: label for the group
+ *  - n: number of input fields
+ *  - maxLength: maximum characters per field
+ *  - state: { value: array of strings, y: number, valid: boolean }
+ *  - setState: setter to update component state
+ */
+
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import colors from "../constants/colors";
 
@@ -10,26 +21,23 @@ export default function TextFieldGroup({
 }) {
   return (
     <View
+      // Capture vertical position for error focus
       onLayout={(event) => {
         const y = event.nativeEvent.layout.y;
-        setState((prevState) => ({
-          ...prevState,
-          y,
-        }));
+        setState((prev) => ({ ...prev, y }));
       }}
     >
-      <Text style={styles.heading} selectable={true}>
-        <Text
-          style={{
-            color: state.valid ? "black" : colors.danger,
-          }}
-        >
+      {/* Group heading and required marker */}
+      <Text style={styles.heading} selectable>
+        <Text style={{ color: state.valid ? "black" : colors.danger }}>
           {title}
         </Text>
-        {title == "" || title.slice(-10) == "(optional)" ? null : (
+        {title && !title.endsWith("(optional)") && (
           <Text style={{ color: "red" }}> *</Text>
         )}
       </Text>
+
+      {/* Render n TextInput fields */}
       {Array(n)
         .fill()
         .map((_, i) => (
@@ -39,20 +47,17 @@ export default function TextFieldGroup({
               styles.inputField,
               {
                 borderColor: state.valid ? "black" : colors.danger,
-                marginBottom: i == n - 1 ? 20 : 5,
+                marginBottom: i === n - 1 ? 20 : 5,
               },
             ]}
             onChangeText={(text) => {
-              setState((prevState) => {
-                const newValue = prevState.value;
+              setState((prev) => {
+                const newValue = [...prev.value];
                 newValue[i] = text;
-                return {
-                  ...prevState,
-                  value: newValue,
-                };
+                return { ...prev, value: newValue };
               });
             }}
-            value={state.value}
+            value={state.value[i]}
             maxLength={maxLength}
           />
         ))}

@@ -1,3 +1,13 @@
+/**
+ * TimeSlotList.js
+ * Manages a dynamic list of time slots with add/remove controls and date pickers.
+ * Exports:
+ *   - TimeSlot: model class for a time slot
+ *   - RemoveButton: UI to remove a slot
+ *   - AddButton: UI to add a new slot
+ *   - Default component: renders all slots and a date picker modal
+ */
+
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import DatePicker from "react-native-date-picker";
@@ -7,6 +17,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 import colors from "../constants/colors";
 
+// Utility: format Date to 'h:mm AM/PM' string
 function timeFormatter(date) {
   const hour = date.getHours() % 12 == 0 ? 12 : date.getHours() % 12;
   const minute = (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
@@ -14,11 +25,13 @@ function timeFormatter(date) {
   return `${hour}:${minute} ${period}`;
 }
 
+// Utility: format Date to 'Day MM/DD/YY h:mm AM/PM' string
 function dateFormatter(date) {
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   return `${days[date.getDay()]} ${date.getMonth() + 1}/${date.getDate() < 10 ? "0" + date.getDate() : date.getDate()}/${date.getFullYear() - 2000} ${timeFormatter(date)}`;
 }
 
+// Utility: compare two times (hours, minutes)
 function timeCompare(hour1, minute1, hour2, minute2) {
   if (hour1 < hour2) {
     return -1;
@@ -35,6 +48,9 @@ function timeCompare(hour1, minute1, hour2, minute2) {
   }
 }
 
+/**
+ * Model for a single time slot with start and end dates.
+ */
 export class TimeSlot {
   constructor(start = new Date(), end = new Date()) {
     this.start = start;
@@ -152,6 +168,9 @@ export class TimeSlot {
   }
 }
 
+/**
+ * Button to remove a specific time slot from the list.
+ */
 function RemoveButton({ state, setState, index }) {
   return (
     <Pressable
@@ -173,6 +192,9 @@ function RemoveButton({ state, setState, index }) {
   );
 }
 
+/**
+ * Button to add a new time slot to the list and open the date picker.
+ */
 function AddButton({
   state,
   setState,
@@ -204,6 +226,9 @@ function AddButton({
   );
 }
 
+/**
+ * Date and time selection component for start and end times of a time slot.
+ */
 export function Select({
   state,
   setState,
@@ -316,6 +341,9 @@ export function Select({
   );
 }
 
+/**
+ * Manages a list of time slots, allowing users to add, remove, and edit slots.
+ */
 export default function TimeSlotList({ title, state, setState }) {
   const [open, setIsOpen] = useState(false);
   const [start, setIsStart] = useState(true);

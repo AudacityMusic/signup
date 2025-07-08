@@ -1,3 +1,10 @@
+/**
+ * LibraryMusicHour.js
+ * Form class for the 'Library Music Hour' signup form.
+ * Extends base Form to define specific questions and validation logic.
+ * Fields include performer info, music selection, performance type, and permissions.
+ */
+
 import { useEffect, useState } from "react";
 
 import {
@@ -15,38 +22,47 @@ import TextField from "../../components/TextField";
 import UploadButton from "../../components/UploadButton";
 
 export default class LibraryMusicHour extends Form {
+  /**
+   * @param {string} date - event date string
+   * @param {string} location - event location
+   * @param {object} navigation - React Navigation prop
+   * @param {object} scrollRef - ref for auto-scrolling on validation errors
+   */
   constructor(date, location, navigation, scrollRef) {
+    // Initialize base Form with title, date, location, navigation, and scroll behavior
     super("Library Music Hour", date, location, navigation, scrollRef);
 
-    this.fullName = emptyQuestionState();
+    // Question states: [stateValue, setState] hooks for each input
+    this.fullName = emptyQuestionState(); // Performer's name
 
+    // Prefill fullName from stored user on mount
     useEffect(() => {
       (async () => {
         const user = await getUser();
-        this.fullName[1]((prevState) => ({
-          ...prevState,
-          value: user?.name,
-        }));
+        this.fullName[1]((prev) => ({ ...prev, value: user?.name }));
       })();
     }, []);
 
-    this.city = emptyQuestionState();
-    this.phoneNumber = emptyQuestionState();
-    this.age = emptyQuestionState();
-    this.musicPiece = emptyQuestionState();
-    this.composer = emptyQuestionState();
-    this.instrument = emptyQuestionState();
-    this.performanceType = emptyQuestionState();
-    this.length = emptyQuestionState();
-    this.recordingLink = emptyQuestionState();
-    this.publicPermission = emptyQuestionState();
-    this.parentalConsent = emptyQuestionState();
-    this.pianoAccompaniment = emptyQuestionState();
-    this.ensembleProfile = emptyQuestionState();
-    this.otherInfo = emptyQuestionState();
+    // Other fields
+    this.city = emptyQuestionState(); // City of residence
+    this.phoneNumber = emptyQuestionState(); // Contact number
+    this.age = emptyQuestionState(); // Performer age
+    this.musicPiece = emptyQuestionState(); // Music piece name
+    this.composer = emptyQuestionState(); // Composer name
+    this.instrument = emptyQuestionState(); // Instrument type
+    this.performanceType = emptyQuestionState(); // Radio choice for performance type
+    this.length = emptyQuestionState(); // Performance length input
+    this.recordingLink = emptyQuestionState(); // Link to recording
+    this.publicPermission = emptyQuestionState(); // Public sharing consent
+    this.parentalConsent = emptyQuestionState(); // Parental consent
+    this.pianoAccompaniment = emptyQuestionState(); // Accompaniment option
+    this.ensembleProfile = emptyQuestionState(); // Ensemble profile if ensemble
+    this.otherInfo = emptyQuestionState(); // Additional notes
 
+    // State for time limit selection based on performance type
     this.timeLimit = useState(0);
 
+    // Mapping of performance options to time limits (minutes)
     this.performanceOptions = {
       "Individual performance only": 8,
       "Individual performance and music instrument presentation": 12,
@@ -56,8 +72,13 @@ export default class LibraryMusicHour extends Form {
     };
   }
 
+  /**
+   * Define form questions array with labels, components, and validation.
+   * Uses Question helper to bind component, state, and validation.
+   * @returns {Question[]} array of question definitions
+   */
   questions() {
-    let questions = [
+    const questions = [
       new Question({
         name: "fullName",
         component: (
@@ -300,6 +321,7 @@ export default class LibraryMusicHour extends Form {
         ),
       }),
     ];
+
     return questions.filter((question) => question != null);
   }
 }
