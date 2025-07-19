@@ -1,3 +1,11 @@
+/**
+ * HomeHeader.js
+ * Custom app header with gradient background, title, and user profile action.
+ * Props:
+ *  - navigation: React Navigation prop for screen navigation
+ *  - route: React Navigation route prop to detect focus changes
+ */
+
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
@@ -7,8 +15,10 @@ import colors from "../constants/colors";
 import { getUser } from "../utils";
 
 export default function HomeHeader({ navigation, route }) {
+  // Local state for current user info
   const [user, setUser] = useState(null);
 
+  // Fetch user from AsyncStorage whenever screen focus changes
   useEffect(() => {
     getUser(true).then(setUser);
   }, [route]);
@@ -19,15 +29,17 @@ export default function HomeHeader({ navigation, route }) {
       style={styles.container}
     >
       <SafeAreaView style={styles.subcontainer}>
-        <Text style={styles.headerText} selectable={true}>
+        {/* App title */}
+        <Text style={styles.headerText} selectable>
           Audacity Sign Up
         </Text>
+        {/* Profile icon or user photo navigates to Account screen */}
         <Pressable onPress={() => navigation.navigate("Account")}>
           {user?.photo ? (
             <Image
               style={styles.profile}
-              source={{ width: 0, height: 0, uri: user.photo }} // Size doesn't matter
-            ></Image>
+              source={{ uri: user.photo, width: 40, height: 40 }}
+            />
           ) : (
             <FontAwesome
               name="user-circle"

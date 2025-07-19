@@ -1,3 +1,12 @@
+/**
+ * VolunteerOpportunityScreen.js
+ * Detailed view of a volunteer event.
+ * - Displays banner image with gradient overlay and title
+ * - Shows event date and location (tap to open in maps)
+ * - Optionally displays description and tags
+ * - Provides Sign Up button (navigates to form or Google Forms URL)
+ */
+
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { ImageBackground } from "expo-image";
@@ -12,6 +21,7 @@ import colors from "../constants/colors";
 import { openInMaps } from "../utils";
 
 export default function VolunteerOpportunityScreen({ route, navigation }) {
+  // Destructure parameters passed via navigation
   const {
     title,
     location,
@@ -23,13 +33,15 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
     isSubmitted,
   } = route.params;
 
+  // Map tags to Tag components
   const tagsIcons = tags.map((text) => <Tag key={text} text={text} />);
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Banner with background image and gradient overlay */}
       <View style={styles.banner}>
         <ImageBackground
-          source={{ width: 0, height: 0, uri: image }}
+          source={{ uri: image, width: 0, height: 0 }}
           style={styles.backgroundImage}
           placeholder={{ blurhash: "LT9Hq#RPVrt8%%RjWCkCR:WWtSWB" }}
           transition={500}
@@ -37,24 +49,21 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
         >
           <LinearGradient
             colors={["transparent", "rgba(0,0,0,0.8)"]}
-            style={{ width: "100%", height: "100%", position: "absolute" }}
-          ></LinearGradient>
+            style={{ position: "absolute", width: "100%", height: "100%" }}
+          />
         </ImageBackground>
-        <View
-          style={[
-            {
-              justifyContent: "flex-end",
-              marginLeft: 20,
-            },
-          ]}
-        >
-          <Text style={styles.headerText} selectable={true}>
+        {/* Overlay title text at bottom-left of banner */}
+        <View style={{ justifyContent: "flex-end", marginLeft: 20 }}>
+          <Text style={styles.headerText} selectable>
             {title}
           </Text>
         </View>
       </View>
+
+      {/* Scrollable content area */}
       <PersistScrollView style={styles.scrollContainer}>
         <View style={styles.subContainer}>
+          {/* Event details: date and location */}
           <View style={styles.details}>
             <View style={styles.icon}>
               <MaterialCommunityIcons
@@ -62,7 +71,7 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
                 size={20}
                 color={colors.black}
               />
-              <Text style={styles.detailsText} selectable={true}>
+              <Text style={styles.detailsText} selectable>
                 {date}
               </Text>
             </View>
@@ -75,33 +84,39 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
               <Pressable onPress={() => openInMaps(location)}>
                 <Text
                   style={[styles.detailsText, styles.locationText]}
-                  selectable={true}
+                  selectable
                 >
                   {location}
                 </Text>
               </Pressable>
             </View>
           </View>
-          {description != "" ? (
+
+          {/* Optional description section */}
+          {description !== "" && (
             <View style={styles.about}>
               <Heading>About</Heading>
-              <Text style={{ fontSize: 14 }} selectable={true}>
+              <Text style={{ fontSize: 14 }} selectable>
                 {description}
               </Text>
             </View>
-          ) : null}
-          {tags.length > 0 ? (
+          )}
+
+          {/* Optional tags section */}
+          {tags.length > 0 && (
             <View style={styles.tagsContainer}>
               <Heading>Tags</Heading>
               <View style={styles.tags}>{tagsIcons}</View>
             </View>
-          ) : null}
+          )}
+
+          {/* Sign Up button with warning if already submitted */}
           <View style={styles.lowerRight}>
-            {isSubmitted ? (
-              <Text style={styles.alreadySubmitted} selectable={true}>
+            {isSubmitted && (
+              <Text style={styles.alreadySubmitted} selectable>
                 Warning: You have already submitted this form.
               </Text>
-            ) : null}
+            )}
             <Pressable
               onPress={() =>
                 formURL == null

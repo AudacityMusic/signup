@@ -1,3 +1,10 @@
+/**
+ * Tag.js
+ * Simple UI element to display a text tag with background styling.
+ * Props:
+ *  - text: string to display inside the tag
+ */
+
 import { StyleSheet, Text, View } from "react-native";
 
 export default function Tag(props) {

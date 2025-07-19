@@ -1,3 +1,9 @@
+/**
+ * Websites.js
+ * Presents quick-access cards to external Audacity-related websites.
+ * Each card shows an icon, label, and opens URL on press.
+ */
+
 import Feather from "@expo/vector-icons/Feather";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -7,6 +13,7 @@ export default function Websites() {
   return (
     <View>
       <View style={styles.container}>
+        {/* Eternity Band website card */}
         <Pressable
           style={[styles.card, styles.first]}
           onPress={() => openURL("https://eternityband.org/")}
@@ -25,6 +32,8 @@ export default function Websites() {
             style={styles.external}
           />
         </Pressable>
+
+        {/* Audacity Workshop website */}
         <Pressable
           style={styles.card}
           onPress={() => openURL("https://goaudacity.com/")}
@@ -43,6 +52,8 @@ export default function Websites() {
             style={styles.external}
           />
         </Pressable>
+
+        {/* ColorVision site */}
         <Pressable
           style={styles.card}
           onPress={() => openURL("https://funyouth.us/art")}
@@ -61,6 +72,8 @@ export default function Websites() {
             style={styles.external}
           />
         </Pressable>
+
+        {/* FUN Youth main site */}
         <Pressable
           style={styles.card}
           onPress={() => openURL("https://funyouth.us/")}
@@ -79,6 +92,8 @@ export default function Websites() {
             style={styles.external}
           />
         </Pressable>
+
+        {/* Audacity Dance Club site */}
         <Pressable
           style={[styles.card, styles.last]}
           onPress={() => openURL("https://eternityband.org/dance/")}

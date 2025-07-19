@@ -1,8 +1,28 @@
+/**
+ * index.js
+ * Shared utility functions:
+ *  - alertError: standardized error alert
+ *  - openURL / maybeOpenURL: external link handling
+ *  - getUser: retrieve cached user from AsyncStorage
+ *  - request: retry wrapper for network calls
+ *  - strToDate / formatDate: date parsing and formatting
+ *  - Question: form question helper class
+ *  - emptyQuestionState: hook for question state
+ *  - validation helpers: isAtLeast, isNotEmpty, isExactly
+ *  - hashForm: deterministic event hash
+ *  - openInMaps: launch maps app for a location
+ */
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import { useState } from "react";
 import { Alert, Linking, Platform } from "react-native";
 
+/**
+ * Log error and show user-friendly alert with diagnostic info.
+ * @param {string} error - error message or object to display
+ * @returns {null}
+ */
 export function alertError(error) {
   console.error(error);
   Alert.alert(
@@ -12,6 +32,10 @@ export function alertError(error) {
   return null;
 }
 
+/**
+ * Open a URL in the default browser.
+ * @param {string} url
+ */
 export function openURL(url) {
   Linking.openURL(url).catch((_) => {
     Alert.alert(
@@ -21,6 +45,13 @@ export function openURL(url) {
   });
 }
 
+/**
+ * Try to open URL, fallback to app store if scheme fails.
+ * @param {string} url
+ * @param {string} appName
+ * @param {string} appStoreID
+ * @param {string} playStoreID
+ */
 export function maybeOpenURL(url, appName, appStoreID, playStoreID) {
   Linking.openURL(url).catch((error) => {
     if (error.code == "EUNSPECIFIED") {
@@ -38,6 +69,11 @@ export function maybeOpenURL(url, appName, appStoreID, playStoreID) {
   });
 }
 
+/**
+ * Retrieve the stored user object from AsyncStorage.
+ * @param {boolean} [isEmptySafe=false]
+ * @returns {Promise<object|undefined>}
+ */
 export async function getUser(isEmptySafe = false) {
   try {
     const userString = await AsyncStorage.getItem("user");
@@ -53,12 +89,20 @@ export async function getUser(isEmptySafe = false) {
   }
 }
 
+/**
+ * Utility delay function for retry backoff.
+ */
 function wait(time) {
   return new Promise((resolve) => {
     setTimeout(resolve, time);
   });
 }
 
+/**
+ * Retry network request with exponential backoff: delays of 1/25/5/25 seconds.
+ * @param {Function} fn - async function that returns data or throws
+ * @returns {Promise<any>}
+ */
 export async function request(fn) {
   let data;
 
@@ -85,6 +129,11 @@ export async function request(fn) {
   return data;
 }
 
+/**
+ * Convert serialized Sheet date string 'Date(YYYY,MM,DD,hh,mm,ss)' into Date object.
+ * @param {string} str
+ * @returns {Date}
+ */
 export function strToDate(str) {
   const [year, month, day, hour, minute, second] = str
     .slice(5, -1)
@@ -94,6 +143,11 @@ export function strToDate(str) {
   return new Date(year, month, day, hour, minute, second);
 }
 
+/**
+ * Format Date object to human-readable string 'Weekday, Month Day, Year Time'.
+ * @param {Date} date
+ * @returns {string}
+ */
 export function formatDate(date) {
   const datePart = date.toLocaleDateString("en-us", {
     weekday: "long",
@@ -110,6 +164,9 @@ export function formatDate(date) {
   return `${datePart} ${timePart}`;
 }
 
+/**
+ * Question helper: binds form question component state and validation.
+ */
 export class Question {
   constructor({
     name,
@@ -127,10 +184,15 @@ export class Question {
   }
 }
 
+/**
+ * Hook to initialize question state.
+ * @param {*} initial
+ */
 export function emptyQuestionState(initial = null) {
   return useState({ value: initial, y: null, valid: true });
 }
 
+// Validation predicates
 export const isAtLeast = (value, len) =>
   value
     ? (value.hasOwnProperty("trim") ? value.trim() : value).length >= len
@@ -139,10 +201,21 @@ export const isNotEmpty = (value) => isAtLeast(value, 1);
 export const isExactly = (value, len) =>
   !isAtLeast(value, len + 1) && isAtLeast(value, len);
 
+/**
+ * Hash event details deterministically for submission tracking.
+ * @param {string} userID
+ * @param {string} title
+ * @param {string} location
+ * @param {string} date
+ */
 export function hashForm(userID, title, location, date) {
   return `${userID}&&&${title}&&&${location}&&&${date}`;
 }
 
+/**
+ * Launch maps application or fallback to web URL for a location.
+ * @param {string} location
+ */
 export function openInMaps(location) {
   const encodedLocation = encodeURIComponent(location);
   const url = Platform.select({

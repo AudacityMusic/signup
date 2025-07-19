@@ -1,3 +1,10 @@
+/**
+ * DanceClub.js
+ * Form class for the 'Audacity Dance Club' sign-up.
+ * - Extends base Form to define dance club specific questions and state
+ * - Fields include full name, contact, favorite pieces, age group, styles, and consents
+ */
+
 import { useEffect } from "react";
 
 import {
@@ -17,29 +24,37 @@ import TextField from "../../components/TextField";
 import TextFieldGroup from "../../components/TextFieldGroup";
 
 export default class DanceClub extends Form {
+  /**
+   * @param {string} date - event date
+   * @param {string} location - event location
+   * @param {object} navigation - React Navigation instance
+   * @param {object} scrollRef - ref for scroll-to-error behavior
+   */
   constructor(date, location, navigation, scrollRef) {
+    // Initialize base form with title and context
     super("Audacity Dance Club", date, location, navigation, scrollRef);
 
-    this.fullName = emptyQuestionState();
-
+    // State hooks for each question
+    this.fullName = emptyQuestionState(); // Performer name
     useEffect(() => {
+      // Prefill name if available
       (async () => {
         const user = await getUser();
-        this.fullName[1]((prevState) => ({
-          ...prevState,
-          value: user?.name,
-        }));
+        this.fullName[1]((prev) => ({ ...prev, value: user?.name }));
       })();
     }, []);
-
-    this.phoneNumber = emptyQuestionState();
-    this.favoritePieces = emptyQuestionState(["", "", "", ""]);
-    this.age = emptyQuestionState();
-    this.favoriteDanceStyles = emptyQuestionState([]);
-    this.consent = emptyQuestionState();
-    this.recording = emptyQuestionState();
+    this.phoneNumber = emptyQuestionState(); // Contact number
+    this.favoritePieces = emptyQuestionState(["", "", "", ""]); // Top 4 music pieces
+    this.age = emptyQuestionState(); // Age selection
+    this.favoriteDanceStyles = emptyQuestionState([]); // Styles selection
+    this.consent = emptyQuestionState(); // Liability consent
+    this.recording = emptyQuestionState(); // Recording consent
   }
 
+  /**
+   * Build array of Question objects with UI components and validation logic
+   * @returns {Question[]}
+   */
   questions() {
     return [
       new Question({
