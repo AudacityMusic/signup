@@ -31,7 +31,12 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
     tags,
     formURL,
     isSubmitted,
+    max,
+    signedUp,
   } = route.params;
+
+  const remainingSpots =
+    parseInt(max) - parseInt(signedUp);
 
   // Map tags to Tag components
   const tagsIcons = tags.map((text) => <Tag key={text} text={text} />);
@@ -109,7 +114,18 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
               <View style={styles.tags}>{tagsIcons}</View>
             </View>
           )}
-
+          {/*Spots remaining indicator*/}
+          {!isNaN(remainingSpots) && (
+            remainingSpots <= 0 ? (
+              <Text style={{ color: "red", fontWeight: "bold", marginTop: 10}}>
+                Registration is full.
+              </Text>
+            ) : (
+              <Text style={{ color: "green", fontWeight: "bold", marginTop: 10 }}>
+                {remainingSpots} spot{remainingSpots !== 1? "s" : ""} remaining
+              </Text>
+            )
+          )}
           {/* Sign Up button with warning if already submitted */}
           <View style={styles.lowerRight}>
             {isSubmitted && (
