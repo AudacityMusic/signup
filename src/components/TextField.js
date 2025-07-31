@@ -11,7 +11,7 @@
  *  - extraMargin: whether to add bottom margin after input
  */
 
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View, Pressable } from "react-native";
 import colors from "../constants/colors";
 
 export default function TextField({
@@ -22,6 +22,8 @@ export default function TextField({
   state,
   setState,
   extraMargin = true,
+  inputted = true,
+  onPress = null
 }) {
   return (
     <View
@@ -46,7 +48,8 @@ export default function TextField({
         {subtitle}
       </Text>
       {/* Text input with validation border color */}
-      <TextInput
+      {inputted ?
+        <TextInput
         style={[
           styles.inputField,
           {
@@ -60,6 +63,18 @@ export default function TextField({
         // @ts-expect-error
         keyboardType={keyboardType}
       />
+      : onPress ? (
+        <Pressable onPress={onPress} style={[styles.inputField, { borderColor: colors.secondary, justifyContent: 'center' }]}>
+          <Text style={{ color: state.value ? 'black' : colors.secondary }}>
+            {state.value || "Filter by date & time"}
+          </Text>
+        </Pressable>
+      ) : (
+        <View style={[styles.inputField, { borderColor: colors.secondary }]}>
+          <Text style={{ color: colors.secondary }}>{title}</Text>
+        </View>
+      )
+      }
     </View>
   );
 }

@@ -33,7 +33,7 @@ export default class RequestConcert extends Form {
     this.publicity = emptyQuestionState(); // Public/private
     this.stipend = emptyQuestionState(); // Stipend availability
     this.donatable = emptyQuestionState(); // Donation option
-    this.timeSlots = emptyQuestionState([]); // Available time slots array
+    this.timeSlots = emptyQuestionState([]); // Available time slots array (start with empty list)
     this.audience = emptyQuestionState(); // Audience description
     this.distance = emptyQuestionState(); // Distance details
     this.provided = emptyQuestionState([]); // Provided resources

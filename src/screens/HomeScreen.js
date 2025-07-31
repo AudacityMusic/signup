@@ -6,16 +6,15 @@
  * - Manages push notifications for each event
  */
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
-
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import { StyleSheet, View, ScrollView } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import FilterPanel from "../components/FilterPanel";
 import CarouselSection from "../components/CarouselSection";
 import Heading from "../components/Heading";
 import OtherOpportunities from "../components/OtherOpportunities";
-import PersistScrollView from "../components/PersistScrollView";
 import Websites from "../components/Websites";
-
+// ...existing imports...
 import {
   alertError,
   formatDate,
@@ -37,9 +36,15 @@ import {
  * - Filters events by date range
  * - Manages notification scheduling for each event
  */
+// Suppress warning about nested VirtualizedLists
 export default function HomeScreen({ navigation, route }) {
   // State: array of event objects
   const [data, setData] = useState([]);
+  
+  // Debug: log when data state changes
+  useEffect(() => {
+    console.log("Data state changed at", new Date().toISOString(), "length:", data.length);
+  }, [data]);
 
   // Request notification permissions and set up channel on mount
   useEffect(() => {
@@ -48,17 +53,18 @@ export default function HomeScreen({ navigation, route }) {
 
   // Whenever event data changes, clear and reschedule notifications
   useEffect(() => {
-    cancelAllScheduled();
-    (async () => {
-      try {
-        // Await all scheduled notifications to catch errors
-        await Promise.all(
-          data.map((event) => scheduleEventNotifications(event)),
-        );
-      } catch (err) {
-        console.error("Failed to schedule notifications:", err);
-      }
-    })();
+    // Temporarily disabled to debug refreshing issue
+    // cancelAllScheduled();
+    // (async () => {
+    //   try {
+    //     // Await all scheduled notifications to catch errors
+    //     await Promise.all(
+    //       data.map((event) => scheduleEventNotifications(event)),
+    //     );
+    //   } catch (err) {
+    //     console.error("Failed to schedule notifications:", err);
+    //   }
+    // })();
   }, [data]);
 
   /**
@@ -66,7 +72,7 @@ export default function HomeScreen({ navigation, route }) {
    * @param {Array} rawData - flat list of event objects
    * @returns {Array[]} array of rows, each an array of up to 3 events
    */
-  function formatData(rawData) {
+  const formatData = useCallback((rawData) => {
     const formatted = [];
     let row = [];
     rawData.forEach((item) => {
@@ -78,14 +84,15 @@ export default function HomeScreen({ navigation, route }) {
     });
     if (row.length) formatted.push(row);
     return formatted;
-  }
+  }, []);
 
   /**
    * Fetch events from Google Sheets, filter by date and submission status,
    * then update state for display and scheduling.
    * @returns {Promise<number|null>} number of events loaded or null on failure
    */
-  async function onRefresh() {
+  const onRefresh = useCallback(async () => {
+    console.log("onRefresh called at", new Date().toISOString());
     const parser = new PublicGoogleSheetsParser(
       process.env.EXPO_PUBLIC_SHEET_ID ??
         alertError("Undefined EXPO_PUBLIC_SHEET_ID env variable"),
@@ -155,19 +162,43 @@ export default function HomeScreen({ navigation, route }) {
 
     // Return count for pull-to-refresh control
     return newData.length;
-  }
+  }, []);
 
-  // Trigger data load on screen focus or route change
+  // Trigger data load on initial mount
   useEffect(() => {
     onRefresh().catch((err) => console.error("Error refreshing events:", err));
-  }, [route]);
+  }, []);
+
+  // Filtered data from FilterPanel
+  const [filteredData, setFilteredData] = useState(data);
+
+  // Callback to receive filtered data from FilterPanel
+  const handleFilteredDataChange = useCallback((newFilteredData) => {
+    setFilteredData(newFilteredData);
+  }, []);
+
+  // Memoized formatted data for carousel to prevent excessive re-renders
+  const formattedData = useMemo(() => {
+    console.log("formattedData recalculated at", new Date().toISOString());
+    return formatData(filteredData);
+  }, [filteredData]);
+
+  // Update filteredData to match new data when no filters applied
+  useEffect(() => {
+    setFilteredData(data);
+  }, [data]);
+
 
   return (
-    <PersistScrollView>
+    <ScrollView>
       <View style={styles.container}>
+        <FilterPanel 
+          data={data}
+          onFilteredDataChange={handleFilteredDataChange}
+        />
         <CarouselSection
           navigation={navigation}
-          data={formatData(data)}
+          data={formattedData}
           onRefresh={onRefresh}
         />
         <Heading>Other Opportunities</Heading>
@@ -175,7 +206,7 @@ export default function HomeScreen({ navigation, route }) {
         <Heading>Websites</Heading>
         <Websites />
       </View>
-    </PersistScrollView>
+    </ScrollView>
   );
 }
 

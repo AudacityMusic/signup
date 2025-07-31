@@ -7,6 +7,7 @@
  */
 
 import {
+  Platform,
   Image,
   Pressable,
   SafeAreaView,
@@ -95,7 +96,7 @@ export default function SignInScreen({ navigation }) {
         </Pressable>
 
         {/* Apple Sign-In button, shown only if available */}
-        {AppleAuth.isAvailableAsync() ? (
+        {Platform.OS === "ios" && AppleAuth.isAvailableAsync() ? (
           <AppleAuth.AppleAuthenticationButton
             buttonType={AppleAuth.AppleAuthenticationButtonType.SIGN_IN}
             buttonStyle={AppleAuth.AppleAuthenticationButtonStyle.BLACK}
