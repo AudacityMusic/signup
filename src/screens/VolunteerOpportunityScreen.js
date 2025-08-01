@@ -122,32 +122,47 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
             )}
             <Pressable
               onPress={() =>
-                remainingSpots <= 0 || isSubmitted ? null : 
-                navigation.navigate(
-                  formURL == null ? "Sign Up Form" : "Google Forms",
-                  formURL == null ? {
-                    title,
-                    location,
-                    date,
-                  } : { formURL }
-                )
+                remainingSpots <= 0 || isSubmitted
+                  ? null
+                  : navigation.navigate(
+                      formURL == null ? "Sign Up Form" : "Google Forms",
+                      formURL == null
+                        ? {
+                            title,
+                            location,
+                            date,
+                          }
+                        : { formURL },
+                    )
               }
             >
               <NextButton>Sign Up</NextButton>
               {/* Show remaining spots if applicable */}
               {!isNaN(remainingSpots) &&
                 (remainingSpots <= 0 ? (
-                  <Text style={{ color: "red", fontSize: 18, fontWeight: "bold", marginTop: 10 }}>
+                  <Text
+                    style={{
+                      color: "red",
+                      fontSize: 18,
+                      fontWeight: "bold",
+                      marginTop: 10,
+                    }}
+                  >
                     Registration is full.
                   </Text>
                 ) : (
                   <Text
-                    style={{ color: "green", fontSize: 18, fontWeight: "bold", marginTop: 10 }}
+                    style={{
+                      color: "green",
+                      fontSize: 18,
+                      fontWeight: "bold",
+                      marginTop: 10,
+                    }}
                   >
-                    {remainingSpots} spot{remainingSpots !== 1 ? "s" : ""} remaining
+                    {remainingSpots} spot{remainingSpots !== 1 ? "s" : ""}{" "}
+                    remaining
                   </Text>
-                ))
-              }
+                ))}
             </Pressable>
           </View>
         </View>
