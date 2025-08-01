@@ -25,15 +25,18 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
     paddingVertical: 15,
-    paddingRight: 10,
+    paddingHorizontal: 20,
     borderRadius: 15,
     backgroundColor: colors.primary,
+    gap: 15,
   },
   nextText: {
-    fontSize: 20,
+    fontSize: 24,
+    fontWeight: "500",
     color: "white",
-    paddingHorizontal: 10,
+    textAlignVertical: "center",
+    includeFontPadding: false,
   },
 });

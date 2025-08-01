@@ -12,6 +12,8 @@
  *  - tags: array of tag strings
  *  - formURL: URL string for sign-up form
  *  - isSubmitted: boolean indicating if the user has signed up
+ *  - max: maximum number of volunteers for the event
+ *  - signedUp: current number of signed up volunteers
  */
 
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -31,6 +33,8 @@ export default function VolunteerOpportunity({
   tags,
   formURL,
   isSubmitted,
+  max,
+  signedUp,
 }) {
   return (
     <TouchableOpacity
@@ -46,6 +50,8 @@ export default function VolunteerOpportunity({
           tags,
           formURL,
           isSubmitted,
+          max,
+          signedUp,
         })
       }
     >

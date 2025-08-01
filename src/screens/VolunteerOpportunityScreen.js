@@ -31,7 +31,11 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
     tags,
     formURL,
     isSubmitted,
+    max,
+    signedUp,
   } = route.params;
+
+  const remainingSpots = parseInt(max) - parseInt(signedUp);
 
   // Map tags to Tag components
   const tagsIcons = tags.map((text) => <Tag key={text} text={text} />);
@@ -109,7 +113,6 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
               <View style={styles.tags}>{tagsIcons}</View>
             </View>
           )}
-
           {/* Sign Up button with warning if already submitted */}
           <View style={styles.lowerRight}>
             {isSubmitted && (
@@ -119,16 +122,47 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
             )}
             <Pressable
               onPress={() =>
-                formURL == null
-                  ? navigation.navigate("Sign Up Form", {
-                      title,
-                      location,
-                      date,
-                    })
-                  : navigation.navigate("Google Forms", { formURL })
+                remainingSpots <= 0 || isSubmitted
+                  ? null
+                  : navigation.navigate(
+                      formURL == null ? "Sign Up Form" : "Google Forms",
+                      formURL == null
+                        ? {
+                            title,
+                            location,
+                            date,
+                          }
+                        : { formURL },
+                    )
               }
             >
               <NextButton>Sign Up</NextButton>
+              {/* Show remaining spots if applicable */}
+              {!isNaN(remainingSpots) &&
+                (remainingSpots <= 0 ? (
+                  <Text
+                    style={{
+                      color: "red",
+                      fontSize: 18,
+                      fontWeight: "bold",
+                      marginTop: 10,
+                    }}
+                  >
+                    Registration is full.
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      color: "green",
+                      fontSize: 18,
+                      fontWeight: "bold",
+                      marginTop: 10,
+                    }}
+                  >
+                    {remainingSpots} spot{remainingSpots !== 1 ? "s" : ""}{" "}
+                    remaining
+                  </Text>
+                ))}
             </Pressable>
           </View>
         </View>
@@ -187,7 +221,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "flex-end",
-    marginTop: 20,
+    marginTop: 50,
   },
   headerText: {
     position: "absolute",
