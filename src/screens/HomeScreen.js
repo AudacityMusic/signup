@@ -125,6 +125,7 @@ export default function HomeScreen({ navigation, route }) {
     // - Exclude past events and events beyond two months ahead
     // - Mark isSubmitted based on stored hashes
     // - Collect valid events
+
     for (let i = 0; i < unparsedData.length; i++) {
       const opportunity = unparsedData[i];
       opportunity.Title ??= "Untitled Event";
