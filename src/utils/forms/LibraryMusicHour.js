@@ -53,6 +53,7 @@ export default class LibraryMusicHour extends Form {
     this.performanceType = emptyQuestionState(); // Radio choice for performance type
     this.length = emptyQuestionState(); // Performance length input
     this.recordingLink = emptyQuestionState(); // Link to recording
+    this.backgroundLink = emptyQuestionState(); //Link to background music
     this.publicPermission = emptyQuestionState(); // Public sharing consent
     this.parentalConsent = emptyQuestionState(); // Parental consent
     this.pianoAccompaniment = emptyQuestionState(); // Accompaniment option
@@ -242,6 +243,18 @@ export default class LibraryMusicHour extends Form {
           }
           return true;
         },
+      }),
+      new Question({
+        name: "backgroundLink",
+        component: (
+          <TextField
+            title="Background Music Link (Optional)"
+            keyboardType="url"
+            key="backgroundLink"
+            state={this.backgroundLink[0]}
+            setState={this.backgroundLink[1]}
+          />
+        ),
       }),
 
       new Question({
