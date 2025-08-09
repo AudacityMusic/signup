@@ -6,6 +6,8 @@
  * - Handles submission and updates button state
  */
 
+import { ErrorBoundary } from 'react-native-error-boundary';
+import FormErrorFallback from '../components/FormErrorFallback';
 import { useRef, useState } from "react";
 import {
   Dimensions,
@@ -69,67 +71,69 @@ export default function VolunteerFormScreen({ navigation, route }) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Keyboard-aware container to avoid hiding inputs */}
-      <KeyboardAvoidingView
-        style={[
-          styles.body,
-          {
-            height: Dimensions.get("window").height - 100,
-            width: Dimensions.get("window").width,
-          },
-        ]}
-        behavior="height"
-      >
-        {/* Scrollable form questions area */}
-        <PersistScrollView scrollRef={scrollRef}>
-          <View style={styles.questions}>
-            {/* Event title, date, and optional location with map link */}
-            <View style={styles.header}>
-              <Text
-                style={[styles.headerText, { fontWeight: "bold" }]}
-                selectable={true}
-              >
-                {title}
-              </Text>
-              {date == null ? null : (
-                <Text style={styles.headerText} selectable={true}>
-                  {date}
+    <ErrorBoundary FallbackComponent={FormErrorFallback}>
+      <SafeAreaView style={styles.container}>
+        {/* Keyboard-aware container to avoid hiding inputs */}
+        <KeyboardAvoidingView
+          style={[
+            styles.body,
+            {
+              height: Dimensions.get("window").height - 100,
+              width: Dimensions.get("window").width,
+            },
+          ]}
+          behavior="height"
+        >
+          {/* Scrollable form questions area */}
+          <PersistScrollView scrollRef={scrollRef}>
+            <View style={styles.questions}>
+              {/* Event title, date, and optional location with map link */}
+              <View style={styles.header}>
+                <Text
+                  style={[styles.headerText, { fontWeight: "bold" }]}
+                  selectable={true}
+                >
+                  {title}
                 </Text>
-              )}
-              {location == null ? null : (
-                <Pressable onPress={() => openInMaps(location)}>
-                  <Text
-                    style={[styles.headerText, styles.locationText]}
-                    selectable={true}
-                  >
-                    {location}
+                {date == null ? null : (
+                  <Text style={styles.headerText} selectable={true}>
+                    {date}
                   </Text>
-                </Pressable>
-              )}
+                )}
+                {location == null ? null : (
+                  <Pressable onPress={() => openInMaps(location)}>
+                    <Text
+                      style={[styles.headerText, styles.locationText]}
+                      selectable={true}
+                    >
+                      {location}
+                    </Text>
+                  </Pressable>
+                )}
+              </View>
+              {/* Render each question component from form */}
+              <View style={styles.form}>
+                {form
+                  .questions()
+                  .filter((question) => question?.isVisible())
+                  .map((question) => question.component)}
+              </View>
+              {/* Submit button triggers form.submit() */}
+              <Pressable
+                style={styles.submitButton}
+                onPress={async () => {
+                  setButtonText("Submitting...");
+                  await form.submit();
+                  setButtonText("Submit");
+                }}
+              >
+                <NextButton>{buttonText}</NextButton>
+              </Pressable>
             </View>
-            {/* Render each question component from form */}
-            <View style={styles.form}>
-              {form
-                .questions()
-                .filter((question) => question?.isVisible())
-                .map((question) => question.component)}
-            </View>
-            {/* Submit button triggers form.submit() */}
-            <Pressable
-              style={styles.submitButton}
-              onPress={async () => {
-                setButtonText("Submitting...");
-                await form.submit();
-                setButtonText("Submit");
-              }}
-            >
-              <NextButton>{buttonText}</NextButton>
-            </Pressable>
-          </View>
-        </PersistScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+          </PersistScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </ErrorBoundary>
   );
 }
 
