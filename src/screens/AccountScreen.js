@@ -12,7 +12,6 @@ import { Alert, StyleSheet, View } from "react-native";
 
 import FullWidthButton from "../components/FullWidthButton.js";
 import Profile from "../components/Profile.js";
-// import AppleAuthTestHelper from "../components/AppleAuthTestHelper.js"; // Remove in production
 
 import colors from "../constants/colors";
 import { alertError } from "../utils/index.js";
@@ -22,9 +21,6 @@ export default function AccountScreen({ navigation }) {
     <View style={styles.container}>
       {/* User profile summary */}
       <Profile />
-
-      {/* Development Test Helper - Remove this in production */}
-      {/* <AppleAuthTestHelper /> */}
 
       {/* Clear all local data and sign out */}
       <FullWidthButton
