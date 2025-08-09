@@ -7,11 +7,12 @@
  */
 
 import "@expo/metro-runtime";
+import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import NoWifiBanner from "./src/components/NoWifiBanner";
 import { ActivityIndicator } from "react-native";
 
 import AccountScreen from "./src/screens/AccountScreen";
@@ -59,6 +60,7 @@ export default function App() {
     <NavigationContainer>
       {/* Light-content status bar to match header styling */}
       <StatusBar style="light" />
+      <NoWifiBanner />
       <Stack.Navigator
         initialRouteName={isLoggedIn ? "Home" : "Sign In"}
         screenOptions={{
