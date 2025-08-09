@@ -14,6 +14,7 @@ export default {
     supportsTablet: true,
     bundleIdentifier: "org.eternityband.signup",
     usesAppleSignIn: true,
+    scheme: process.env.EXPO_PUBLIC_GOOGLE_OAUTH_IOS_SCHEME || "com.googleusercontent.apps.761199370622-m8mpb5eihd5fbn76gk4lolcttcdm1f6k",
   },
   android: {
     adaptiveIcon: {
@@ -41,11 +42,7 @@ export default {
     [
       "@react-native-google-signin/google-signin",
       {
-        iosUrlScheme:
-          process.env.EXPO_PUBLIC_GOOGLE_OAUTH_IOS_SCHEME ??
-          console.error(
-            "Error: Undefined EXPO_PUBLIC_GOOGLE_OAUTH_IOS_SCHEME env variable",
-          ),
+        iosUrlScheme: process.env.EXPO_PUBLIC_GOOGLE_OAUTH_IOS_SCHEME || "com.googleusercontent.apps.761199370622-m8mpb5eihd5fbn76gk4lolcttcdm1f6k",
       },
     ],
     "expo-apple-authentication",
