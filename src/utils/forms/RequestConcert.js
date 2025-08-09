@@ -154,6 +154,9 @@ export default class RequestConcert extends Form {
             key="timeSlots"
             state={this.timeSlots[0]}
             setState={this.timeSlots[1]}
+            startTitle="Select Starting Date & Time"
+            endTitle="Select Ending Time"
+            combinedTitle="Select Time Slot"
           />
         ),
         validate: (slots) =>

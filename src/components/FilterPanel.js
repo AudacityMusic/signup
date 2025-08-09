@@ -8,7 +8,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { StyleSheet, View, TextInput, TouchableOpacity, Text, Pressable } from 'react-native';
-import MultiSelect from 'react-native-multiple-select';
+import { Dropdown, MultiSelect } from 'react-native-element-dropdown';
 import Fuse from 'fuse.js';
 import TimeSlot from "./TimeSlot";
 import { formatDate } from "../utils";
@@ -206,70 +206,65 @@ export default function FilterPanel({
         value={keyFilter}
         onChangeText={setKeyFilter}
       />
-      {/* Location filter via single-select MultiSelect */}
-      <MultiSelect
-        items={locations.map((loc) => ({ id: loc, name: loc }))}
-        uniqueKey="id"
-        single={true}
-        onSelectedItemsChange={(selectedItems) => {
-          if (locationFilter.length > 0 && selectedItems[0] === locationFilter[0]) {
+      {/* Location filter via single-select Dropdown */}
+      <Dropdown
+        data={locations.map((loc) => ({ label: loc, value: loc }))}
+        labelField="label"
+        valueField="value"
+        placeholder="Select Location"
+        searchPlaceholder="Search Locations..."
+        value={locationFilter[0] || null}
+        onChange={(item) => {
+          if (locationFilter.length > 0 && item.value === locationFilter[0]) {
             setLocationFilter([]);
           } else {
-            setLocationFilter(selectedItems);
+            setLocationFilter([item.value]);
           }
         }}
-        selectedItems={locationFilter}
-        selectText="Select Location"
-        searchInputPlaceholderText="  Search Locations..."
-        hideSubmitButton={true}
-        styleMainWrapper={styles.multiSelectWrapper}
-        styleListContainer={styles.multiSelectList}
-        styleTextDropdown={styles.multiSelectText}
-        styleTextDropdownSelected={styles.multiSelectText}
-        styleDropdownMenuSubsection={styles.multiSelectDropdown}
-        fixedHeight={false}
+        search={true}
+        style={styles.dropdown}
+        containerStyle={styles.dropdownContainer}
+        selectedTextStyle={styles.dropdownSelectedText}
+        placeholderStyle={styles.dropdownPlaceholder}
+        itemTextStyle={styles.dropdownItemText}
+        renderRightIcon={() => null}
+        showsVerticalScrollIndicator={false}
       />
-      {/* Date range filter */
-      <Pressable style={styles.dateFilterBox} onPress={() => setShowDatePicker(true)}>
-        <Text style={styles.dateFilterText}>
-          {dateFilterState.value || "Filter by date & time"}
-        </Text>
-      </Pressable>
-      }
-      {showDatePicker && (
-        <TimeSlot 
-          slot={filterSlot} 
-          onChange={(newSlot) => {
-            setFilterSlot(newSlot);
-            setShowDatePicker(false);
-          }}
-          selectRange={true}
-          autoOpen={true}
-        />
-      )}
+      {/* Date range filter */}
+      <TimeSlot 
+        slot={filterSlot} 
+        onChange={(newSlot) => {
+          setFilterSlot(newSlot);
+        }}
+        selectRange={!(filterSlot.start && filterSlot.end)}
+        autoOpen={false}
+        startPickerMode="datetime"
+        endPickerMode="datetime"
+        startTitle="Select Earliest Date & Time"
+        endTitle="Select Latest Date & Time"
+        style={styles.dateFilterBox}
+        textStyle={styles.dateFilterText}
+        placeholder="Filter by date & time"
+      />
       {/* Tag filter via multi-select, includes special option for any-match mode */}
       <MultiSelect
-        items={[{ id: '__ANY__', name: '*Match any' },
-               ...allTags.map((tag) => ({ id: tag, name: tag }))]}
-        uniqueKey="id"
-        onSelectedItemsChange={setTagsFilter}
-        selectedItems={tagsFilter}
-        selectText="Select Tags"
-        searchInputPlaceholderText="  Search Tags..."
-        tagRemoveIconColor="#CCC"
-        tagBorderColor="#CCC"
-        tagTextColor="#CCC"
-        selectedItemTextColor="#CCC"
-        selectedItemIconColor="#CCC"
-        itemTextColor="#000"
-        displayKey="name"
-        hideSubmitButton={true}
-        styleMainWrapper={styles.multiSelectWrapper}
-        styleListContainer={styles.multiSelectList}
-        styleTextDropdown={styles.multiSelectText}
-        styleTextDropdownSelected={styles.multiSelectText}
-        styleDropdownMenuSubsection={styles.multiSelectDropdown}
-        fixedHeight={false}
+        data={[{ label: '*Match any', value: '__ANY__' },
+               ...allTags.map((tag) => ({ label: tag, value: tag }))]}
+        labelField="label"
+        valueField="value"
+        placeholder="Select Tags"
+        searchPlaceholder="Search Tags..."
+        value={tagsFilter}
+        onChange={setTagsFilter}
+        search={true}
+        style={styles.dropdown}
+        containerStyle={styles.dropdownContainer}
+        selectedTextStyle={styles.dropdownSelectedText}
+        placeholderStyle={styles.dropdownPlaceholder}
+        itemTextStyle={styles.dropdownItemText}
+        selectedStyle={styles.selectedItem}
+        renderRightIcon={() => null}
+        showsVerticalScrollIndicator={false}
       />
       {/* Apply Filters Button */}
       <TouchableOpacity style={styles.applyButton} onPress={applyFilters}>
@@ -294,31 +289,38 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     marginBottom: 10,
   },
-  // react-native-multiple-select styles
-  multiSelectWrapper: {
-    marginBottom: 10,
-  },
-  multiSelectList: {
-    maxHeight: 120,
-    marginBottom: 0,
-  },
-  multiSelectText: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'left',
-    paddingLeft: 5,
-    lineHeight: 20,
-  },
-  multiSelectDropdown: {
+  // react-native-element-dropdown styles
+  dropdown: {
     height: 40,
     borderRadius: 0,
     borderWidth: 1,
     borderColor: '#ccc',
     backgroundColor: 'white',
     paddingHorizontal: 5,
-    paddingVertical: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginBottom: 10,
+  },
+  dropdownContainer: {
+    maxHeight: 200,
+  },
+  dropdownSelectedText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'left',
+  },
+  dropdownPlaceholder: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'left',
+  },
+  dropdownItemText: {
+    fontSize: 16,
+    color: '#000',
+  },
+  selectedItem: {
+    borderRadius: 12,
+    backgroundColor: '#f0f0f0',
+    marginRight: 5,
+    marginBottom: 5,
   },
   dateFilterBox: {
     height: 40,
@@ -339,7 +341,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     borderWidth: 1.5,
-    borderColor: 'black',
+    borderColor: '#ccc',
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',

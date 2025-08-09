@@ -5,7 +5,7 @@
  *   - Default component: renders all slots and a date picker modal
  */
 
-import React from "react";
+import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -13,9 +13,17 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import colors from "../constants/colors";
 import TimeSlot from "./TimeSlot";
 
-export default function TimeSlotList({ title, state, setState }) {
+export default function TimeSlotList({ 
+  title, 
+  state, 
+  setState,
+  startTitle = "Start Date",
+  endTitle = "End Date",
+  combinedTitle = "Select Time Slot"
+}) {
   const slots = state.value;
   const setSlots = (newSlots) => setState((prev) => ({ ...prev, value: newSlots }));
+  const [isAddingSlot, setIsAddingSlot] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -26,37 +34,62 @@ export default function TimeSlotList({ title, state, setState }) {
       {slots.map((slot, index) => (
         <View key={index} style={styles.slotRow}>
           <TimeSlot
-            // combined range selection: datetime start and time-only end
+            // Use range selection only for empty slots, independent for filled slots
             slot={slot}
-            selectRange={true}
+            selectRange={!(slot.start && slot.end)}
             startPickerMode="datetime"
             endPickerMode="time"
-            // no individual title
-            title={null}
-            // auto-open picker for newly added slots
-            autoOpen={slot.start == null && slot.end == null}
+            // don't auto-open for existing slots
+            autoOpen={false}
+            startTitle={startTitle}
+            endTitle={endTitle}
             onChange={(updatedSlot) => {
               const newSlots = [...slots];
               newSlots[index] = updatedSlot;
               setSlots(newSlots);
             }}
           />
-          <Pressable
-            style={styles.button}
-            onPress={() => {
-              const newSlots = slots.filter((_, i) => i !== index);
-              setSlots(newSlots);
-            }}
-          >
-            <EvilIcons name="trash" size={30} color="#FF3B30" />
-          </Pressable>
+          {(slot.start || slot.end) && (
+            <Pressable
+              style={styles.button}
+              onPress={() => {
+                const newSlots = slots.filter((_, i) => i !== index);
+                setSlots(newSlots);
+              }}
+            >
+              <EvilIcons name="trash" size={30} color="#FF3B30" />
+            </Pressable>
+          )}
         </View>
       ))}
+      {isAddingSlot && (
+        <TimeSlot
+          slot={{ start: null, end: null }}
+          selectRange={true}
+          startPickerMode="datetime"
+          endPickerMode="time"
+          autoOpen={true}
+          startTitle={startTitle}
+          endTitle={endTitle}
+          onChange={(updatedSlot) => {
+            // Only add to slots array if both dates are set
+            if (updatedSlot.start && updatedSlot.end) {
+              setSlots([...slots, updatedSlot]);
+              setIsAddingSlot(false);
+            }
+          }}
+          onCancel={() => {
+            // Remove the temporary slot on cancel
+            setIsAddingSlot(false);
+          }}
+        />
+      )}
       <Pressable
         style={styles.button}
         onPress={() => {
-          const newSlot = { start: null, end: null };
-          setSlots([...slots, newSlot]);
+          if (!isAddingSlot) {
+            setIsAddingSlot(true);
+          }
         }}
       >
         <Ionicons name="add-circle-sharp" size={21} color={colors.blue} />

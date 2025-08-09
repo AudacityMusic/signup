@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, Alert } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import colors from '../constants/colors';
 
@@ -14,11 +14,17 @@ import colors from '../constants/colors';
 export default function TimeSlot({
   slot,
   onChange,
-  title = null,
   startPickerMode = 'datetime',
   endPickerMode = 'datetime',
   selectRange = false,
   autoOpen = false,
+  onCancel = null,
+  startTitle = 'Start Date',
+  endTitle = 'End Date',
+  hideDisplayText = false,
+  style = null,
+  textStyle = null,
+  placeholder = null,
 }) {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState('start');
@@ -35,8 +41,8 @@ export default function TimeSlot({
   const formatDateTime = (dt) => dt.toLocaleDateString() + ' ' + dt.toLocaleTimeString();
   const formatTimeOnly = (dt) => dt.toLocaleTimeString();
   const combinedLabel = () => {
-    if (slot.start && slot.end) return `${formatDateTime(slot.start)} - ${formatTimeOnly(slot.end)}`;
-    return 'Select Time Slot';
+    if (slot.start && slot.end) return `${formatDateTime(slot.start)} — ${formatTimeOnly(slot.end)}`;
+    return null; // Don't show any text when no dates are selected
   };
   // Auto-open picker for new slots when selectRange is enabled
   useEffect(() => {
@@ -47,34 +53,66 @@ export default function TimeSlot({
     }
   }, [autoOpen, selectRange]);
 
+  const hasContent = style || hideDisplayText 
+    ? true // Always show when custom style is provided or hideDisplayText is true
+    : (selectRange ? combinedLabel() : (slot.start || slot.end));
+  
   return (
-    <View style={{ marginVertical: 5 }}>
-      {title && !selectRange ? <Text style={{ fontWeight: '600', marginBottom: 4 }}>{title}</Text> : null}
-      {selectRange ? (
-        <Pressable onPress={() => { setSelectingRange(true); setMode('start'); setOpen(true); }}>
-          <Text style={{ textDecorationLine: 'underline', color: valid ? 'black' : colors.danger }}>
-            {combinedLabel()}
-          </Text>
-        </Pressable>
-      ) : (
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Pressable onPress={() => { setMode('start'); setOpen(true); }}>
-            <Text style={{ textDecorationLine: 'underline', color: valid ? 'black' : colors.danger }}>
-              {label(slot.start, 'Start Date')}
-            </Text>
-          </Pressable>
-          <Pressable onPress={() => { setMode('end'); setOpen(true); }}>
-            <Text style={{ textDecorationLine: 'underline', color: valid ? 'black' : colors.danger }}>
-              {label(slot.end, 'End Date')}
-            </Text>
-          </Pressable>
+    <>
+      {hasContent && (
+        <View style={style ? [style, combinedLabel() ? { flexDirection: 'row', alignItems: 'center' } : {}] : (combinedLabel() ? { marginVertical: 5, flexDirection: 'row', alignItems: 'center' } : { marginVertical: 5 })}>
+          {selectRange ? (
+            <Pressable onPress={() => { 
+              setSelectingRange(true); 
+              setMode('start'); 
+              setOpen(true);
+            }}>
+              <Text style={textStyle ? textStyle : { textDecorationLine: 'underline', color: valid ? 'black' : colors.danger }}>
+                {combinedLabel() || placeholder}
+              </Text>
+            </Pressable>
+          ) : combinedLabel() ? (
+            <>
+              <Pressable 
+                style={style ? { position: 'absolute', left: 0 } : {}}
+                onPress={() => { setMode('start'); setOpen(true); }}
+              >
+                <Text style={textStyle ? textStyle : { textDecorationLine: 'underline', color: valid ? 'black' : colors.danger }}>
+                  {formatDateTime(slot.start)}
+                </Text>
+              </Pressable>
+              <Text style={style ? { position: 'absolute', left: '50%', transform: [{ translateX: -10 }], color: '#666' } : { marginHorizontal: 5, color: valid ? 'black' : colors.danger }}>—</Text>
+              <Pressable 
+                style={style ? { position: 'absolute', right: 0 } : {}}
+                onPress={() => { setMode('end'); setOpen(true); }}
+              >
+                <Text style={textStyle ? [textStyle, { textAlign: 'right' }] : { textDecorationLine: 'underline', color: valid ? 'black' : colors.danger }}>
+                  {style ? formatDateTime(slot.end) : formatTimeOnly(slot.end)}
+                </Text>
+              </Pressable>
+            </>
+          ) : (
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Pressable onPress={() => { setMode('start'); setOpen(true); }}>
+                <Text style={{ textDecorationLine: 'underline', color: valid ? 'black' : colors.danger }}>
+                  {label(slot.start, startTitle)}
+                </Text>
+              </Pressable>
+              <Pressable onPress={() => { setMode('end'); setOpen(true); }}>
+                <Text style={{ textDecorationLine: 'underline', color: valid ? 'black' : colors.danger }}>
+                  {label(slot.end, endTitle)}
+                </Text>
+              </Pressable>
+            </View>
+          )}
         </View>
       )}
       <DatePicker
         modal
         open={open}
+        title={mode === 'start' ? startTitle : endTitle}
         date={(selectRange && mode === 'start') ? (tempStart || slot.start || new Date()) : (slot[mode] || new Date())}
-        mode={selectRange ? (mode === 'start' ? startPickerMode : endPickerMode) : 'datetime'}
+        mode={mode === 'start' ? startPickerMode : endPickerMode}
         onConfirm={(date) => {
           setOpen(false);
           if (selectRange && selectingRange) {
@@ -97,8 +135,12 @@ export default function TimeSlot({
           setSelectingRange(false); 
           setOpen(false); 
           setTempStart(null);
+          // Call parent onCancel if provided (for temp slot removal)
+          if (onCancel) {
+            onCancel();
+          }
         }}
       />
-    </View>
+    </>
   );
 }
