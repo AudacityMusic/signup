@@ -7,7 +7,7 @@
  */
 
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FilterPanel from "../components/FilterPanel";
 import CarouselSection from "../components/CarouselSection";
@@ -189,24 +189,51 @@ export default function HomeScreen({ navigation, route }) {
   }, [data]);
 
 
-  return (
-    <ScrollView>
-      <View style={styles.container}>
+  const renderItem = ({ item, index }) => {
+    if (index === 0) {
+      return (
         <FilterPanel 
           data={data}
           onFilteredDataChange={handleFilteredDataChange}
         />
+      );
+    } else if (index === 1) {
+      return (
         <CarouselSection
           navigation={navigation}
           data={formattedData}
           onRefresh={onRefresh}
         />
-        <Heading>Other Opportunities</Heading>
-        <OtherOpportunities navigation={navigation} />
-        <Heading>Websites</Heading>
-        <Websites />
-      </View>
-    </ScrollView>
+      );
+    } else if (index === 2) {
+      return <Heading>Other Opportunities</Heading>;
+    } else if (index === 3) {
+      return <OtherOpportunities navigation={navigation} />;
+    } else if (index === 4) {
+      return <Heading>Websites</Heading>;
+    } else if (index === 5) {
+      return <Websites />;
+    }
+    return null;
+  };
+
+  const listData = [
+    { key: 'filter' },
+    { key: 'carousel' },
+    { key: 'other-heading' },
+    { key: 'other-opportunities' },
+    { key: 'websites-heading' },
+    { key: 'websites' }
+  ];
+
+  return (
+    <FlatList
+      data={listData}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.key}
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={true}
+    />
   );
 }
 

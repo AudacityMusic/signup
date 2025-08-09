@@ -212,7 +212,6 @@ export default function FilterPanel({
         uniqueKey="id"
         single={true}
         onSelectedItemsChange={(selectedItems) => {
-          // toggle off if same item selected again
           if (locationFilter.length > 0 && selectedItems[0] === locationFilter[0]) {
             setLocationFilter([]);
           } else {
@@ -228,14 +227,15 @@ export default function FilterPanel({
         styleTextDropdown={styles.multiSelectText}
         styleTextDropdownSelected={styles.multiSelectText}
         styleDropdownMenuSubsection={styles.multiSelectDropdown}
-        fixedHeight={true}
+        fixedHeight={false}
       />
-      {/* Date range filter */}
+      {/* Date range filter */
       <Pressable style={styles.dateFilterBox} onPress={() => setShowDatePicker(true)}>
         <Text style={styles.dateFilterText}>
           {dateFilterState.value || "Filter by date & time"}
         </Text>
       </Pressable>
+      }
       {showDatePicker && (
         <TimeSlot 
           slot={filterSlot} 
@@ -269,7 +269,7 @@ export default function FilterPanel({
         styleTextDropdown={styles.multiSelectText}
         styleTextDropdownSelected={styles.multiSelectText}
         styleDropdownMenuSubsection={styles.multiSelectDropdown}
-        fixedHeight={true}
+        fixedHeight={false}
       />
       {/* Apply Filters Button */}
       <TouchableOpacity style={styles.applyButton} onPress={applyFilters}>
@@ -296,17 +296,16 @@ const styles = StyleSheet.create({
   },
   // react-native-multiple-select styles
   multiSelectWrapper: {
-    marginBottom: 0,
+    marginBottom: 10,
   },
   multiSelectList: {
-    maxHeight: 150,
+    maxHeight: 120,
+    marginBottom: 0,
   },
   multiSelectText: {
     fontSize: 16,
     color: '#666',
     textAlign: 'left',
-    paddingTop: 10,
-    marginTop: 0,
     paddingLeft: 5,
     lineHeight: 20,
   },
@@ -317,7 +316,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     backgroundColor: 'white',
     paddingHorizontal: 5,
-    paddingVertical: 10,
+    paddingVertical: 0,
     justifyContent: 'center',
     alignItems: 'center',
   },
