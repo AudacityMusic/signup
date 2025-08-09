@@ -25,10 +25,7 @@ import {
   strToDate,
 } from "../utils";
 import PublicGoogleSheetsParser from "../utils/PublicGoogleSheetsParser";
-import {
-  EXPO_PUBLIC_SHEET_ID,
-  EXPO_PUBLIC_SHEET_NAME,
-} from "@env";
+import { EXPO_PUBLIC_SHEET_ID, EXPO_PUBLIC_SHEET_NAME } from "@env";
 import {
   initNotificationHandling,
   scheduleEventNotifications,
@@ -93,8 +90,7 @@ export default function HomeScreen({ navigation, route }) {
     const parser = new PublicGoogleSheetsParser(
       EXPO_PUBLIC_SHEET_ID || "1w8CEPFw3Qk1bFueetJDMGpRG_7c2L0O0nLKVmVjSH0g",
       {
-        sheetName:
-          EXPO_PUBLIC_SHEET_NAME || "DEV",
+        sheetName: EXPO_PUBLIC_SHEET_NAME || "DEV",
       },
     );
 

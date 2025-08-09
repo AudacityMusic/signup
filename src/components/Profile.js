@@ -28,9 +28,11 @@ export default function Profile() {
 
   // Check if user is signed in with Apple
   const isAppleUser = user?.provider === "apple" || user?.id === "apple";
-  
+
   // Check if Apple user has incomplete profile
-  const hasIncompleteProfile = isAppleUser && (!user?.name || !user?.email || user?.name === "" || user?.email === "");
+  const hasIncompleteProfile =
+    isAppleUser &&
+    (!user?.name || !user?.email || user?.name === "" || user?.email === "");
 
   // Default display values while loading or empty
   let name = user?.name ?? "Loading";
@@ -67,20 +69,22 @@ export default function Profile() {
         <Text style={styles.email} selectable>
           {email}
         </Text>
-        
+
         {/* Show update profile button for Apple users */}
         {isAppleUser && (
           <Pressable
             style={[
               styles.updateButton,
-              hasIncompleteProfile && styles.updateButtonHighlight
+              hasIncompleteProfile && styles.updateButtonHighlight,
             ]}
             onPress={() => setShowProfileEditor(true)}
           >
-            <Text style={[
-              styles.updateButtonText,
-              hasIncompleteProfile && styles.updateButtonTextHighlight
-            ]}>
+            <Text
+              style={[
+                styles.updateButtonText,
+                hasIncompleteProfile && styles.updateButtonTextHighlight,
+              ]}
+            >
               {hasIncompleteProfile ? "Complete Profile" : "Update Profile"}
             </Text>
           </Pressable>

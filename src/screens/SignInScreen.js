@@ -30,16 +30,18 @@ import {
 } from "@env";
 
 // Initialize Google Sign-In configuration
-console.log('Environment variables:', {
+console.log("Environment variables:", {
   EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID,
-  EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID
+  EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID,
 });
 
 GoogleSignin.configure({
   webClientId:
-    EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID || "761199370622-hsdvg6i6irb8d86aa6bjvbqgkjh3jhmh.apps.googleusercontent.com", // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
+    EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID ||
+    "761199370622-hsdvg6i6irb8d86aa6bjvbqgkjh3jhmh.apps.googleusercontent.com", // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
   iosClientId:
-    EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID || "761199370622-m8mpb5eihd5fbn76gk4lolcttcdm1f6k.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+    EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID ||
+    "761199370622-m8mpb5eihd5fbn76gk4lolcttcdm1f6k.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
   scopes: [
     "https://www.googleapis.com/auth/userinfo.profile",
     "https://www.googleapis.com/auth/userinfo.email",
@@ -120,15 +122,22 @@ export default function SignInScreen({ navigation }) {
                 // Check if we have existing Apple user data
                 let existingAppleUser = null;
                 try {
-                  const appleUserData = await AsyncStorage.getItem("apple-user-data");
+                  const appleUserData =
+                    await AsyncStorage.getItem("apple-user-data");
                   if (appleUserData) {
                     existingAppleUser = JSON.parse(appleUserData);
-                    console.log("🍎 Found existing Apple user data:", existingAppleUser);
+                    console.log(
+                      "🍎 Found existing Apple user data:",
+                      existingAppleUser,
+                    );
                   } else {
                     console.log("🍎 No existing Apple user data found");
                   }
                 } catch (error) {
-                  console.log("🍎 Error retrieving existing Apple user data:", error);
+                  console.log(
+                    "🍎 Error retrieving existing Apple user data:",
+                    error,
+                  );
                 }
 
                 // Extract name and email from credential (only available on first sign-in)
@@ -141,10 +150,14 @@ export default function SignInScreen({ navigation }) {
                   givenName: credential.fullName?.givenName,
                   familyName: credential.fullName?.familyName,
                   email: credential.email,
-                  user: credential.user
+                  user: credential.user,
                 });
 
-                if (credential.fullName && (credential.fullName.givenName || credential.fullName.familyName)) {
+                if (
+                  credential.fullName &&
+                  (credential.fullName.givenName ||
+                    credential.fullName.familyName)
+                ) {
                   // First sign-in: Apple provides full name
                   const firstName = credential.fullName.givenName || "";
                   const lastName = credential.fullName.familyName || "";
@@ -159,7 +172,10 @@ export default function SignInScreen({ navigation }) {
                 if (credential.email) {
                   // First sign-in: Apple provides email
                   userEmail = credential.email;
-                  console.log("🍎 Using email from Apple credential:", userEmail);
+                  console.log(
+                    "🍎 Using email from Apple credential:",
+                    userEmail,
+                  );
                 } else if (existingAppleUser && existingAppleUser.email) {
                   // Subsequent sign-ins: use stored email
                   userEmail = existingAppleUser.email;
@@ -189,10 +205,15 @@ export default function SignInScreen({ navigation }) {
                     appleUserId: credential.user,
                     lastUpdated: new Date().toISOString(),
                   };
-                  await AsyncStorage.setItem("apple-user-data", JSON.stringify(appleUserData));
+                  await AsyncStorage.setItem(
+                    "apple-user-data",
+                    JSON.stringify(appleUserData),
+                  );
                   console.log("🍎 Stored Apple user data:", appleUserData);
                 } else {
-                  console.log("🍎 No data to store - userName and userEmail are empty");
+                  console.log(
+                    "🍎 No data to store - userName and userEmail are empty",
+                  );
                 }
 
                 await AsyncStorage.removeItem("access-token");

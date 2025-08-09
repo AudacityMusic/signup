@@ -14,7 +14,11 @@ import { alertError, updateAppleUserData, getAppleUserData } from "../utils";
 
 export default function AppleUserProfile({ onUpdate }) {
   const [nameState, setNameState] = useState({ value: "", y: 0, valid: true });
-  const [emailState, setEmailState] = useState({ value: "", y: 0, valid: true });
+  const [emailState, setEmailState] = useState({
+    value: "",
+    y: 0,
+    valid: true,
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
@@ -26,8 +30,8 @@ export default function AppleUserProfile({ onUpdate }) {
     try {
       const appleData = await getAppleUserData();
       if (appleData) {
-        setNameState(prev => ({ ...prev, value: appleData.name || "" }));
-        setEmailState(prev => ({ ...prev, value: appleData.email || "" }));
+        setNameState((prev) => ({ ...prev, value: appleData.name || "" }));
+        setEmailState((prev) => ({ ...prev, value: appleData.email || "" }));
       }
     } catch (error) {
       console.error("Error loading Apple user data:", error);
@@ -45,13 +49,13 @@ export default function AppleUserProfile({ onUpdate }) {
 
     if (!name) {
       Alert.alert("Required Field", "Please enter your name.");
-      setNameState(prev => ({ ...prev, valid: false }));
+      setNameState((prev) => ({ ...prev, valid: false }));
       return;
     }
 
     if (!email) {
       Alert.alert("Required Field", "Please enter your email address.");
-      setEmailState(prev => ({ ...prev, valid: false }));
+      setEmailState((prev) => ({ ...prev, valid: false }));
       return;
     }
 
@@ -59,13 +63,13 @@ export default function AppleUserProfile({ onUpdate }) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       Alert.alert("Invalid Email", "Please enter a valid email address.");
-      setEmailState(prev => ({ ...prev, valid: false }));
+      setEmailState((prev) => ({ ...prev, valid: false }));
       return;
     }
 
     // Reset validation states
-    setNameState(prev => ({ ...prev, valid: true }));
-    setEmailState(prev => ({ ...prev, valid: true }));
+    setNameState((prev) => ({ ...prev, valid: true }));
+    setEmailState((prev) => ({ ...prev, valid: true }));
 
     setIsLoading(true);
     try {
@@ -88,25 +92,27 @@ export default function AppleUserProfile({ onUpdate }) {
                 }
               },
             },
-          ]
+          ],
         );
       } else {
         alertError("Failed to update profile information. Please try again.");
       }
     } catch (error) {
-      alertError("An error occurred while updating your profile: " + error.message);
+      alertError(
+        "An error occurred while updating your profile: " + error.message,
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleNameChange = (newValue) => {
-    setNameState(prev => ({ ...prev, value: newValue, valid: true }));
+    setNameState((prev) => ({ ...prev, value: newValue, valid: true }));
     setHasChanges(true);
   };
 
   const handleEmailChange = (newValue) => {
-    setEmailState(prev => ({ ...prev, value: newValue, valid: true }));
+    setEmailState((prev) => ({ ...prev, value: newValue, valid: true }));
     setHasChanges(true);
   };
 
