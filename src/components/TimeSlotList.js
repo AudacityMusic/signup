@@ -132,7 +132,7 @@ export default function TimeSlotList({
         setState((prev) => ({ ...prev, value: slotsWithValidation }));
       }
     }
-  }, []); // Only run on mount
+  }, [slots, setState]);
 
   return (
     <View style={styles.container}>

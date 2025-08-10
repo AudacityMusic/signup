@@ -125,17 +125,6 @@ const styles = StyleSheet.create({
 });
 
 export default React.memo(CarouselSection, (prevProps, nextProps) => {
-  console.log(
-    "React.memo comparison - data lengths:",
-    prevProps.data.length,
-    "vs",
-    nextProps.data.length,
-  );
-  console.log(
-    "React.memo comparison - data same reference?",
-    prevProps.data === nextProps.data,
-  );
-
   // Only re-render if data reference actually changed
   if (prevProps.data !== nextProps.data) {
     return false; // Allow re-render
