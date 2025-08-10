@@ -60,7 +60,7 @@ export default function TimeSlot({
   return (
     <>
       {hasContent && (
-        <View style={style ? [style, combinedLabel() ? { flexDirection: 'row', alignItems: 'center' } : {}] : (combinedLabel() ? { marginVertical: 5, flexDirection: 'row', alignItems: 'center' } : { marginVertical: 5 })}>
+        <View style={style ? [style, combinedLabel() ? { flexDirection: 'row', alignItems: 'center' } : {}, { justifyContent: 'flex-start' }] : (combinedLabel() ? { marginVertical: 5, flexDirection: 'row', alignItems: 'center' } : { marginVertical: 5 })}>
           {selectRange ? (
             <Pressable onPress={() => { 
               setSelectingRange(true); 
@@ -72,25 +72,35 @@ export default function TimeSlot({
               </Text>
             </Pressable>
           ) : combinedLabel() ? (
-            <>
-              <Pressable 
-                style={style ? { position: 'absolute', left: 0 } : {}}
-                onPress={() => { setMode('start'); setOpen(true); }}
-              >
-                <Text style={textStyle ? textStyle : { textDecorationLine: 'underline', color: valid ? 'black' : colors.danger }}>
-                  {formatDateTime(slot.start)}
-                </Text>
-              </Pressable>
-              <Text style={style ? { position: 'absolute', left: '50%', transform: [{ translateX: -10 }], color: '#666' } : { marginHorizontal: 5, color: valid ? 'black' : colors.danger }}>—</Text>
-              <Pressable 
-                style={style ? { position: 'absolute', right: 0 } : {}}
-                onPress={() => { setMode('end'); setOpen(true); }}
-              >
-                <Text style={textStyle ? [textStyle, { textAlign: 'right' }] : { textDecorationLine: 'underline', color: valid ? 'black' : colors.danger }}>
-                  {style ? formatDateTime(slot.end) : formatTimeOnly(slot.end)}
-                </Text>
-              </Pressable>
-            </>
+            style ? (
+              <View style={{ flexDirection: 'row', paddingLeft: 5, justifyContent: 'flex-start' }}>
+                <Pressable onPress={() => { setMode('start'); setOpen(true); }}>
+                  <Text style={textStyle ? textStyle : { textDecorationLine: 'underline', color: valid ? 'black' : colors.danger }}>
+                    {formatDateTime(slot.start)}
+                  </Text>
+                </Pressable>
+                <Text style={{ color: '#666' }}>  —  </Text>
+                <Pressable onPress={() => { setMode('end'); setOpen(true); }}>
+                  <Text style={textStyle ? textStyle : { textDecorationLine: 'underline', color: valid ? 'black' : colors.danger }}>
+                    {formatDateTime(slot.end)}
+                  </Text>
+                </Pressable>
+              </View>
+            ) : (
+              <>
+                <Pressable onPress={() => { setMode('start'); setOpen(true); }}>
+                  <Text style={textStyle ? textStyle : { textDecorationLine: 'underline', color: valid ? 'black' : colors.danger }}>
+                    {formatDateTime(slot.start)}
+                  </Text>
+                </Pressable>
+                <Text style={{ color: valid ? 'black' : colors.danger }}>  —  </Text>
+                <Pressable onPress={() => { setMode('end'); setOpen(true); }}>
+                  <Text style={textStyle ? [textStyle, { textAlign: 'right' }] : { textDecorationLine: 'underline', color: valid ? 'black' : colors.danger }}>
+                    {formatTimeOnly(slot.end)}
+                  </Text>
+                </Pressable>
+              </>
+            )
           ) : (
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Pressable onPress={() => { setMode('start'); setOpen(true); }}>
