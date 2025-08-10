@@ -70,7 +70,18 @@ export default function HomeScreen({ navigation, route }) {
     //   } catch (err) {
     //     console.error("Failed to schedule notifications:", err);
     //   }
-    // })();
+    // Re-enable notification scheduling in production
+    cancelAllScheduled();
+    (async () => {
+      try {
+        // Await all scheduled notifications to catch errors
+        await Promise.all(
+          data.map((event) => scheduleEventNotifications(event)),
+        );
+      } catch (err) {
+        console.error("Failed to schedule notifications:", err);
+      }
+    })();
   }, [data]);
 
   /**
