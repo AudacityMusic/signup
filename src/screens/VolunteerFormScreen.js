@@ -38,45 +38,47 @@ function getForm(title, date, location, navigation, scrollRef) {
     {
       name: "LIBRARY MUSIC HOUR",
       constructor: LibraryMusicHour,
-      aliases: ["Library Music Hour", "Library Music", "Music Hour"]
+      aliases: ["Library Music Hour", "Library Music", "Music Hour"],
     },
     {
-      name: "MUSIC BY THE TRACKS", 
+      name: "MUSIC BY THE TRACKS",
       constructor: MusicByTheTracks,
-      aliases: ["Music by the Tracks", "Music Tracks", "By the Tracks"]
+      aliases: ["Music by the Tracks", "Music Tracks", "By the Tracks"],
     },
     {
       name: "REQUEST A CONCERT",
       constructor: RequestConcert,
-      aliases: ["Request a Concert", "Request Concert", "Concert Request"]
+      aliases: ["Request a Concert", "Request Concert", "Concert Request"],
     },
     {
       name: "AUDACITY DANCE CLUB",
       constructor: DanceClub,
-      aliases: ["Audacity Dance Club", "Dance Club", "Dance"]
-    }
+      aliases: ["Audacity Dance Club", "Dance Club", "Dance"],
+    },
   ];
 
   // Create searchable list with all names and aliases
-  const searchList = formOptions.flatMap(option => [
+  const searchList = formOptions.flatMap((option) => [
     { name: option.name, constructor: option.constructor },
-    ...option.aliases.map(alias => ({ name: alias, constructor: option.constructor }))
+    ...option.aliases.map((alias) => ({
+      name: alias,
+      constructor: option.constructor,
+    })),
   ]);
 
   // Configure Fuse for fuzzy search
   const fuse = new Fuse(searchList, {
-    keys: ['name'],
+    keys: ["name"],
     threshold: 0.3, // Lower = more strict matching (0.0 = exact, 1.0 = match anything)
     ignoreLocation: true,
-    ignoreFieldNorm: true
+    ignoreFieldNorm: true,
   });
 
   // Search for the best match
   const results = fuse.search(eventTitle);
-  
+
   if (results.length > 0) {
     const bestMatch = results[0].item;
-    console.log(`Fuzzy matched "${eventTitle}" to "${bestMatch.name}"`);
     return new bestMatch.constructor(date, location, navigation, scrollRef);
   }
 
@@ -156,26 +158,22 @@ export default function VolunteerFormScreen({ navigation, route }) {
               style={styles.submitButton}
               onPress={async () => {
                 // Check if form is valid before showing "Submitting..."
-                console.log('About to validate form...');
                 let invalidResponses = 0;
                 try {
                   invalidResponses = form.validate();
-                  console.log('Form validation result:', invalidResponses);
                 } catch (error) {
-                  console.log('Error during validation:', error);
                   invalidResponses = 1; // Assume invalid if error occurs
                 }
                 if (invalidResponses > 0) {
-                  console.log('Showing alert for', invalidResponses, 'invalid responses');
                   // Show error alert with count of invalid questions
-                  const questionText = invalidResponses === 1 ? "question" : "questions";
+                  const questionText =
+                    invalidResponses === 1 ? "question" : "questions";
                   const hasText = invalidResponses === 1 ? "has" : "have";
                   Alert.alert(
                     "Error",
                     `${invalidResponses} ${questionText} ${hasText} invalid or missing responses. Please fix all responses highlighted in red to submit this form.`,
-                    [{ text: "OK" }]
+                    [{ text: "OK" }],
                   );
-                  console.log('Alert should have been shown');
                   // Don't show "Submitting..." if validation fails
                   await form.submit(); // This will just show the error alert and return
                 } else {
