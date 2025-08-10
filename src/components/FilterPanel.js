@@ -12,7 +12,7 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  Text
+  Text,
 } from "react-native";
 import { Dropdown, MultiSelect } from "react-native-element-dropdown";
 import Fuse from "fuse.js";

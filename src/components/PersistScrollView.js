@@ -27,7 +27,7 @@ export default function PersistScrollView({
   // Convert children to array for FlatList, memoized for performance
   const childrenArray = useMemo(
     () => (Array.isArray(children) ? children : [children]),
-    [children]
+    [children],
   );
 
   const renderItem = ({ item }) => item;
