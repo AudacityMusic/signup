@@ -15,7 +15,7 @@ import TimeSlot from "./TimeSlot";
 
 // Add validation method to a slot object
 const addValidationToSlot = (slot) => {
-  if (slot.validate) return slot; // Already has validation
+  if (slot.validate && slot.validateDetailed) return slot; // Already has validation
 
   return {
     ...slot,
@@ -46,6 +46,51 @@ const addValidationToSlot = (slot) => {
 
       return true;
     },
+    
+    validateDetailed: function () {
+      const result = { valid: true, invalidStart: false, invalidEnd: false };
+      
+      // Both start and end must be non-null
+      if (!this.start || !this.end) {
+        result.valid = false;
+        if (!this.start) result.invalidStart = true;
+        if (!this.end) result.invalidEnd = true;
+        return result;
+      }
+
+      // Start must be before end
+      if (this.start >= this.end) {
+        result.valid = false;
+        result.invalidStart = true;
+        result.invalidEnd = true;
+        return result;
+      }
+
+      // Business rules: 10:30 AM <= start <= 5:00 PM
+      const startHour = this.start.getHours();
+      const startMinute = this.start.getMinutes();
+      const startTimeInMinutes = startHour * 60 + startMinute;
+      const minStartTime = 10 * 60 + 30; // 10:30 AM
+      const maxStartTime = 17 * 60; // 5:00 PM
+
+      if (startTimeInMinutes < minStartTime || startTimeInMinutes > maxStartTime) {
+        result.valid = false;
+        result.invalidStart = true;
+      }
+
+      // Business rules: start < end <= 6:00 PM
+      const endHour = this.end.getHours();
+      const endMinute = this.end.getMinutes();
+      const endTimeInMinutes = endHour * 60 + endMinute;
+      const maxEndTime = 18 * 60; // 6:00 PM
+
+      if (endTimeInMinutes > maxEndTime) {
+        result.valid = false;
+        result.invalidEnd = true;
+      }
+
+      return result;
+    },
   };
 };
 
@@ -66,8 +111,8 @@ export default function TimeSlotList({
   };
   const [isAddingSlot, setIsAddingSlot] = useState(false);
 
-  // Only show red styling when there are actually invalid slots
-  const hasInvalidSlots = !state.valid && slots.some(slot => slot.validate && !slot.validate());
+  // Only show red styling when there are invalid slots OR the list is empty (after validation attempt)
+  const hasInvalidSlots = !state.valid && (slots.length === 0 || slots.some(slot => slot.validate && !slot.validate()));
 
   // Ensure existing slots have validation methods when component mounts
   useEffect(() => {
@@ -107,7 +152,7 @@ export default function TimeSlotList({
               autoOpen={false}
               startTitle={startTitle}
               endTitle={endTitle}
-              isValid={state.valid ? true : slot.validate ? slot.validate() : true}
+              validationResult={state.valid ? { valid: true, invalidStart: false, invalidEnd: false } : (slot.validateDetailed ? slot.validateDetailed() : { valid: true, invalidStart: false, invalidEnd: false })}
               onChange={(updatedSlot) => {
                 const newSlots = [...slots];
                 newSlots[index] = addValidationToSlot(updatedSlot);

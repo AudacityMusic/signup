@@ -27,6 +27,7 @@ export default function TimeSlot({
   placeholder = null,
   showClearButton = false,
   isValid = true,
+  validationResult = { valid: true, invalidStart: false, invalidEnd: false },
 }) {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState("start");
@@ -37,10 +38,10 @@ export default function TimeSlot({
     return date ? date.toDateString() : placeholder;
   }
 
-  // For red coloring: only show red when form validation failed (!isValid)
-  // For basic logic: always just check start < end
-  const basicValid = slot.start && slot.end ? slot.start < slot.end : true;
-  const colorValid = isValid; // Only red when form validation failed
+  // For red coloring: use detailed validation results
+  const startColorValid = validationResult.valid || !validationResult.invalidStart;
+  const endColorValid = validationResult.valid || !validationResult.invalidEnd;
+  const overallColorValid = validationResult.valid;
 
   // Formatting helpers
   const formatDateTime = (dt) =>
@@ -124,7 +125,7 @@ export default function TimeSlot({
                         ? textStyle
                         : {
                             textDecorationLine: "underline",
-                            color: colorValid ? "black" : colors.danger,
+                            color: overallColorValid ? "black" : colors.danger,
                             fontSize: 16,
                           }
                     }
@@ -153,7 +154,7 @@ export default function TimeSlot({
                             ? [textStyle, { textDecorationLine: "underline" }]
                             : {
                                 textDecorationLine: "underline",
-                                color: colorValid ? "black" : colors.danger,
+                                color: startColorValid ? "black" : colors.danger,
                                 fontSize: 16,
                               }
                         }
@@ -174,7 +175,7 @@ export default function TimeSlot({
                             ? [textStyle, { textDecorationLine: "underline" }]
                             : {
                                 textDecorationLine: "underline",
-                                color: colorValid ? "black" : colors.danger,
+                                color: endColorValid ? "black" : colors.danger,
                                 fontSize: 16,
                               }
                         }
@@ -197,7 +198,7 @@ export default function TimeSlot({
                             ? textStyle
                             : {
                                 textDecorationLine: "underline",
-                                color: colorValid ? "black" : colors.danger,
+                                color: startColorValid ? "black" : colors.danger,
                                 fontSize: 16,
                               }
                         }
@@ -206,7 +207,7 @@ export default function TimeSlot({
                       </Text>
                     </Pressable>
                     <Text
-                      style={{ color: colorValid ? "black" : colors.danger }}
+                      style={{ color: overallColorValid ? "black" : colors.danger }}
                     >
                       {" "}
                       —{" "}
@@ -223,7 +224,7 @@ export default function TimeSlot({
                             ? [textStyle, { textAlign: "right" }]
                             : {
                                 textDecorationLine: "underline",
-                                color: colorValid ? "black" : colors.danger,
+                                color: endColorValid ? "black" : colors.danger,
                                 fontSize: 16,
                               }
                         }
@@ -249,7 +250,7 @@ export default function TimeSlot({
                     <Text
                       style={{
                         textDecorationLine: "underline",
-                        color: colorValid ? "black" : colors.danger,
+                        color: startColorValid ? "black" : colors.danger,
                         fontSize: 16,
                       }}
                     >
@@ -265,7 +266,7 @@ export default function TimeSlot({
                     <Text
                       style={{
                         textDecorationLine: "underline",
-                        color: colorValid ? "black" : colors.danger,
+                        color: endColorValid ? "black" : colors.danger,
                         fontSize: 16,
                       }}
                     >
@@ -291,7 +292,7 @@ export default function TimeSlot({
                         ? textStyle
                         : {
                             textDecorationLine: "underline",
-                            color: colorValid ? "black" : colors.danger,
+                            color: overallColorValid ? "black" : colors.danger,
                             fontSize: 16,
                           }
                     }
@@ -320,7 +321,7 @@ export default function TimeSlot({
                             ? [textStyle, { textDecorationLine: "underline" }]
                             : {
                                 textDecorationLine: "underline",
-                                color: colorValid ? "black" : colors.danger,
+                                color: startColorValid ? "black" : colors.danger,
                                 fontSize: 16,
                               }
                         }
@@ -341,7 +342,7 @@ export default function TimeSlot({
                             ? [textStyle, { textDecorationLine: "underline" }]
                             : {
                                 textDecorationLine: "underline",
-                                color: colorValid ? "black" : colors.danger,
+                                color: endColorValid ? "black" : colors.danger,
                                 fontSize: 16,
                               }
                         }
@@ -364,7 +365,7 @@ export default function TimeSlot({
                             ? textStyle
                             : {
                                 textDecorationLine: "underline",
-                                color: colorValid ? "black" : colors.danger,
+                                color: startColorValid ? "black" : colors.danger,
                                 fontSize: 16,
                               }
                         }
@@ -373,7 +374,7 @@ export default function TimeSlot({
                       </Text>
                     </Pressable>
                     <Text
-                      style={{ color: colorValid ? "black" : colors.danger }}
+                      style={{ color: overallColorValid ? "black" : colors.danger }}
                     >
                       {" "}
                       —{" "}
@@ -390,7 +391,7 @@ export default function TimeSlot({
                             ? [textStyle, { textAlign: "right" }]
                             : {
                                 textDecorationLine: "underline",
-                                color: colorValid ? "black" : colors.danger,
+                                color: endColorValid ? "black" : colors.danger,
                                 fontSize: 16,
                               }
                         }
@@ -416,7 +417,7 @@ export default function TimeSlot({
                     <Text
                       style={{
                         textDecorationLine: "underline",
-                        color: colorValid ? "black" : colors.danger,
+                        color: startColorValid ? "black" : colors.danger,
                         fontSize: 16,
                       }}
                     >
@@ -432,7 +433,7 @@ export default function TimeSlot({
                     <Text
                       style={{
                         textDecorationLine: "underline",
-                        color: colorValid ? "black" : colors.danger,
+                        color: endColorValid ? "black" : colors.danger,
                         fontSize: 16,
                       }}
                     >
@@ -487,7 +488,17 @@ export default function TimeSlot({
               setTempStart(null);
             }
           } else {
-            onChange({ ...slot, [mode]: date });
+            // When editing individual times, ensure end time stays on same date as start
+            if (mode === "end" && slot.start && endPickerMode === "time") {
+              const endDate = new Date(slot.start);
+              endDate.setHours(date.getHours());
+              endDate.setMinutes(date.getMinutes());
+              endDate.setSeconds(date.getSeconds());
+              endDate.setMilliseconds(date.getMilliseconds());
+              onChange({ ...slot, end: endDate });
+            } else {
+              onChange({ ...slot, [mode]: date });
+            }
           }
         }}
         onCancel={() => {
