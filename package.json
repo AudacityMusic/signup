@@ -51,7 +51,7 @@
     "prettier": "^3.3.2"
   },
   "overrides": {
-    "metro": "^0.83.1"
+    "metro": "~0.82.5"
   },
   "private": true
 }
