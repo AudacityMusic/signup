@@ -75,13 +75,13 @@ export default function TimeSlot({
             style ? (
               <View style={{ flexDirection: 'row', paddingLeft: 5, justifyContent: 'flex-start' }}>
                 <Pressable onPress={() => { setMode('start'); setOpen(true); }}>
-                  <Text style={textStyle ? textStyle : { textDecorationLine: 'underline', color: valid ? 'black' : colors.danger }}>
+                  <Text style={textStyle ? [textStyle, { textDecorationLine: 'underline' }] : { textDecorationLine: 'underline', color: valid ? 'black' : colors.danger }}>
                     {formatDateTime(slot.start)}
                   </Text>
                 </Pressable>
                 <Text style={{ color: '#666' }}>  —  </Text>
                 <Pressable onPress={() => { setMode('end'); setOpen(true); }}>
-                  <Text style={textStyle ? textStyle : { textDecorationLine: 'underline', color: valid ? 'black' : colors.danger }}>
+                  <Text style={textStyle ? [textStyle, { textDecorationLine: 'underline' }] : { textDecorationLine: 'underline', color: valid ? 'black' : colors.danger }}>
                     {formatDateTime(slot.end)}
                   </Text>
                 </Pressable>
