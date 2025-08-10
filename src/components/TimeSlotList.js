@@ -33,7 +33,10 @@ const addValidationToSlot = (slot) => {
       const minStartTime = 10 * 60 + 30; // 10:30 AM
       const maxStartTime = 17 * 60; // 5:00 PM
 
-      if (startTimeInMinutes < minStartTime || startTimeInMinutes > maxStartTime)
+      if (
+        startTimeInMinutes < minStartTime ||
+        startTimeInMinutes > maxStartTime
+      )
         return false;
 
       // Business rules: start < end <= 6:00 PM
@@ -46,10 +49,10 @@ const addValidationToSlot = (slot) => {
 
       return true;
     },
-    
+
     validateDetailed: function () {
       const result = { valid: true, invalidStart: false, invalidEnd: false };
-      
+
       // Both start and end must be non-null
       if (!this.start || !this.end) {
         result.valid = false;
@@ -73,7 +76,10 @@ const addValidationToSlot = (slot) => {
       const minStartTime = 10 * 60 + 30; // 10:30 AM
       const maxStartTime = 17 * 60; // 5:00 PM
 
-      if (startTimeInMinutes < minStartTime || startTimeInMinutes > maxStartTime) {
+      if (
+        startTimeInMinutes < minStartTime ||
+        startTimeInMinutes > maxStartTime
+      ) {
         result.valid = false;
         result.invalidStart = true;
       }
@@ -112,7 +118,10 @@ export default function TimeSlotList({
   const [isAddingSlot, setIsAddingSlot] = useState(false);
 
   // Only show red styling when there are invalid slots OR the list is empty (after validation attempt)
-  const hasInvalidSlots = !state.valid && (slots.length === 0 || slots.some(slot => slot.validate && !slot.validate()));
+  const hasInvalidSlots =
+    !state.valid &&
+    (slots.length === 0 ||
+      slots.some((slot) => slot.validate && !slot.validate()));
 
   // Ensure existing slots have validation methods when component mounts
   useEffect(() => {
@@ -152,7 +161,13 @@ export default function TimeSlotList({
               autoOpen={false}
               startTitle={startTitle}
               endTitle={endTitle}
-              validationResult={state.valid ? { valid: true, invalidStart: false, invalidEnd: false } : (slot.validateDetailed ? slot.validateDetailed() : { valid: true, invalidStart: false, invalidEnd: false })}
+              validationResult={
+                state.valid
+                  ? { valid: true, invalidStart: false, invalidEnd: false }
+                  : slot.validateDetailed
+                    ? slot.validateDetailed()
+                    : { valid: true, invalidStart: false, invalidEnd: false }
+              }
               onChange={(updatedSlot) => {
                 const newSlots = [...slots];
                 newSlots[index] = addValidationToSlot(updatedSlot);
