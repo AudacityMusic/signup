@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   applyButtonText: {
-    color: "black",
+    color: "#666",
     fontSize: 16,
     textAlign: "center",
   },

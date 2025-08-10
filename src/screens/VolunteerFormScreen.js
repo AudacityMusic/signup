@@ -8,6 +8,7 @@
 
 import { useRef, useState } from "react";
 import {
+  Alert,
   Dimensions,
   KeyboardAvoidingView,
   Pressable,
@@ -16,6 +17,7 @@ import {
   Text,
   View,
 } from "react-native";
+import Fuse from "fuse.js";
 
 import NextButton from "../components/NextButton";
 import PersistScrollView from "../components/PersistScrollView";
@@ -27,24 +29,58 @@ import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
 import RequestConcert from "../utils/forms/RequestConcert";
 import colors from "../constants/colors";
 
-// Factory: choose form class by event title
+// Factory: choose form class by event title using fuzzy matching
 function getForm(title, date, location, navigation, scrollRef) {
-  const eventTitle = title.trim().toUpperCase();
+  const eventTitle = title.trim();
 
-  if (eventTitle == "LIBRARY MUSIC HOUR") {
-    return new LibraryMusicHour(date, location, navigation, scrollRef);
-  }
-  if (eventTitle == "MUSIC BY THE TRACKS") {
-    return new MusicByTheTracks(date, location, navigation, scrollRef);
-  }
-  if (eventTitle == "REQUEST A CONCERT") {
-    return new RequestConcert(date, location, navigation, scrollRef);
-  }
-  if (eventTitle == "AUDACITY DANCE CLUB") {
-    return new DanceClub(date, location, navigation, scrollRef);
+  // Define form options with their exact names and constructors
+  const formOptions = [
+    {
+      name: "LIBRARY MUSIC HOUR",
+      constructor: LibraryMusicHour,
+      aliases: ["Library Music Hour", "Library Music", "Music Hour"]
+    },
+    {
+      name: "MUSIC BY THE TRACKS", 
+      constructor: MusicByTheTracks,
+      aliases: ["Music by the Tracks", "Music Tracks", "By the Tracks"]
+    },
+    {
+      name: "REQUEST A CONCERT",
+      constructor: RequestConcert,
+      aliases: ["Request a Concert", "Request Concert", "Concert Request"]
+    },
+    {
+      name: "AUDACITY DANCE CLUB",
+      constructor: DanceClub,
+      aliases: ["Audacity Dance Club", "Dance Club", "Dance"]
+    }
+  ];
+
+  // Create searchable list with all names and aliases
+  const searchList = formOptions.flatMap(option => [
+    { name: option.name, constructor: option.constructor },
+    ...option.aliases.map(alias => ({ name: alias, constructor: option.constructor }))
+  ]);
+
+  // Configure Fuse for fuzzy search
+  const fuse = new Fuse(searchList, {
+    keys: ['name'],
+    threshold: 0.3, // Lower = more strict matching (0.0 = exact, 1.0 = match anything)
+    ignoreLocation: true,
+    ignoreFieldNorm: true
+  });
+
+  // Search for the best match
+  const results = fuse.search(eventTitle);
+  
+  if (results.length > 0) {
+    const bestMatch = results[0].item;
+    console.log(`Fuzzy matched "${eventTitle}" to "${bestMatch.name}"`);
+    return new bestMatch.constructor(date, location, navigation, scrollRef);
   }
 
-  alertError(`Unknown form title ${eventTitle} in getForm`);
+  alertError(`Unknown form title "${eventTitle}" in getForm`);
   return null;
 }
 
@@ -120,8 +156,26 @@ export default function VolunteerFormScreen({ navigation, route }) {
               style={styles.submitButton}
               onPress={async () => {
                 // Check if form is valid before showing "Submitting..."
-                const invalidResponses = form.validate();
+                console.log('About to validate form...');
+                let invalidResponses = 0;
+                try {
+                  invalidResponses = form.validate();
+                  console.log('Form validation result:', invalidResponses);
+                } catch (error) {
+                  console.log('Error during validation:', error);
+                  invalidResponses = 1; // Assume invalid if error occurs
+                }
                 if (invalidResponses > 0) {
+                  console.log('Showing alert for', invalidResponses, 'invalid responses');
+                  // Show error alert with count of invalid questions
+                  const questionText = invalidResponses === 1 ? "question" : "questions";
+                  const hasText = invalidResponses === 1 ? "has" : "have";
+                  Alert.alert(
+                    "Error",
+                    `${invalidResponses} ${questionText} ${hasText} invalid or missing responses. Please fix all responses highlighted in red to submit this form.`,
+                    [{ text: "OK" }]
+                  );
+                  console.log('Alert should have been shown');
                   // Don't show "Submitting..." if validation fails
                   await form.submit(); // This will just show the error alert and return
                 } else {
