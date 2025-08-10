@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   dateFilterText: {
-    fontSize: 16,
+    fontSize: 15,
     color: "#666",
     textAlign: "left",
   },
