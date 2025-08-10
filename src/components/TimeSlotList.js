@@ -11,7 +11,7 @@ import EvilIcons from "@expo/vector-icons/EvilIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import colors from "../constants/colors";
-import TimeSlot from "./TimeSlot";
+import TimeSlot from "./TimeSlot.js";
 
 // Add validation method to a slot object
 const addValidationToSlot = (slot) => {

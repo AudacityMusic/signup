@@ -12,8 +12,7 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  Text,
-  Pressable,
+  Text
 } from "react-native";
 import { Dropdown, MultiSelect } from "react-native-element-dropdown";
 import Fuse from "fuse.js";
@@ -206,8 +205,7 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
           { name: "searchableDay", weight: 0.001 }, // "Monday"
           { name: "searchableYear", weight: 0.001 }, // "2024"
         ],
-        threshold: 0.6, // More lenient threshold for sorting (0.4 was too restrictive)
-        includeScore: true,
+        threshold: 0.5, // More restrictive threshold for fuzzy search (recommended: 0.4-0.5)
         minMatchCharLength: 1,
       });
       const results = fuse.search(appliedKeyFilter);
