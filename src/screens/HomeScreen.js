@@ -42,16 +42,6 @@ export default function HomeScreen({ navigation, route }) {
   // State: array of event objects
   const [data, setData] = useState([]);
 
-  // Debug: log when data state changes
-  useEffect(() => {
-    console.log(
-      "Data state changed at",
-      new Date().toISOString(),
-      "length:",
-      data.length,
-    );
-  }, [data]);
-
   // Request notification permissions and set up channel on mount
   useEffect(() => {
     initNotificationHandling();
@@ -98,7 +88,6 @@ export default function HomeScreen({ navigation, route }) {
    * @returns {Promise<number|null>} number of events loaded or null on failure
    */
   const onRefresh = useCallback(async () => {
-    console.log("onRefresh called at", new Date().toISOString());
     const parser = new PublicGoogleSheetsParser(
       EXPO_PUBLIC_SHEET_ID || "1w8CEPFw3Qk1bFueetJDMGpRG_7c2L0O0nLKVmVjSH0g",
       {
@@ -183,7 +172,6 @@ export default function HomeScreen({ navigation, route }) {
 
   // Memoized formatted data for carousel to prevent excessive re-renders
   const formattedData = useMemo(() => {
-    console.log("formattedData recalculated at", new Date().toISOString());
     return formatData(filteredData);
   }, [filteredData]);
 

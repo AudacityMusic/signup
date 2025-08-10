@@ -98,13 +98,6 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
 
   // Filtered events (using applied filters) - memoized for performance
   const filteredData = useMemo(() => {
-    console.log(
-      "filteredData recalculated at",
-      new Date().toISOString(),
-      "data length:",
-      data.length,
-    );
-
     // Step 1: Apply hard filters first (location, tags, time) - these remove events completely
     let hardFilteredEvents = data.filter((e) => {
       // Apply location hard filter

@@ -7,7 +7,7 @@
  *  - scrollRef: ref to control FlatList instance
  */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import { FlatList } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
@@ -24,7 +24,11 @@ export default function PersistScrollView({
   }, []);
 
   // Convert children to array for FlatList
-  const childrenArray = Array.isArray(children) ? children : [children];
+  // Convert children to array for FlatList, memoized for performance
+  const childrenArray = useMemo(
+    () => (Array.isArray(children) ? children : [children]),
+    [children]
+  );
 
   const renderItem = ({ item }) => item;
 

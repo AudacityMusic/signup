@@ -18,12 +18,6 @@ import RefreshButton from "./RefreshButton";
 import VolunteerOpportunity from "./VolunteerOpportunity";
 
 function CarouselSection({ navigation, data, onRefresh }) {
-  console.log(
-    "CarouselSection re-rendered at",
-    new Date().toISOString(),
-    "with data length:",
-    data.length,
-  );
   // Current index of active carousel slide for dots indicator
   const [dotIndex, setDotIndex] = useState(0);
 
@@ -80,7 +74,6 @@ function CarouselSection({ navigation, data, onRefresh }) {
         data={data}
         renderItem={renderItem}
         onSnapToItem={useCallback((index) => {
-          console.log("Carousel snapped to index:", index);
           setDotIndex(index);
         }, [])}
       />
@@ -145,10 +138,8 @@ export default React.memo(CarouselSection, (prevProps, nextProps) => {
 
   // Only re-render if data reference actually changed
   if (prevProps.data !== nextProps.data) {
-    console.log("Data reference changed, allowing re-render");
     return false; // Allow re-render
   }
 
-  console.log("Blocking re-render - same data reference");
   return true; // Block re-render
 });

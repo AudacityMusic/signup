@@ -175,7 +175,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
                     [{ text: "OK" }],
                   );
                   // Don't show "Submitting..." if validation fails
-                  await form.submit(); // This will just show the error alert and return
+                  // Do not call form.submit() here; error alert is already shown
                 } else {
                   // Only show "Submitting..." if validation passes
                   setButtonText("Submitting...");
