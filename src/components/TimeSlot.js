@@ -474,7 +474,14 @@ export default function TimeSlot({
               setOpen(true);
               // Don't call onChange until both dates are selected
             } else {
-              const finalSlot = { start: tempStart, end: date };
+              // Ensure end time is on the same date as start time
+              const endDate = new Date(tempStart);
+              endDate.setHours(date.getHours());
+              endDate.setMinutes(date.getMinutes());
+              endDate.setSeconds(date.getSeconds());
+              endDate.setMilliseconds(date.getMilliseconds());
+              
+              const finalSlot = { start: tempStart, end: endDate };
               onChange(finalSlot);
               setSelectingRange(false);
               setTempStart(null);

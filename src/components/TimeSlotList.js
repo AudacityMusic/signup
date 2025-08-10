@@ -66,8 +66,8 @@ export default function TimeSlotList({
   };
   const [isAddingSlot, setIsAddingSlot] = useState(false);
 
-  // Only show red styling after form validation attempt fails
-  const hasInvalidSlots = !state.valid;
+  // Only show red styling when there are actually invalid slots
+  const hasInvalidSlots = !state.valid && slots.some(slot => slot.validate && !slot.validate());
 
   // Ensure existing slots have validation methods when component mounts
   useEffect(() => {
@@ -107,7 +107,7 @@ export default function TimeSlotList({
               autoOpen={false}
               startTitle={startTitle}
               endTitle={endTitle}
-              isValid={state.valid ? true : !slot.validate || slot.validate()}
+              isValid={state.valid ? true : slot.validate ? slot.validate() : true}
               onChange={(updatedSlot) => {
                 const newSlots = [...slots];
                 newSlots[index] = addValidationToSlot(updatedSlot);
