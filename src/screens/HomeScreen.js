@@ -6,9 +6,9 @@
  * - Manages push notifications for each event
  */
 
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState, useMemo, useCallback } from "react";
+import { StyleSheet, View, FlatList } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import FilterPanel from "../components/FilterPanel";
 import CarouselSection from "../components/CarouselSection";
 import Heading from "../components/Heading";
@@ -40,10 +40,15 @@ import {
 export default function HomeScreen({ navigation, route }) {
   // State: array of event objects
   const [data, setData] = useState([]);
-  
+
   // Debug: log when data state changes
   useEffect(() => {
-    console.log("Data state changed at", new Date().toISOString(), "length:", data.length);
+    console.log(
+      "Data state changed at",
+      new Date().toISOString(),
+      "length:",
+      data.length,
+    );
   }, [data]);
 
   // Request notification permissions and set up channel on mount
@@ -188,11 +193,10 @@ export default function HomeScreen({ navigation, route }) {
     setFilteredData(data);
   }, [data]);
 
-
   const renderItem = ({ item, index }) => {
     if (index === 0) {
       return (
-        <FilterPanel 
+        <FilterPanel
           data={data}
           onFilteredDataChange={handleFilteredDataChange}
         />
@@ -218,12 +222,12 @@ export default function HomeScreen({ navigation, route }) {
   };
 
   const listData = [
-    { key: 'filter' },
-    { key: 'carousel' },
-    { key: 'other-heading' },
-    { key: 'other-opportunities' },
-    { key: 'websites-heading' },
-    { key: 'websites' }
+    { key: "filter" },
+    { key: "carousel" },
+    { key: "other-heading" },
+    { key: "other-opportunities" },
+    { key: "websites-heading" },
+    { key: "websites" },
   ];
 
   return (

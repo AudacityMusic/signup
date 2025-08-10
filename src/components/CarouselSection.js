@@ -18,42 +18,50 @@ import RefreshButton from "./RefreshButton";
 import VolunteerOpportunity from "./VolunteerOpportunity";
 
 function CarouselSection({ navigation, data, onRefresh }) {
-  console.log("CarouselSection re-rendered at", new Date().toISOString(), "with data length:", data.length);
+  console.log(
+    "CarouselSection re-rendered at",
+    new Date().toISOString(),
+    "with data length:",
+    data.length,
+  );
   // Current index of active carousel slide for dots indicator
   const [dotIndex, setDotIndex] = useState(0);
 
   /**
    * Renders one page of the carousel (one row of up to 3 events)
    */
-  const renderItem = useCallback(({ item }) => {
-    return (
-      <View>
-        {item.map((event, index) => {
-          // Render a card for each event
-          return (
-            <VolunteerOpportunity
-              navigation={navigation}
-              title={event.Title}
-              location={event.Location}
-              date={formatDate(event.Date)}
-              image={event.Image}
-              description={event.Description ?? ""}
-              tags={
-                event.Tags == null
-                  ? []
-                  : event.Tags.split(",")
-                      .map((str) => str.trim())
-                      .filter((str) => str.length > 0)
-              }
-              formURL={event["Form Link"] ?? null}
-              isSubmitted={event.isSubmitted}
-              key={index}
-            />
-          );
-        })}
-      </View>
-    );
-  }, [navigation]);
+  const renderItem = useCallback(
+    ({ item }) => {
+      return (
+        <View>
+          {item.map((event, index) => {
+            // Render a card for each event
+            return (
+              <VolunteerOpportunity
+                navigation={navigation}
+                title={event.Title}
+                location={event.Location}
+                date={formatDate(event.Date)}
+                image={event.Image}
+                description={event.Description ?? ""}
+                tags={
+                  event.Tags == null
+                    ? []
+                    : event.Tags.split(",")
+                        .map((str) => str.trim())
+                        .filter((str) => str.length > 0)
+                }
+                formURL={event["Form Link"] ?? null}
+                isSubmitted={event.isSubmitted}
+                key={index}
+              />
+            );
+          })}
+        </View>
+      );
+    },
+    [navigation],
+  );
 
   return (
     <View>
@@ -122,15 +130,23 @@ const styles = StyleSheet.create({
 });
 
 export default React.memo(CarouselSection, (prevProps, nextProps) => {
-  console.log("React.memo comparison - data lengths:", prevProps.data.length, "vs", nextProps.data.length);
-  console.log("React.memo comparison - data same reference?", prevProps.data === nextProps.data);
-  
+  console.log(
+    "React.memo comparison - data lengths:",
+    prevProps.data.length,
+    "vs",
+    nextProps.data.length,
+  );
+  console.log(
+    "React.memo comparison - data same reference?",
+    prevProps.data === nextProps.data,
+  );
+
   // Only re-render if data reference actually changed
   if (prevProps.data !== nextProps.data) {
     console.log("Data reference changed, allowing re-render");
     return false; // Allow re-render
   }
-  
+
   console.log("Blocking re-render - same data reference");
   return true; // Block re-render
 });

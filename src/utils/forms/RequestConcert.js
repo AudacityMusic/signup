@@ -151,6 +151,7 @@ export default class RequestConcert extends Form {
         component: (
           <TimeSlotList
             title="Possible Concert Times"
+            subheader="Each concert must start between 10:30 am and 5 pm while also ending before 6 pm."
             key="timeSlots"
             state={this.timeSlots[0]}
             setState={this.timeSlots[1]}
@@ -242,7 +243,7 @@ export default class RequestConcert extends Form {
         name: "otherInfo",
         component: (
           <TextField
-            title="Additional Comments"
+            title="Other Information (optional)"
             key="otherInfo"
             state={this.otherInfo[0]}
             setState={this.otherInfo[1]}

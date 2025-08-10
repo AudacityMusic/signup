@@ -23,7 +23,7 @@ export default function TextField({
   setState,
   extraMargin = true,
   inputted = true,
-  onPress = null
+  onPress = null,
 }) {
   return (
     <View
@@ -48,24 +48,32 @@ export default function TextField({
         {subtitle}
       </Text>
       {/* Text input with validation border color */}
-      {inputted ?
+      {inputted ? (
         <TextInput
-        style={[
-          styles.inputField,
-          {
-            borderColor: state.valid ? "black" : colors.danger,
-            marginBottom: extraMargin ? 20 : 0,
-          },
-        ]}
-        onChangeText={(text) => setState((prev) => ({ ...prev, value: text }))}
-        value={state.value}
-        maxLength={maxLength}
-        // @ts-expect-error
-        keyboardType={keyboardType}
-      />
-      : onPress ? (
-        <Pressable onPress={onPress} style={[styles.inputField, { borderColor: colors.secondary, justifyContent: 'center' }]}>
-          <Text style={{ color: state.value ? 'black' : colors.secondary }}>
+          style={[
+            styles.inputField,
+            {
+              borderColor: state.valid ? "black" : colors.danger,
+              marginBottom: extraMargin ? 20 : 0,
+            },
+          ]}
+          onChangeText={(text) =>
+            setState((prev) => ({ ...prev, value: text, valid: true }))
+          }
+          value={state.value}
+          maxLength={maxLength}
+          // @ts-expect-error
+          keyboardType={keyboardType}
+        />
+      ) : onPress ? (
+        <Pressable
+          onPress={onPress}
+          style={[
+            styles.inputField,
+            { borderColor: colors.secondary, justifyContent: "center" },
+          ]}
+        >
+          <Text style={{ color: state.value ? "black" : colors.secondary }}>
             {state.value || "Filter by date & time"}
           </Text>
         </Pressable>
@@ -73,8 +81,7 @@ export default function TextField({
         <View style={[styles.inputField, { borderColor: colors.secondary }]}>
           <Text style={{ color: colors.secondary }}>{title}</Text>
         </View>
-      )
-      }
+      )}
     </View>
   );
 }

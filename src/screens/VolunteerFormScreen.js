@@ -119,9 +119,17 @@ export default function VolunteerFormScreen({ navigation, route }) {
             <Pressable
               style={styles.submitButton}
               onPress={async () => {
-                setButtonText("Submitting...");
-                await form.submit();
-                setButtonText("Submit");
+                // Check if form is valid before showing "Submitting..."
+                const invalidResponses = form.validate();
+                if (invalidResponses > 0) {
+                  // Don't show "Submitting..." if validation fails
+                  await form.submit(); // This will just show the error alert and return
+                } else {
+                  // Only show "Submitting..." if validation passes
+                  setButtonText("Submitting...");
+                  await form.submit();
+                  setButtonText("Submit");
+                }
               }}
             >
               <NextButton>{buttonText}</NextButton>

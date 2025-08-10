@@ -52,7 +52,7 @@ export default function MultiSelect({
               const newValue = selected[index]
                 ? prev.value.filter((v) => v !== option)
                 : [...prev.value, option];
-              return { ...prev, value: newValue };
+              return { ...prev, value: newValue, valid: true };
             });
             // Update local selected toggle
             setSelected((prev) => {
@@ -70,7 +70,14 @@ export default function MultiSelect({
               size={24}
               color={selected[index] ? colors.blue : colors.black}
             />
-            <Text style={styles.optionText}>{option}</Text>
+            <Text
+              style={[
+                styles.optionText,
+                !state.valid && { color: colors.danger },
+              ]}
+            >
+              {option}
+            </Text>
           </View>
         </Pressable>
       ))}
