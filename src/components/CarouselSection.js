@@ -53,6 +53,8 @@ function CarouselSection({ navigation, data, onRefresh }) {
                 }
                 formURL={event["Form Link"] ?? null}
                 isSubmitted={event.isSubmitted}
+                max={event.Max}
+                signedUp={event["Signed Up"]}
                 key={index}
               />
             );
