@@ -191,10 +191,10 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
         placeholderStyle={styles.dropdownPlaceholder}
         itemTextStyle={styles.dropdownItemText}
         renderRightIcon={(visible) => (
-          <MaterialIcons 
-            name={visible ? "keyboard-arrow-up" : "keyboard-arrow-down"} 
-            size={20} 
-            color="#666" 
+          <MaterialIcons
+            name={visible ? "keyboard-arrow-up" : "keyboard-arrow-down"}
+            size={20}
+            color="#666"
           />
         )}
       />
@@ -232,10 +232,10 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
         itemTextStyle={styles.dropdownItemText}
         selectedStyle={styles.selectedItem}
         renderRightIcon={(visible) => (
-          <MaterialIcons 
-            name={visible ? "keyboard-arrow-up" : "keyboard-arrow-down"} 
-            size={20} 
-            color="#666" 
+          <MaterialIcons
+            name={visible ? "keyboard-arrow-up" : "keyboard-arrow-down"}
+            size={20}
+            color="#666"
           />
         )}
       />
