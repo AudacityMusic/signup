@@ -117,7 +117,7 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
       // Apply tags hard filter (AND semantics only)
       if (appliedTagsFilter.length > 0) {
         const eventTags = (e.Tags || "").split(",").map((t) => t.trim());
-        
+
         // Use fuzzy matching for tags - all selected tags must match
         const tagFuse = new Fuse(eventTags, {
           threshold: 0.3, // Stricter threshold for tags
@@ -154,7 +154,6 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
     appliedFilterSlot,
     appliedTagsFilter,
   ]);
-
 
   // Notify parent component when filtered data changes
   useEffect(() => {
