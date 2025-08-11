@@ -24,7 +24,6 @@ import {
   strToDate,
 } from "../utils";
 import PublicGoogleSheetsParser from "../utils/PublicGoogleSheetsParser";
-import { EXPO_PUBLIC_SHEET_ID, EXPO_PUBLIC_SHEET_NAME } from "@env";
 import {
   initNotificationHandling,
   scheduleEventNotifications,
@@ -89,9 +88,12 @@ export default function HomeScreen({ navigation, route }) {
    */
   const onRefresh = useCallback(async () => {
     const parser = new PublicGoogleSheetsParser(
-      EXPO_PUBLIC_SHEET_ID || "1w8CEPFw3Qk1bFueetJDMGpRG_7c2L0O0nLKVmVjSH0g",
+      process.env.EXPO_PUBLIC_SHEET_ID ??
+        alertError("Undefined EXPO_PUBLIC_SHEET_ID env variable"),
       {
-        sheetName: EXPO_PUBLIC_SHEET_NAME || "DEV",
+        sheetName:
+          process.env.EXPO_PUBLIC_SHEET_NAME ??
+          alertError("Undefined EXPO_PUBLIC_SHEET_NAME env variable"),
       },
     );
 
