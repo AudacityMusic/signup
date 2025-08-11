@@ -24,24 +24,15 @@ import {
 import * as AppleAuth from "expo-apple-authentication";
 
 import { alertError } from "../utils";
-import {
-  EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID,
-  EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID,
-} from "@env";
 
 // Initialize Google Sign-In configuration
-console.log("Environment variables:", {
-  EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID,
-  EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID,
-});
-
 GoogleSignin.configure({
   webClientId:
-    EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID ||
-    "761199370622-hsdvg6i6irb8d86aa6bjvbqgkjh3jhmh.apps.googleusercontent.com", // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
+    process.env.EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID ??
+    alertError("Undefined EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID env variable"), // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
   iosClientId:
-    EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID ||
-    "761199370622-m8mpb5eihd5fbn76gk4lolcttcdm1f6k.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+    process.env.EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID ??
+    alertError("Undefined EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID env variable"), // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
   scopes: [
     "https://www.googleapis.com/auth/userinfo.profile",
     "https://www.googleapis.com/auth/userinfo.email",
@@ -118,104 +109,20 @@ export default function SignInScreen({ navigation }) {
                     AppleAuth.AppleAuthenticationScope.EMAIL,
                   ],
                 });
-
-                // Check if we have existing Apple user data
-                let existingAppleUser = null;
-                try {
-                  const appleUserData =
-                    await AsyncStorage.getItem("apple-user-data");
-                  if (appleUserData) {
-                    existingAppleUser = JSON.parse(appleUserData);
-                    console.log(
-                      "🍎 Found existing Apple user data:",
-                      existingAppleUser,
-                    );
-                  } else {
-                    console.log("🍎 No existing Apple user data found");
-                  }
-                } catch (error) {
-                  console.log(
-                    "🍎 Error retrieving existing Apple user data:",
-                    error,
-                  );
-                }
-
-                // Extract name and email from credential (only available on first sign-in)
-                let userName = "";
-                let userEmail = "";
-
-                console.log("🍎 Apple credential received:", {
-                  hasFullName: !!credential.fullName,
-                  hasEmail: !!credential.email,
-                  givenName: credential.fullName?.givenName,
-                  familyName: credential.fullName?.familyName,
-                  email: credential.email,
-                  user: credential.user,
-                });
-
-                if (
-                  credential.fullName &&
-                  (credential.fullName.givenName ||
-                    credential.fullName.familyName)
-                ) {
-                  // First sign-in: Apple provides full name
-                  const firstName = credential.fullName.givenName || "";
-                  const lastName = credential.fullName.familyName || "";
-                  userName = `${firstName} ${lastName}`.trim();
-                  console.log("🍎 Using name from Apple credential:", userName);
-                } else if (existingAppleUser && existingAppleUser.name) {
-                  // Subsequent sign-ins: use stored name
-                  userName = existingAppleUser.name;
-                  console.log("🍎 Using stored name:", userName);
-                }
-
-                if (credential.email) {
-                  // First sign-in: Apple provides email
-                  userEmail = credential.email;
-                  console.log(
-                    "🍎 Using email from Apple credential:",
-                    userEmail,
-                  );
-                } else if (existingAppleUser && existingAppleUser.email) {
-                  // Subsequent sign-ins: use stored email
-                  userEmail = existingAppleUser.email;
-                  console.log("🍎 Using stored email:", userEmail);
-                }
-
-                // Create user object
-                const userObject = {
-                  name: userName,
-                  email: userEmail,
-                  id: credential.user || "apple",
-                  provider: "apple",
-                  appleUserId: credential.user,
-                };
-
-                console.log("🍎 Final user object:", userObject);
-
-                // Store user data for app usage
-                await AsyncStorage.setItem("user", JSON.stringify(userObject));
-
-                // Persistently store Apple-specific data for future sign-ins
-                // This data is stored separately to preserve it across app sessions
-                if (userName || userEmail) {
-                  const appleUserData = {
-                    name: userName,
-                    email: userEmail,
-                    appleUserId: credential.user,
-                    lastUpdated: new Date().toISOString(),
-                  };
-                  await AsyncStorage.setItem(
-                    "apple-user-data",
-                    JSON.stringify(appleUserData),
-                  );
-                  console.log("🍎 Stored Apple user data:", appleUserData);
-                } else {
-                  console.log(
-                    "🍎 No data to store - userName and userEmail are empty",
-                  );
-                }
-
+                // Store placeholder user for Apple (limited data)
+                await AsyncStorage.setItem(
+                  "user",
+                  JSON.stringify({
+                    // Apple Auth only returns fullName and email once
+                    // https://docs.expo.dev/versions/latest/sdk/apple-authentication/#appleauthenticationsigninasyncoptions
+                    // TODO: Use fullName and email while complying with data clearing policies
+                    // name: `${credential.fullName.givenName} ${credential.fullName.familyName}`,
+                    // email: credential.email,
+                    name: "",
+                    email: "",
+                    id: "apple",
+                  }),
+                );
                 await AsyncStorage.removeItem("access-token");
                 navigation.navigate("Home", { forceRerender: true });
               } catch (error) {
