@@ -17,6 +17,7 @@ import {
 import { Dropdown, MultiSelect } from "react-native-element-dropdown";
 import Fuse from "fuse.js";
 import TimeSlot from "./TimeSlot";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export default function FilterPanel({ data, onFilteredDataChange }) {
   // Filter states
@@ -189,8 +190,13 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
         selectedTextStyle={styles.dropdownSelectedText}
         placeholderStyle={styles.dropdownPlaceholder}
         itemTextStyle={styles.dropdownItemText}
-        renderRightIcon={() => null}
-        showsVerticalScrollIndicator={false}
+        renderRightIcon={(visible) => (
+          <MaterialIcons 
+            name={visible ? "keyboard-arrow-up" : "keyboard-arrow-down"} 
+            size={20} 
+            color="#666" 
+          />
+        )}
       />
       {/* Date range filter */}
       <TimeSlot
@@ -225,8 +231,13 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
         placeholderStyle={styles.dropdownPlaceholder}
         itemTextStyle={styles.dropdownItemText}
         selectedStyle={styles.selectedItem}
-        renderRightIcon={() => null}
-        showsVerticalScrollIndicator={false}
+        renderRightIcon={(visible) => (
+          <MaterialIcons 
+            name={visible ? "keyboard-arrow-up" : "keyboard-arrow-down"} 
+            size={20} 
+            color="#666" 
+          />
+        )}
       />
       {/* Apply Filters Button */}
       <TouchableOpacity style={styles.applyButton} onPress={applyFilters}>
