@@ -69,7 +69,7 @@ function getForm(title, date, location, navigation, scrollRef) {
   // Configure Fuse for fuzzy search
   const fuse = new Fuse(searchList, {
     keys: ["name"],
-    threshold: 0.3, // Lower = more strict matching (0.0 = exact, 1.0 = match anything)
+    threshold: 0.2, // Lower = more strict matching (0.0 = exact, 1.0 = match anything)
     ignoreLocation: true,
     ignoreFieldNorm: true,
   });

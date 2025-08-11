@@ -1,9 +1,9 @@
 /**
  * FilterPanel.js
  * Component for filtering and searching events
- * - Key search with prioritized fields (title > description > location > tags > date)
+ * - Simple name search with fuzzy matching on event titles
  * - Location, tags, and date range hard filters
- * - Fuzzy search with relevance sorting
+ * - Tag filter uses AND semantics (all selected tags must match)
  */
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
@@ -17,23 +17,16 @@ import {
 import { Dropdown, MultiSelect } from "react-native-element-dropdown";
 import Fuse from "fuse.js";
 import TimeSlot from "./TimeSlot";
-import { formatDate } from "../utils";
 
 export default function FilterPanel({ data, onFilteredDataChange }) {
   // Filter states
-  const [keyFilter, setKeyFilter] = useState("");
+  const [nameFilter, setNameFilter] = useState("");
   const [locationFilter, setLocationFilter] = useState([]);
   const [tagsFilter, setTagsFilter] = useState([]);
   const [filterSlot, setFilterSlot] = useState({ start: null, end: null });
-  const [dateFilterState, setDateFilterState] = useState({
-    value: "",
-    y: 0,
-    valid: true,
-  });
-  const [showDatePicker, setShowDatePicker] = useState(false);
 
   // Applied filter states (used for actual filtering)
-  const [appliedKeyFilter, setAppliedKeyFilter] = useState("");
+  const [appliedNameFilter, setAppliedNameFilter] = useState("");
   const [appliedLocationFilter, setAppliedLocationFilter] = useState([]);
   const [appliedTagsFilter, setAppliedTagsFilter] = useState([]);
   const [appliedFilterSlot, setAppliedFilterSlot] = useState({
@@ -90,11 +83,11 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
 
   // Apply filters function
   const applyFilters = useCallback(() => {
-    setAppliedKeyFilter(keyFilter);
+    setAppliedNameFilter(nameFilter);
     setAppliedLocationFilter(locationFilter);
     setAppliedTagsFilter(tagsFilter);
     setAppliedFilterSlot(filterSlot);
-  }, [keyFilter, locationFilter, tagsFilter, filterSlot]);
+  }, [nameFilter, locationFilter, tagsFilter, filterSlot]);
 
   // Filtered events (using applied filters) - memoized for performance
   const filteredData = useMemo(() => {
@@ -121,119 +114,47 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
         if (new Date(e.Date) > appliedFilterSlot.end) return false;
       }
 
-      // Apply tags hard filter
+      // Apply tags hard filter (AND semantics only)
       if (appliedTagsFilter.length > 0) {
         const eventTags = (e.Tags || "").split(",").map((t) => t.trim());
-        const anyMode = appliedTagsFilter.includes("__ANY__");
-        const selectedTags = appliedTagsFilter.filter(
-          (tag) => tag !== "__ANY__",
+        
+        // Use fuzzy matching for tags - all selected tags must match
+        const tagFuse = new Fuse(eventTags, {
+          threshold: 0.3, // Stricter threshold for tags
+          minMatchCharLength: 1,
+        });
+
+        const allMatch = appliedTagsFilter.every(
+          (selectedTag) =>
+            tagFuse.search(selectedTag).length > 0 ||
+            eventTags.includes(selectedTag),
         );
-
-        if (selectedTags.length > 0) {
-          // Use fuzzy matching for tags
-          const tagFuse = new Fuse(eventTags, {
-            threshold: 0.3, // Stricter threshold for tags
-            minMatchCharLength: 1,
-          });
-
-          if (anyMode) {
-            // OR semantics: any of selectedTags should fuzzy match
-            const hasMatch = selectedTags.some(
-              (selectedTag) =>
-                tagFuse.search(selectedTag).length > 0 ||
-                eventTags.includes(selectedTag),
-            );
-            if (!hasMatch) return false;
-          } else {
-            // AND semantics: all selectedTags should fuzzy match
-            const allMatch = selectedTags.every(
-              (selectedTag) =>
-                tagFuse.search(selectedTag).length > 0 ||
-                eventTags.includes(selectedTag),
-            );
-            if (!allMatch) return false;
-          }
-        }
+        if (!allMatch) return false;
       }
       return true;
     });
 
-    // Step 2: Apply key filter for sorting/relevance (if specified)
-    if (appliedKeyFilter) {
-      // Add searchable date strings to each event for time-based searches
-      const dataWithSearchableDates = hardFilteredEvents.map((event) => ({
-        ...event,
-        searchableDate: formatDate(event.Date), // Full formatted date for searching
-        searchableMonth: event.Date.toLocaleDateString("en-us", {
-          month: "long",
-        }), // "August"
-        searchableMonthShort: event.Date.toLocaleDateString("en-us", {
-          month: "short",
-        }), // "Aug"
-        searchableDay: event.Date.toLocaleDateString("en-us", {
-          weekday: "long",
-        }), // "Monday"
-        searchableYear: event.Date.getFullYear().toString(), // "2024"
-        searchableMonthDay: event.Date.toLocaleDateString("en-us", {
-          month: "long",
-          day: "numeric",
-        }), // "August 23"
-        searchableMonthDayShort: event.Date.toLocaleDateString("en-us", {
-          month: "short",
-          day: "numeric",
-        }), // "Aug 23"
-      }));
-
-      const fuse = new Fuse(dataWithSearchableDates, {
-        keys: [
-          { name: "Title", weight: 0.5 }, // Event name (50% - highest priority)
-          { name: "Description", weight: 0.25 }, // Event description (25% - second priority)
-          { name: "Location", weight: 0.1 }, // Event location (10% - third priority)
-          { name: "Tags", weight: 0.1 }, // Event tags (10% - fourth priority)
-          { name: "searchableDate", weight: 0.015 }, // Full date string (5% total for all date fields)
-          { name: "searchableMonthDay", weight: 0.015 }, // "August 23"
-          { name: "searchableMonthDayShort", weight: 0.01 }, // "Aug 23"
-          { name: "searchableMonth", weight: 0.005 }, // "August"
-          { name: "searchableMonthShort", weight: 0.003 }, // "Aug"
-          { name: "searchableDay", weight: 0.001 }, // "Monday"
-          { name: "searchableYear", weight: 0.001 }, // "2024"
-        ],
-        threshold: 0.5, // More restrictive threshold for fuzzy search (recommended: 0.4-0.5)
+    // Step 2: Apply name filter for simple fuzzy matching on event titles (if specified)
+    if (appliedNameFilter) {
+      const fuse = new Fuse(hardFilteredEvents, {
+        keys: ["Title"],
+        threshold: 0.3, // Moderate threshold for name matching
         minMatchCharLength: 1,
       });
-      const results = fuse.search(appliedKeyFilter);
+      const results = fuse.search(appliedNameFilter);
       return results.map((result) => result.item);
     }
 
-    // Step 3: If no key filter, return hard-filtered events as-is
+    // Step 3: If no name filter, return hard-filtered events as-is
     return hardFilteredEvents;
   }, [
     data,
-    appliedKeyFilter,
+    appliedNameFilter,
     appliedLocationFilter,
     appliedFilterSlot,
     appliedTagsFilter,
   ]);
 
-  // Update TextField display when filter slot changes
-  useEffect(() => {
-    if (filterSlot.start && filterSlot.end) {
-      const startStr =
-        filterSlot.start.toLocaleDateString() +
-        " " +
-        filterSlot.start.toLocaleTimeString();
-      const endStr =
-        filterSlot.end.toLocaleDateString() +
-        " " +
-        filterSlot.end.toLocaleTimeString();
-      setDateFilterState((prev) => ({
-        ...prev,
-        value: `${startStr} - ${endStr}`,
-      }));
-    } else {
-      setDateFilterState((prev) => ({ ...prev, value: "" }));
-    }
-  }, [filterSlot]);
 
   // Notify parent component when filtered data changes
   useEffect(() => {
@@ -244,9 +165,9 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
     <View style={styles.filters}>
       <TextInput
         style={styles.input}
-        placeholder="Enter keywords..."
-        value={keyFilter}
-        onChangeText={setKeyFilter}
+        placeholder="Search by event name..."
+        value={nameFilter}
+        onChangeText={setNameFilter}
       />
       {/* Location filter via single-select Dropdown */}
       <Dropdown
@@ -289,12 +210,9 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
         placeholder="Filter by date & time"
         showClearButton={true}
       />
-      {/* Tag filter via multi-select, includes special option for any-match mode */}
+      {/* Tag filter via multi-select */}
       <MultiSelect
-        data={[
-          { label: "*Match any", value: "__ANY__" },
-          ...allTags.map((tag) => ({ label: tag, value: tag })),
-        ]}
+        data={allTags.map((tag) => ({ label: tag, value: tag }))}
         labelField="label"
         valueField="value"
         placeholder="Select Tags"
