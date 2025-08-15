@@ -6,16 +6,15 @@
  * - Manages push notifications for each event
  */
 
+import React, { useEffect, useState, useMemo, useCallback } from "react";
+import { StyleSheet, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
-
+import FilterPanel from "../components/FilterPanel";
 import CarouselSection from "../components/CarouselSection";
 import Heading from "../components/Heading";
 import OtherOpportunities from "../components/OtherOpportunities";
-import PersistScrollView from "../components/PersistScrollView";
 import Websites from "../components/Websites";
-
+// ...existing imports...
 import {
   alertError,
   formatDate,
@@ -37,6 +36,7 @@ import {
  * - Filters events by date range
  * - Manages notification scheduling for each event
  */
+// Suppress warning about nested VirtualizedLists
 export default function HomeScreen({ navigation, route }) {
   // State: array of event objects
   const [data, setData] = useState([]);
@@ -48,6 +48,7 @@ export default function HomeScreen({ navigation, route }) {
 
   // Whenever event data changes, clear and reschedule notifications
   useEffect(() => {
+    // Re-enable notification scheduling in production
     cancelAllScheduled();
     (async () => {
       try {
@@ -66,7 +67,7 @@ export default function HomeScreen({ navigation, route }) {
    * @param {Array} rawData - flat list of event objects
    * @returns {Array[]} array of rows, each an array of up to 3 events
    */
-  function formatData(rawData) {
+  const formatData = useCallback((rawData) => {
     const formatted = [];
     let row = [];
     rawData.forEach((item) => {
@@ -78,14 +79,14 @@ export default function HomeScreen({ navigation, route }) {
     });
     if (row.length) formatted.push(row);
     return formatted;
-  }
+  }, []);
 
   /**
    * Fetch events from Google Sheets, filter by date and submission status,
    * then update state for display and scheduling.
    * @returns {Promise<number|null>} number of events loaded or null on failure
    */
-  async function onRefresh() {
+  const onRefresh = useCallback(async () => {
     const parser = new PublicGoogleSheetsParser(
       process.env.EXPO_PUBLIC_SHEET_ID ??
         alertError("Undefined EXPO_PUBLIC_SHEET_ID env variable"),
@@ -156,27 +157,76 @@ export default function HomeScreen({ navigation, route }) {
 
     // Return count for pull-to-refresh control
     return newData.length;
-  }
+  }, []);
 
-  // Trigger data load on screen focus or route change
+  // Trigger data load on initial mount
   useEffect(() => {
     onRefresh().catch((err) => console.error("Error refreshing events:", err));
-  }, [route]);
+  }, []);
 
-  return (
-    <PersistScrollView>
-      <View style={styles.container}>
+  // Filtered data from FilterPanel
+  const [filteredData, setFilteredData] = useState(data);
+
+  // Callback to receive filtered data from FilterPanel
+  const handleFilteredDataChange = useCallback((newFilteredData) => {
+    setFilteredData(newFilteredData);
+  }, []);
+
+  // Memoized formatted data for carousel to prevent excessive re-renders
+  const formattedData = useMemo(() => {
+    return formatData(filteredData);
+  }, [filteredData]);
+
+  // Update filteredData to match new data when no filters applied
+  useEffect(() => {
+    setFilteredData(data);
+  }, [data]);
+
+  const renderItem = ({ item, index }) => {
+    if (index === 0) {
+      return (
+        <FilterPanel
+          data={data}
+          onFilteredDataChange={handleFilteredDataChange}
+        />
+      );
+    } else if (index === 1) {
+      return (
         <CarouselSection
           navigation={navigation}
-          data={formatData(data)}
+          data={formattedData}
           onRefresh={onRefresh}
         />
-        <Heading>Other Opportunities</Heading>
-        <OtherOpportunities navigation={navigation} />
-        <Heading>Websites</Heading>
-        <Websites />
-      </View>
-    </PersistScrollView>
+      );
+    } else if (index === 2) {
+      return <Heading>Other Opportunities</Heading>;
+    } else if (index === 3) {
+      return <OtherOpportunities navigation={navigation} />;
+    } else if (index === 4) {
+      return <Heading>Websites</Heading>;
+    } else if (index === 5) {
+      return <Websites />;
+    }
+    return null;
+  };
+
+  const listData = [
+    { key: "filter" },
+    { key: "carousel" },
+    { key: "other-heading" },
+    { key: "other-opportunities" },
+    { key: "websites-heading" },
+    { key: "websites" },
+  ];
+
+  return (
+    <FlatList
+      data={listData}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.key}
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={true}
+    />
   );
 }
 

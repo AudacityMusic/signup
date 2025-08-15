@@ -40,7 +40,10 @@ export default function MultipleChoice({
         <Pressable
           key={value}
           style={styles.option}
-          onPress={() => onSelect(value)}
+          onPress={() => {
+            onSelect(value);
+            setState((prev) => ({ ...prev, valid: true }));
+          }}
         >
           <View style={styles.radioCircle}>
             {state.value === value && <View style={styles.selectedRb} />}
@@ -49,6 +52,7 @@ export default function MultipleChoice({
             style={[
               styles.optionText,
               state.value === value && styles.selectedText,
+              !state.valid && { color: colors.danger },
             ]}
           >
             {value}
