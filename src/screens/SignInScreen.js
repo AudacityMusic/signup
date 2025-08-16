@@ -93,7 +93,7 @@ export default function SignInScreen({ navigation }) {
             Sign in with Google
           </Text>
         </Pressable>
-
+/*
         {/* Apple Sign-In button, shown only if available */}
         {AppleAuth.isAvailableAsync() ? (
           <AppleAuth.AppleAuthenticationButton
@@ -134,7 +134,7 @@ export default function SignInScreen({ navigation }) {
               }
             }}
           />
-        ) : null}
+        ) : null} */
       </View>
     </SafeAreaView>
   );
