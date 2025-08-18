@@ -2,418 +2,237 @@
  * TimeSlotList.js
  * Manages a dynamic list of time slots with add/remove controls and date pickers.
  * Exports:
- *   - TimeSlot: model class for a time slot
- *   - RemoveButton: UI to remove a slot
- *   - AddButton: UI to add a new slot
  *   - Default component: renders all slots and a date picker modal
  */
 
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import DatePicker from "react-native-date-picker";
-
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import colors from "../constants/colors";
+import TimeSlot from "./TimeSlot.js";
 
-// Utility: format Date to 'h:mm AM/PM' string
-function timeFormatter(date) {
-  const hour = date.getHours() % 12 == 0 ? 12 : date.getHours() % 12;
-  const minute = (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
-  const period = date.getHours() >= 12 ? "PM" : "AM";
-  return `${hour}:${minute} ${period}`;
-}
+// Add validation method to a slot object
+const addValidationToSlot = (slot) => {
+  if (slot.validate && slot.validateDetailed) return slot; // Already has validation
 
-// Utility: format Date to 'Day MM/DD/YY h:mm AM/PM' string
-function dateFormatter(date) {
-  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  return `${days[date.getDay()]} ${date.getMonth() + 1}/${date.getDate() < 10 ? "0" + date.getDate() : date.getDate()}/${date.getFullYear() - 2000} ${timeFormatter(date)}`;
-}
+  return {
+    ...slot,
+    validate: function () {
+      // Both start and end must be non-null
+      if (!this.start || !this.end) return false;
 
-// Utility: compare two times (hours, minutes)
-function timeCompare(hour1, minute1, hour2, minute2) {
-  if (hour1 < hour2) {
-    return -1;
-  } else if (hour1 > hour2) {
-    return 1;
-  } else {
-    if (minute1 < minute2) {
-      return -1;
-    } else if (minute1 > minute2) {
-      return 1;
-    } else {
-      return 0;
-    }
-  }
-}
+      // Start must be before end
+      if (this.start >= this.end) return false;
 
-/**
- * Model for a single time slot with start and end dates.
- */
-export class TimeSlot {
-  constructor(start = new Date(), end = new Date()) {
-    this.start = start;
-    this.end = end;
-    this.valid = true;
-  }
+      // Business rules: 10:30 AM <= start <= 5:00 PM
+      const startHour = this.start.getHours();
+      const startMinute = this.start.getMinutes();
+      const startTimeInMinutes = startHour * 60 + startMinute;
+      const minStartTime = 10 * 60 + 30; // 10:30 AM
+      const maxStartTime = 17 * 60; // 5:00 PM
 
-  validate() {
-    const start_hour = this.start.getHours();
-    const start_minute = this.start.getMinutes();
-    const end_hour = this.end.getHours();
-    const end_minute = this.end.getMinutes();
+      if (
+        startTimeInMinutes < minStartTime ||
+        startTimeInMinutes > maxStartTime
+      )
+        return false;
 
-    if (this.start >= this.end) {
-      this.valid = false;
-    } else if (
-      timeCompare(start_hour, start_minute, 10, 30) < 0 ||
-      timeCompare(start_hour, start_minute, 17, 0) > 0
-    ) {
-      this.valid = false;
-    } else if (timeCompare(end_hour, end_minute, 18, 0) > 0) {
-      this.valid = false;
-    } else {
-      this.valid = true;
-    }
+      // Business rules: start < end <= 6:00 PM
+      const endHour = this.end.getHours();
+      const endMinute = this.end.getMinutes();
+      const endTimeInMinutes = endHour * 60 + endMinute;
+      const maxEndTime = 18 * 60; // 6:00 PM
 
-    return this.valid;
-  }
+      if (endTimeInMinutes > maxEndTime) return false;
 
-  toString() {
-    return `${dateFormatter(this.start)} - ${timeFormatter(this.end)}`;
-  }
+      return true;
+    },
 
-  compareTo(other) {
-    if (this.start < other.start) {
-      return -1;
-    } else if (this.start > other.start) {
-      return 1;
-    } else {
-      if (this.end < other.end) {
-        return -1;
-      } else if (this.end > other.end) {
-        return 1;
-      } else {
-        return 0;
+    validateDetailed: function () {
+      const result = { valid: true, invalidStart: false, invalidEnd: false };
+
+      // Both start and end must be non-null
+      if (!this.start || !this.end) {
+        result.valid = false;
+        if (!this.start) result.invalidStart = true;
+        if (!this.end) result.invalidEnd = true;
+        return result;
+      }
+
+      // Start must be before end
+      if (this.start >= this.end) {
+        result.valid = false;
+        result.invalidStart = true;
+        result.invalidEnd = true;
+        return result;
+      }
+
+      // Business rules: 10:30 AM <= start <= 5:00 PM
+      const startHour = this.start.getHours();
+      const startMinute = this.start.getMinutes();
+      const startTimeInMinutes = startHour * 60 + startMinute;
+      const minStartTime = 10 * 60 + 30; // 10:30 AM
+      const maxStartTime = 17 * 60; // 5:00 PM
+
+      if (
+        startTimeInMinutes < minStartTime ||
+        startTimeInMinutes > maxStartTime
+      ) {
+        result.valid = false;
+        result.invalidStart = true;
+      }
+
+      // Business rules: start < end <= 6:00 PM
+      const endHour = this.end.getHours();
+      const endMinute = this.end.getMinutes();
+      const endTimeInMinutes = endHour * 60 + endMinute;
+      const maxEndTime = 18 * 60; // 6:00 PM
+
+      if (endTimeInMinutes > maxEndTime) {
+        result.valid = false;
+        result.invalidEnd = true;
+      }
+
+      return result;
+    },
+  };
+};
+
+export default function TimeSlotList({
+  title,
+  state,
+  setState,
+  startTitle = "Start Date",
+  endTitle = "End Date",
+  combinedTitle = "Select Time Slot",
+  subheader = null,
+}) {
+  const slots = state.value;
+  const setSlots = (newSlots) => {
+    // Ensure all slots have validation method
+    const slotsWithValidation = newSlots.map(addValidationToSlot);
+    setState((prev) => ({ ...prev, value: slotsWithValidation }));
+  };
+  const [isAddingSlot, setIsAddingSlot] = useState(false);
+
+  // Only show red styling when there are invalid slots OR the list is empty (after validation attempt)
+  const hasInvalidSlots =
+    !state.valid &&
+    (slots.length === 0 ||
+      slots.some((slot) => slot.validate && !slot.validate()));
+
+  // Ensure existing slots have validation methods when component mounts
+  useEffect(() => {
+    if (slots.length > 0) {
+      const needsValidation = slots.some((slot) => !slot.validate);
+      if (needsValidation) {
+        const slotsWithValidation = slots.map(addValidationToSlot);
+        setState((prev) => ({ ...prev, value: slotsWithValidation }));
       }
     }
-  }
+  }, [slots, setState]);
 
-  render(state, setState, index, setIndex, setIsOpen, setIsAdded, setIsStart) {
-    return (
-      <View
-        key={index * 10}
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          marginBottom: 10,
-          alignItems: "center",
-        }}
+  return (
+    <View style={styles.container}>
+      <Text
+        style={[styles.title, hasInvalidSlots && { color: "red" }]}
+        selectable={true}
       >
-        <View key={index * 10 + 1} style={{ flexDirection: "row" }}>
-          <Pressable
-            key={index * 10 + 2}
-            onPress={() => {
-              setIsOpen(true);
-              setIsAdded(false);
-              setIsStart(true);
-              setIndex(index);
-            }}
-          >
-            <Text
-              key={index * 10 + 3}
-              style={{
-                fontSize: 16,
-                textDecorationLine: "underline",
-                color: this.valid ? "black" : colors.danger,
-              }}
-            >
-              {dateFormatter(this.start)}
-            </Text>
-          </Pressable>
-          <Text key={index * 10 + 4} style={{ fontSize: 16 }}>
-            {" "}
-            -{" "}
-          </Text>
-          <Pressable
-            key={index * 10 + 5}
-            onPress={() => {
-              setIsOpen(true);
-              setIsAdded(false);
-              setIsStart(false);
-              setIndex(index);
-            }}
-          >
-            <Text
-              key={index * 10 + 6}
-              style={{
-                fontSize: 16,
-                textDecorationLine: "underline",
-                color: this.valid ? "black" : colors.danger,
-              }}
-            >
-              {timeFormatter(this.end)}
-            </Text>
-          </Pressable>
-        </View>
-        <RemoveButton
-          key={index * 10 + 7}
-          state={state}
-          setState={setState}
-          index={index}
-        />
-      </View>
-    );
-  }
-}
-
-/**
- * Button to remove a specific time slot from the list.
- */
-function RemoveButton({ state, setState, index }) {
-  return (
-    <Pressable
-      key={index * 10 + 7}
-      style={styles.button}
-      onPress={() => {
-        setState((previous) => {
-          return {
-            ...previous,
-            value: previous.value
-              .slice(0, index)
-              .concat(previous.value.slice(index + 1, state.value.length)),
-          };
-        });
-      }}
-    >
-      <EvilIcons name="trash" size={30} color="#FF3B30" />
-    </Pressable>
-  );
-}
-
-/**
- * Button to add a new time slot to the list and open the date picker.
- */
-function AddButton({
-  state,
-  setState,
-  setIndex,
-  setIsAdded,
-  setIsOpen,
-  setIsStart,
-}) {
-  return (
-    <Pressable
-      style={styles.button}
-      onPress={() => {
-        setIsAdded(true);
-        setIsStart(true);
-        let length = state.value.length;
-        setIndex(length);
-        setState((previous) => {
-          return {
-            ...previous,
-            value: previous.value.concat([new TimeSlot()]),
-          };
-        });
-        setIsOpen(true);
-      }}
-    >
-      <Ionicons name="add-circle-sharp" size={21} color={colors.blue} />
-      <Text style={{ color: colors.blue, fontSize: 19 }}> Add Time Slot</Text>
-    </Pressable>
-  );
-}
-
-/**
- * Date and time selection component for start and end times of a time slot.
- */
-export function Select({
-  state,
-  setState,
-  index,
-  isAdded,
-  isStart,
-  setIsStart,
-  isOpen,
-  setIsOpen,
-}) {
-  const now = new Date();
-
-  if (state.value.length <= index) {
-    return;
-  }
-
-  let start = state.value[index].start;
-  let end = state.value[index].end;
-
-  return (
-    <DatePicker
-      modal
-      open={isOpen}
-      date={
-        isStart && isAdded
-          ? new Date()
-          : isStart || isAdded
-            ? new Date(
-                now.getFullYear(),
-                now.getMonth(),
-                now.getDate(),
-                start.getHours(),
-                start.getMinutes(),
-              )
-            : new Date(
-                now.getFullYear(),
-                now.getMonth(),
-                now.getDate(),
-                end.getHours(),
-                end.getMinutes(),
-              )
-      }
-      mode={isStart ? "datetime" : "time"}
-      title={isStart ? "Select Start Time" : "Select End Time"}
-      minimumDate={
-        isStart
-          ? new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0)
-          : new Date(
-              start.getFullYear(),
-              start.getMonth(),
-              start.getDate(),
-              start.getHours(),
-              start.getMinutes(),
-            )
-      }
-      maximumDate={
-        isStart
-          ? new Date(
-              now.getFullYear(),
-              now.getMonth() + 3,
-              now.getDate(),
-              23,
-              59,
-              59,
-            )
-          : new Date(
-              start.getFullYear(),
-              start.getMonth(),
-              start.getDate(),
-              23,
-              59,
-              59,
-            )
-      }
-      onConfirm={(date) => {
-        if (isStart) {
-          setState((previous) => {
-            let next = previous.value;
-            next[index].start = date;
-            return { ...previous, value: next };
-          });
-          setIsStart(false);
-
-          setIsOpen(false);
-
-          if (isAdded) {
-            setIsOpen(true);
-          }
-        } else {
-          setState((previous) => {
-            let next = previous.value;
-            next[index].end = date;
-            return { ...previous, value: next };
-          });
-          setIsOpen(false);
-        }
-      }}
-      onCancel={() => {
-        if (isAdded && isStart) {
-          setState((previous) => {
-            return {
-              ...previous,
-              value: previous.value.slice(0, previous.value.length - 1),
-            };
-          });
-        }
-        setIsOpen(false);
-      }}
-    />
-  );
-}
-
-/**
- * Manages a list of time slots, allowing users to add, remove, and edit slots.
- */
-export default function TimeSlotList({ title, state, setState }) {
-  const [open, setIsOpen] = useState(false);
-  const [start, setIsStart] = useState(true);
-  const [added, setIsAdded] = useState(false);
-  const [index, setIndex] = useState(0);
-
-  return (
-    <View
-      style={styles.container}
-      onLayout={(event) => {
-        const y = event.nativeEvent.layout.y;
-        setState((prevState) => ({
-          ...prevState,
-          y,
-        }));
-      }}
-    >
-      <Text style={styles.title} selectable={true}>
         {title}
         <Text style={{ color: "red" }}> *</Text>
       </Text>
-      <Text
-        style={[
-          styles.requirements,
-          { color: state.valid ? "black" : colors.danger },
-        ]}
-        selectable={true}
-      >
-        {
-          "Each time slot must start between 10:30 am and 5 pm and end before 6 pm."
-        }
-      </Text>
-      {state.value.map((slot, index) =>
-        slot == null || (index == state.value.length - 1 && open && added)
-          ? null
-          : slot.render(
-              state,
-              setState,
-              index,
-              setIndex,
-              setIsOpen,
-              setIsAdded,
-              setIsStart,
-            ),
+      {subheader && (
+        <Text style={[styles.subheader, hasInvalidSlots && { color: "red" }]}>
+          {subheader}
+        </Text>
       )}
-      <AddButton
-        state={state}
-        setState={setState}
-        setIndex={setIndex}
-        setIsAdded={setIsAdded}
-        setIsOpen={setIsOpen}
-        setIsStart={setIsStart}
-      />
-      {open ? (
-        <Select
-          state={state}
-          setState={setState}
-          index={index}
-          isAdded={added}
-          isStart={start}
-          setIsStart={setIsStart}
-          isOpen={open}
-          setIsOpen={setIsOpen}
+      {slots.map((slot, index) => (
+        <View key={index}>
+          <View style={styles.slotRow}>
+            <TimeSlot
+              // Use range selection only for empty slots, independent for filled slots
+              slot={slot}
+              selectRange={!(slot.start && slot.end)}
+              startPickerMode="datetime"
+              endPickerMode="time"
+              // don't auto-open for existing slots
+              autoOpen={false}
+              startTitle={startTitle}
+              endTitle={endTitle}
+              validationResult={
+                state.valid
+                  ? { valid: true, invalidStart: false, invalidEnd: false }
+                  : slot.validateDetailed
+                    ? slot.validateDetailed()
+                    : { valid: true, invalidStart: false, invalidEnd: false }
+              }
+              onChange={(updatedSlot) => {
+                const newSlots = [...slots];
+                newSlots[index] = addValidationToSlot(updatedSlot);
+                setSlots(newSlots);
+
+                // Reset validation state when slot is modified
+                setState((prev) => ({ ...prev, valid: true }));
+              }}
+            />
+            {(slot.start || slot.end) && (
+              <Pressable
+                style={styles.button}
+                onPress={() => {
+                  const newSlots = slots.filter((_, i) => i !== index);
+                  setSlots(newSlots);
+                }}
+              >
+                <EvilIcons name="trash" size={30} color="#FF3B30" />
+              </Pressable>
+            )}
+          </View>
+        </View>
+      ))}
+      {isAddingSlot && (
+        <TimeSlot
+          slot={{ start: null, end: null }}
+          selectRange={true}
+          startPickerMode="datetime"
+          endPickerMode="time"
+          autoOpen={true}
+          startTitle={startTitle}
+          endTitle={endTitle}
+          isValid={state.valid}
+          onChange={(updatedSlot) => {
+            // Only add to slots array if both dates are set
+            if (updatedSlot.start && updatedSlot.end) {
+              setSlots([...slots, addValidationToSlot(updatedSlot)]);
+              setIsAddingSlot(false);
+              // Reset validation state when new slot is added
+              setState((prev) => ({ ...prev, valid: true }));
+            }
+          }}
+          onCancel={() => {
+            // Remove the temporary slot on cancel
+            setIsAddingSlot(false);
+          }}
         />
-      ) : null}
+      )}
+      <Pressable
+        style={styles.button}
+        onPress={() => {
+          if (!isAddingSlot) {
+            setIsAddingSlot(true);
+          }
+        }}
+      >
+        <Ionicons name="add-circle-sharp" size={21} color={colors.blue} />
+        <Text style={{ color: colors.blue, fontSize: 19 }}> Add Time Slot</Text>
+      </Pressable>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: { flex: 1, marginBottom: 10 },
   title: {
     fontSize: 18,
     fontWeight: "600",
@@ -421,19 +240,18 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     color: "black",
   },
-
-  requirements: {
-    fontSize: 17,
-    color: colors.secondary,
-    flexWrap: "wrap",
+  subheader: {
+    fontSize: 16,
+    fontWeight: "500",
+    marginBottom: 8,
+    color: "#333",
+  },
+  slotRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 10,
   },
-
-  container: {
-    flex: 1,
-    marginBottom: 10,
-  },
-
   button: {
     flexDirection: "row",
     alignItems: "center",
