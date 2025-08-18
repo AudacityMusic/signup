@@ -1,11 +1,10 @@
 /**
-* VolunteerFormScreen.js
-* Renders a dynamic sign-up form based on the event type.
-* - Chooses the correct form class via getForm()
-* - Displays questions with automatic scroll-to-error support
-* - Handles submission and updates button state
-*/
-
+ * VolunteerFormScreen.js
+ * Renders a dynamic sign-up form based on the event type.
+ * - Chooses the correct form class via getForm()
+ * - Displays questions with automatic scroll-to-error support
+ * - Handles submission and updates button state
+ */
 
 import { useRef, useState } from "react";
 import {
@@ -20,10 +19,8 @@ import {
 } from "react-native";
 import Fuse from "fuse.js";
 
-
 import NextButton from "../components/NextButton";
 import PersistScrollView from "../components/PersistScrollView";
-
 
 import { alertError, openInMaps } from "../utils";
 import DanceClub from "../utils/forms/DanceClub";
@@ -88,7 +85,6 @@ function getForm(title, date, location, navigation, scrollRef) {
   alertError(`Unknown form title "${eventTitle}" in getForm`);
   return null;
 }
-
 
 export default function VolunteerFormScreen({ navigation, route }) {
   // Extract parameters from navigation
@@ -197,57 +193,56 @@ export default function VolunteerFormScreen({ navigation, route }) {
   );
 }
 
-
 const styles = StyleSheet.create({
- container: {
-   paddingVertical: "7%",
-   alignItems: "stretch",
-   flexDirection: "column",
- },
- body: {
-   flexDirection: "column",
-   justifyContent: "space-between",
-   alignItems: "stretch",
- },
- form: {
-   alignItems: "stretch",
- },
- header: {
-   alignItems: "center",
-   textAlign: "center",
-   paddingVertical: 20,
- },
- questions: {
-   paddingHorizontal: 30,
- },
- headerText: {
-   fontSize: 18,
-   flexWrap: "wrap",
-   textAlign: "center",
- },
- checkBoxesContainer: {
-   flex: 1,
-   justifyContent: "center",
-   flexDirection: "column",
-   textAlignVertical: "center",
- },
- uploadsContainer: {
-   flex: 3.5,
-   justifyContent: "center",
-   flexDirection: "column",
-   textAlignVertical: "center",
-   fontSize: 20,
- },
- otherInfoContainer: {
-   flex: 1.2,
- },
- submitButton: {
-   alignSelf: "flex-end",
-   justifyContent: "flex-end",
-   marginBottom: 50,
- },
- locationText: {
-   textDecorationLine: "underline",
-   color: colors.primary,
- },
+  container: {
+    paddingVertical: "7%",
+    alignItems: "stretch",
+    flexDirection: "column",
+  },
+  body: {
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "stretch",
+  },
+  form: {
+    alignItems: "stretch",
+  },
+  header: {
+    alignItems: "center",
+    textAlign: "center",
+    paddingVertical: 20,
+  },
+  questions: {
+    paddingHorizontal: 30,
+  },
+  headerText: {
+    fontSize: 18,
+    flexWrap: "wrap",
+    textAlign: "center",
+  },
+  checkBoxesContainer: {
+    flex: 1,
+    justifyContent: "center",
+    flexDirection: "column",
+    textAlignVertical: "center",
+  },
+  uploadsContainer: {
+    flex: 3.5,
+    justifyContent: "center",
+    flexDirection: "column",
+    textAlignVertical: "center",
+    fontSize: 20,
+  },
+  otherInfoContainer: {
+    flex: 1.2,
+  },
+  submitButton: {
+    alignSelf: "flex-end",
+    justifyContent: "flex-end",
+    marginBottom: 50,
+  },
+  locationText: {
+    textDecorationLine: "underline",
+    color: colors.primary,
+  },
 });
