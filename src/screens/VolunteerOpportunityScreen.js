@@ -12,7 +12,14 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { Linking, Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  Linking,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 import Heading from "../components/Heading";
 import NextButton from "../components/NextButton";
@@ -97,24 +104,45 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
             </View>
           </View>
 
-         {/* Optional description section */}
-         {typeof description === "string" && description.trim() !== "" && (
-           <View style={styles.about}>
-             <Heading>About</Heading>
-             <Markdown
-               style={{
-                 body: { fontSize: 14, color: colors.black },
-                 link: { color: colors.primary },
-               }}
-               onLinkPress={(url) => {
-                 Linking.openURL(url);
-                 return true;
-               }}
-             >
-               {description}
-             </Markdown>
-           </View>
-         )}
+          {/* Optional description section */}
+          {typeof description === "string" && description.trim() !== "" && (
+            <View style={styles.about}>
+              <Heading>About</Heading>
+              <Markdown
+                style={{
+                  heading1: {
+                    flexDirection: "row",
+                    fontSize: 30,
+                  },
+                  heading2: {
+                    flexDirection: "row",
+                    fontSize: 25,
+                  },
+                  heading3: {
+                    flexDirection: "row",
+                    fontSize: 22,
+                  },
+                  heading4: {
+                    flexDirection: "row",
+                    fontSize: 19,
+                  },
+                  heading5: {
+                    flexDirection: "row",
+                    fontSize: 17,
+                  },
+                  heading6: {
+                    flexDirection: "row",
+                    fontSize: 15,
+                  },
+                  body: {
+                    fontSize: 14,
+                  },
+                }}
+              >
+                {description}
+              </Markdown>
+            </View>
+          )}
 
           {/* Optional tags section */}
           {tags.length > 0 && (
