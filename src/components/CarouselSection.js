@@ -7,7 +7,7 @@
  *  - onRefresh: Callback to reload event data (pull-to-refresh).
  */
 
-import { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import AnimatedDotsCarousel from "react-native-animated-dots-carousel";
 import Carousel from "react-native-reanimated-carousel";
@@ -17,44 +17,47 @@ import Heading from "./Heading";
 import RefreshButton from "./RefreshButton";
 import VolunteerOpportunity from "./VolunteerOpportunity";
 
-export default function CarouselSection({ navigation, data, onRefresh }) {
+function CarouselSection({ navigation, data, onRefresh }) {
   // Current index of active carousel slide for dots indicator
   const [dotIndex, setDotIndex] = useState(0);
 
   /**
    * Renders one page of the carousel (one row of up to 3 events)
    */
-  const renderItem = ({ item }) => {
-    return (
-      <View>
-        {item.map((event, index) => {
-          // Render a card for each event
-          return (
-            <VolunteerOpportunity
-              navigation={navigation}
-              title={event.Title}
-              location={event.Location}
-              date={formatDate(event.Date)}
-              image={event.Image}
-              description={event.Description ?? ""}
-              tags={
-                event.Tags == null
-                  ? []
-                  : event.Tags.split(",")
-                      .map((str) => str.trim())
-                      .filter((str) => str.length > 0)
-              }
-              formURL={event["Form Link"] ?? null}
-              isSubmitted={event.isSubmitted}
-              max={event.Max}
-              signedUp={event["Signed Up"]}
-              key={index}
-            />
-          );
-        })}
-      </View>
-    );
-  };
+  const renderItem = useCallback(
+    ({ item }) => {
+      return (
+        <View>
+          {item.map((event, index) => {
+            // Render a card for each event
+            return (
+              <VolunteerOpportunity
+                navigation={navigation}
+                title={event.Title}
+                location={event.Location}
+                date={formatDate(event.Date)}
+                image={event.Image}
+                description={event.Description ?? ""}
+                tags={
+                  event.Tags == null
+                    ? []
+                    : event.Tags.split(",")
+                        .map((str) => str.trim())
+                        .filter((str) => str.length > 0)
+                }
+                formURL={event["Form Link"] ?? null}
+                isSubmitted={event.isSubmitted}
+                max={event.Max}
+                signedUp={event["Signed Up"]}
+                key={index}
+              />
+            );
+          })}
+        </View>
+      );
+    },
+    [navigation],
+  );
 
   return (
     <View>
@@ -70,7 +73,9 @@ export default function CarouselSection({ navigation, data, onRefresh }) {
         height={280}
         data={data}
         renderItem={renderItem}
-        onSnapToItem={(index) => setDotIndex(index)}
+        onSnapToItem={useCallback((index) => {
+          setDotIndex(index);
+        }, [])}
       />
 
       {/* Pagination dots below carousel */}
@@ -117,4 +122,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
+});
+
+export default React.memo(CarouselSection, (prevProps, nextProps) => {
+  // Only re-render if data reference actually changed
+  if (prevProps.data !== nextProps.data) {
+    return false; // Allow re-render
+  }
+
+  return true; // Block re-render
 });

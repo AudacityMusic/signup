@@ -7,11 +7,19 @@
  * - Provides Sign Up button (navigates to form or Google Forms URL)
  */
 
+import Markdown from "react-native-markdown-display";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  Linking,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 import Heading from "../components/Heading";
 import NextButton from "../components/NextButton";
@@ -97,12 +105,42 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
           </View>
 
           {/* Optional description section */}
-          {description !== "" && (
+          {typeof description === "string" && description.trim() !== "" && (
             <View style={styles.about}>
               <Heading>About</Heading>
-              <Text style={{ fontSize: 14 }} selectable>
+              <Markdown
+                style={{
+                  heading1: {
+                    flexDirection: "row",
+                    fontSize: 30,
+                  },
+                  heading2: {
+                    flexDirection: "row",
+                    fontSize: 25,
+                  },
+                  heading3: {
+                    flexDirection: "row",
+                    fontSize: 22,
+                  },
+                  heading4: {
+                    flexDirection: "row",
+                    fontSize: 19,
+                  },
+                  heading5: {
+                    flexDirection: "row",
+                    fontSize: 17,
+                  },
+                  heading6: {
+                    flexDirection: "row",
+                    fontSize: 15,
+                  },
+                  body: {
+                    fontSize: 14,
+                  },
+                }}
+              >
                 {description}
-              </Text>
+              </Markdown>
             </View>
           )}
 

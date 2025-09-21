@@ -46,7 +46,9 @@ export default function CheckBoxQuery({
         <Checkbox
           color={colors.blue}
           value={state.value === "Yes"}
-          onValueChange={() => setState((prev) => ({ ...prev, value: "Yes" }))}
+          onValueChange={() =>
+            setState((prev) => ({ ...prev, value: "Yes", valid: true }))
+          }
           style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
         />
         <Text
@@ -65,7 +67,7 @@ export default function CheckBoxQuery({
               color={colors.blue}
               value={state.value === "No"}
               onValueChange={() =>
-                setState((prev) => ({ ...prev, value: "No" }))
+                setState((prev) => ({ ...prev, value: "No", valid: true }))
               }
               style={{ borderRadius: 20, transform: [{ scale: 1.3 }] }}
             />
