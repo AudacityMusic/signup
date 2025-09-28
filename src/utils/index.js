@@ -30,41 +30,41 @@ export async function sendEmail(to, subject, body) {
     const encodedSubject = encodeURIComponent(subject);
     const encodedBody = encodeURIComponent(body);
     const emailUrl = `mailto:${to}?subject=${encodedSubject}&body=${encodedBody}`;
-    
-    console.log('Attempting to open email URL:', emailUrl);
-    console.log('Platform:', Platform.OS, Platform.Version);
+
+    console.log("Attempting to open email URL:", emailUrl);
+    console.log("Platform:", Platform.OS, Platform.Version);
 
     const canOpen = await Linking.canOpenURL(emailUrl);
-    console.log('Can open mailto URL:', canOpen);
-    
+    console.log("Can open mailto URL:", canOpen);
+
     if (canOpen) {
       await Linking.openURL(emailUrl);
-      console.log('Email client opened successfully');
+      console.log("Email client opened successfully");
     } else {
-      console.warn('Cannot open mailto URL - this is common on iOS Simulator');
-      
+      console.warn("Cannot open mailto URL - this is common on iOS Simulator");
+
       // Try alternative approach for debugging
       try {
         await Linking.openURL(emailUrl);
-        console.log('Direct email opening succeeded despite canOpenURL being false');
+        console.log(
+          "Direct email opening succeeded despite canOpenURL being false",
+        );
       } catch (directError) {
-        console.log('Direct email opening also failed:', directError);
-        
+        console.log("Direct email opening also failed:", directError);
+
         // Show user-friendly message with copy-to-clipboard option
         Alert.alert(
-          'Email Not Available',
+          "Email Not Available",
           `Testing on simulator or no email app configured.\n\nEmail: ${to}\nSubject: ${subject}\n\nTip: Test on a real device with Mail app configured.`,
-          [{ text: 'Got it' }]
+          [{ text: "Got it" }],
         );
       }
     }
   } catch (emailError) {
-    console.error('Failed to send email:', emailError);
-    Alert.alert(
-      'Email Error',
-      `Email functionality error. Contact: ${to}`,
-      [{ text: 'OK' }]
-    );
+    console.error("Failed to send email:", emailError);
+    Alert.alert("Email Error", `Email functionality error. Contact: ${to}`, [
+      { text: "OK" },
+    ]);
   }
 }
 
@@ -76,119 +76,136 @@ export async function sendEmail(to, subject, body) {
 async function submitBugReport(error) {
   try {
     const user = await getUser(true);
-    const userId = user?.id || 'anonymous';
-    const userName = user?.name || 'Anonymous User';
+    const userId = user?.id || "anonymous";
+    const userName = user?.name || "Anonymous User";
 
-    const subject = 'Auto Bug Report - Mobile App Error';
+    const subject = "Auto Bug Report - Mobile App Error";
     const bugData = {
       user: userName,
       userId: userId,
       platform: `${Platform.OS} v${Platform.Version}`,
-      appVersion: Constants.expoConfig?.version || 'Unknown',
+      appVersion: Constants.expoConfig?.version || "Unknown",
       timestamp: new Date().toISOString(),
-      error: error.toString()
+      error: error.toString(),
     };
 
     // Method 1: Try email first
     try {
-      const emailBody = `Bug Report Auto-Submitted\n\n` +
+      const emailBody =
+        `Bug Report Auto-Submitted\n\n` +
         `User: ${bugData.user} (ID: ${bugData.userId})\n` +
         `Platform: ${bugData.platform}\n` +
         `App Version: ${bugData.appVersion}\n` +
         `Timestamp: ${bugData.timestamp}\n\n` +
         `Error Details:\n${bugData.error}\n\n` +
         `Please investigate this error and contact the user if needed.`;
-        
-      await sendEmail('uppalsamaira9@gmail.com', subject, emailBody);
-      console.log('Bug report sent via email');
+
+      await sendEmail("uppalsamaira9@gmail.com", subject, emailBody);
+      console.log("Bug report sent via email");
       return;
     } catch (emailError) {
-      console.warn('Email method failed, trying alternatives:', emailError);
+      console.warn("Email method failed, trying alternatives:", emailError);
     }
 
     // Method 2: Send email via EmailJS service (reliable web-based email)
     try {
-      const emailJSResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const emailJSResponse = await fetch(
+        "https://api.emailjs.com/api/v1.0/email/send",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            service_id: "YOUR_SERVICE_ID", // You'll need to replace this
+            template_id: "YOUR_TEMPLATE_ID", // You'll need to replace this
+            user_id: "YOUR_PUBLIC_KEY", // You'll need to replace this
+            template_params: {
+              to_email: "uppalsamaira9@gmail.com",
+              from_name: "Audacity App Bug Report",
+              subject: subject,
+              message:
+                `Bug Report Auto-Submitted\n\n` +
+                `User: ${bugData.user} (ID: ${bugData.userId})\n` +
+                `Platform: ${bugData.platform}\n` +
+                `App Version: ${bugData.appVersion}\n` +
+                `Timestamp: ${bugData.timestamp}\n\n` +
+                `Error Details:\n${bugData.error}`,
+            },
+          }),
         },
-        body: JSON.stringify({
-          service_id: 'YOUR_SERVICE_ID', // You'll need to replace this
-          template_id: 'YOUR_TEMPLATE_ID', // You'll need to replace this
-          user_id: 'YOUR_PUBLIC_KEY', // You'll need to replace this
-          template_params: {
-            to_email: 'uppalsamaira9@gmail.com',
-            from_name: 'Audacity App Bug Report',
-            subject: subject,
-            message: `Bug Report Auto-Submitted\n\n` +
-              `User: ${bugData.user} (ID: ${bugData.userId})\n` +
-              `Platform: ${bugData.platform}\n` +
-              `App Version: ${bugData.appVersion}\n` +
-              `Timestamp: ${bugData.timestamp}\n\n` +
-              `Error Details:\n${bugData.error}`
-          }
-        })
-      });
+      );
 
       if (emailJSResponse.ok) {
-        console.log('Bug report sent via EmailJS');
-        Alert.alert('Bug Report Sent', 'Thank you! Your bug report has been sent successfully.');
+        console.log("Bug report sent via EmailJS");
+        Alert.alert(
+          "Bug Report Sent",
+          "Thank you! Your bug report has been sent successfully.",
+        );
         return;
       }
     } catch (emailJSError) {
-      console.warn('EmailJS method failed:', emailJSError);
+      console.warn("EmailJS method failed:", emailJSError);
     }
 
     // Method 3: Send email via Formspree (simple webhook-to-email service)
     try {
-      const formspreeResponse = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
+      const formspreeResponse = await fetch(
+        "https://formspree.io/f/YOUR_FORM_ID",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            email: "uppalsamaira9@gmail.com",
+            subject: subject,
+            message:
+              `Bug Report Auto-Submitted\n\n` +
+              `User: ${bugData.user} (ID: ${bugData.userId})\n` +
+              `Platform: ${bugData.platform}\n` +
+              `App Version: ${bugData.appVersion}\n` +
+              `Timestamp: ${bugData.timestamp}\n\n` +
+              `Error Details:\n${bugData.error}`,
+          }),
         },
-        body: JSON.stringify({
-          email: 'uppalsamaira9@gmail.com',
-          subject: subject,
-          message: `Bug Report Auto-Submitted\n\n` +
-            `User: ${bugData.user} (ID: ${bugData.userId})\n` +
-            `Platform: ${bugData.platform}\n` +
-            `App Version: ${bugData.appVersion}\n` +
-            `Timestamp: ${bugData.timestamp}\n\n` +
-            `Error Details:\n${bugData.error}`
-        })
-      });
+      );
 
       if (formspreeResponse.ok) {
-        console.log('Bug report sent via Formspree');
-        Alert.alert('Bug Report Sent', 'Thank you! Your bug report has been sent successfully.');
+        console.log("Bug report sent via Formspree");
+        Alert.alert(
+          "Bug Report Sent",
+          "Thank you! Your bug report has been sent successfully.",
+        );
         return;
       }
     } catch (formspreeError) {
-      console.warn('Formspree method failed:', formspreeError);
+      console.warn("Formspree method failed:", formspreeError);
     }
 
     // Method 4: Store locally for manual retrieval
     try {
-      const existingReports = await AsyncStorage.getItem('bug_reports') || '[]';
+      const existingReports =
+        (await AsyncStorage.getItem("bug_reports")) || "[]";
       const reports = JSON.parse(existingReports);
       reports.push(bugData);
-      await AsyncStorage.setItem('bug_reports', JSON.stringify(reports));
-      console.log('Bug report stored locally - check AsyncStorage for bug_reports');
-      
+      await AsyncStorage.setItem("bug_reports", JSON.stringify(reports));
+      console.log(
+        "Bug report stored locally - check AsyncStorage for bug_reports",
+      );
+
       // Show alert to user about local storage
       Alert.alert(
-        'Bug Report Stored',
-        'Bug report saved locally. Please contact support manually if the issue persists.',
-        [{ text: 'OK' }]
+        "Bug Report Stored",
+        "Bug report saved locally. Please contact support manually if the issue persists.",
+        [{ text: "OK" }],
       );
     } catch (storageError) {
-      console.error('All bug report methods failed:', storageError);
+      console.error("All bug report methods failed:", storageError);
     }
-
   } catch (bugReportError) {
-    console.error('Failed to submit bug report:', bugReportError);
+    console.error("Failed to submit bug report:", bugReportError);
   }
 }
 
@@ -198,7 +215,7 @@ export function alertError(error) {
   submitBugReport(error);
   Alert.alert(
     "Error",
-   `Your request was not processed successfully due to an unexpected error. We apologize for the inconvenience. A bug report has been automatically submitted to ${Constants.expoConfig.extra?.email || 'support'}. Thank you!\n\nPlatform: ${Platform.OS} with v${Platform.Version}\n\n${error}`,
+    `Your request was not processed successfully due to an unexpected error. We apologize for the inconvenience. A bug report has been automatically submitted to ${Constants.expoConfig.extra?.email || "support"}. Thank you!\n\nPlatform: ${Platform.OS} with v${Platform.Version}\n\n${error}`,
   );
   return null;
 }
@@ -209,10 +226,10 @@ export function alertError(error) {
  */
 export async function getBugReports() {
   try {
-    const existingReports = await AsyncStorage.getItem('bug_reports') || '[]';
+    const existingReports = (await AsyncStorage.getItem("bug_reports")) || "[]";
     return JSON.parse(existingReports);
   } catch (error) {
-    console.error('Failed to get bug reports:', error);
+    console.error("Failed to get bug reports:", error);
     return [];
   }
 }
@@ -223,14 +240,14 @@ export async function getBugReports() {
  */
 export async function clearBugReports() {
   try {
-    await AsyncStorage.removeItem('bug_reports');
-    console.log('Bug reports cleared');
+    await AsyncStorage.removeItem("bug_reports");
+    console.log("Bug reports cleared");
   } catch (error) {
-    console.error('Failed to clear bug reports:', error);
+    console.error("Failed to clear bug reports:", error);
   }
 }
 
-alertError(2/0)
+alertError(2 / 0);
 /**
  * Open a URL in the default browser.
  * @param {string} url
