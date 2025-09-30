@@ -63,7 +63,7 @@ export async function sendEmail(to, subject, body) {
 async function submitBugReport(error) {
   const user = await getUser(true);
   const supportEmail =
-    Constants.expoConfig.extra?.email || "uppalsamaira9@gmail.com";
+    Constants.expoConfig.extra?.email || "it@eternityband.org";
 
   const subject = "Bug Report - Auto Submitted";
   const body = `Bug Report Details:
@@ -114,7 +114,6 @@ export function alertError(error) {
   return null;
 }
 
-alertError("Test error for bug report");
 /**
  * Retrieve all stored bug reports (for debugging/manual review).
  * @returns {Promise<Array>}
