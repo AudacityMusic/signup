@@ -18,8 +18,9 @@ import Constants from "expo-constants";
 import { useState } from "react";
 import { Alert, Linking, Platform } from "react-native";
 
+ 
 /**
- * Send email using the device's default email client.
+ * Send email using mailto URL (works in Expo Go).
  * @param {string} to - recipient email address
  * @param {string} subject - email subject
  * @param {string} body - email body content
@@ -31,184 +32,76 @@ export async function sendEmail(to, subject, body) {
     const encodedBody = encodeURIComponent(body);
     const emailUrl = `mailto:${to}?subject=${encodedSubject}&body=${encodedBody}`;
 
-    console.log("Attempting to open email URL:", emailUrl);
-    console.log("Platform:", Platform.OS, Platform.Version);
+    console.log("Attempting to send email via mailto URL");
 
     const canOpen = await Linking.canOpenURL(emailUrl);
-    console.log("Can open mailto URL:", canOpen);
-
     if (canOpen) {
       await Linking.openURL(emailUrl);
       console.log("Email client opened successfully");
     } else {
-      console.warn("Cannot open mailto URL - this is common on iOS Simulator");
-
-      // Try alternative approach for debugging
-      try {
-        await Linking.openURL(emailUrl);
-        console.log(
-          "Direct email opening succeeded despite canOpenURL being false",
-        );
-      } catch (directError) {
-        console.log("Direct email opening also failed:", directError);
-
-        // Show user-friendly message with copy-to-clipboard option
-        Alert.alert(
-          "Email Not Available",
-          `Testing on simulator or no email app configured.\n\nEmail: ${to}\nSubject: ${subject}\n\nTip: Test on a real device with Mail app configured.`,
-          [{ text: "Got it" }],
-        );
-      }
+      console.warn("Cannot open mailto URL - no email app configured");
+      Alert.alert(
+        "Email Not Available",
+        `No email app configured. Please manually email:\n\nTo: ${to}\nSubject: ${subject}`,
+        [{ text: "OK" }]
+      );
+      throw new Error("No email app available");
     }
-  } catch (emailError) {
-    console.error("Failed to send email:", emailError);
-    Alert.alert("Email Error", `Email functionality error. Contact: ${to}`, [
+  } catch (error) {
+    console.error("Failed to send email:", error);
+    Alert.alert("Email Error", `Failed to send email: ${error.message}`, [
       { text: "OK" },
     ]);
+    throw error;
   }
 }
 
 /**
- * Submit bug report using multiple methods for reliability.
+ * Submit bug report using email.
  * @param {string} error - error message or object to display
  * @returns {Promise<void>}
  */
 async function submitBugReport(error) {
+  const user = await getUser(true);
+  const supportEmail = Constants.expoConfig.extra?.email || "uppalsamaira9@gmail.com";
+  
+  const subject = "Bug Report - Auto Submitted";
+  const body = `Bug Report Details:
+  
+User: ${user?.name || "Anonymous"}
+User ID: ${user?.id || "unknown"}
+Platform: ${Platform.OS} v${Platform.Version}
+App Version: ${Constants.expoConfig?.version || "Unknown"}
+Timestamp: ${new Date().toISOString()}
+
+Error Details:
+${error.toString()}
+`;
+
   try {
-    const user = await getUser(true);
-    const userId = user?.id || "anonymous";
-    const userName = user?.name || "Anonymous User";
-
-    const subject = "Auto Bug Report - Mobile App Error";
-    const bugData = {
-      user: userName,
-      userId: userId,
-      platform: `${Platform.OS} v${Platform.Version}`,
-      appVersion: Constants.expoConfig?.version || "Unknown",
-      timestamp: new Date().toISOString(),
-      error: error.toString(),
-    };
-
-    // Method 1: Try email first
+    await sendEmail(supportEmail, subject, body);
+    console.log("Bug report submitted successfully via email");
+  } catch (emailError) {
+    console.error("Failed to submit bug report:", emailError);
+    // Store locally as fallback
     try {
-      const emailBody =
-        `Bug Report Auto-Submitted\n\n` +
-        `User: ${bugData.user} (ID: ${bugData.userId})\n` +
-        `Platform: ${bugData.platform}\n` +
-        `App Version: ${bugData.appVersion}\n` +
-        `Timestamp: ${bugData.timestamp}\n\n` +
-        `Error Details:\n${bugData.error}\n\n` +
-        `Please investigate this error and contact the user if needed.`;
-
-      await sendEmail("uppalsamaira9@gmail.com", subject, emailBody);
-      console.log("Bug report sent via email");
-      return;
-    } catch (emailError) {
-      console.warn("Email method failed, trying alternatives:", emailError);
-    }
-
-    // Method 2: Send email via EmailJS service (reliable web-based email)
-    try {
-      const emailJSResponse = await fetch(
-        "https://api.emailjs.com/api/v1.0/email/send",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            service_id: "YOUR_SERVICE_ID", // You'll need to replace this
-            template_id: "YOUR_TEMPLATE_ID", // You'll need to replace this
-            user_id: "YOUR_PUBLIC_KEY", // You'll need to replace this
-            template_params: {
-              to_email: "uppalsamaira9@gmail.com",
-              from_name: "Audacity App Bug Report",
-              subject: subject,
-              message:
-                `Bug Report Auto-Submitted\n\n` +
-                `User: ${bugData.user} (ID: ${bugData.userId})\n` +
-                `Platform: ${bugData.platform}\n` +
-                `App Version: ${bugData.appVersion}\n` +
-                `Timestamp: ${bugData.timestamp}\n\n` +
-                `Error Details:\n${bugData.error}`,
-            },
-          }),
-        },
-      );
-
-      if (emailJSResponse.ok) {
-        console.log("Bug report sent via EmailJS");
-        Alert.alert(
-          "Bug Report Sent",
-          "Thank you! Your bug report has been sent successfully.",
-        );
-        return;
-      }
-    } catch (emailJSError) {
-      console.warn("EmailJS method failed:", emailJSError);
-    }
-
-    // Method 3: Send email via Formspree (simple webhook-to-email service)
-    try {
-      const formspreeResponse = await fetch(
-        "https://formspree.io/f/YOUR_FORM_ID",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            email: "uppalsamaira9@gmail.com",
-            subject: subject,
-            message:
-              `Bug Report Auto-Submitted\n\n` +
-              `User: ${bugData.user} (ID: ${bugData.userId})\n` +
-              `Platform: ${bugData.platform}\n` +
-              `App Version: ${bugData.appVersion}\n` +
-              `Timestamp: ${bugData.timestamp}\n\n` +
-              `Error Details:\n${bugData.error}`,
-          }),
-        },
-      );
-
-      if (formspreeResponse.ok) {
-        console.log("Bug report sent via Formspree");
-        Alert.alert(
-          "Bug Report Sent",
-          "Thank you! Your bug report has been sent successfully.",
-        );
-        return;
-      }
-    } catch (formspreeError) {
-      console.warn("Formspree method failed:", formspreeError);
-    }
-
-    // Method 4: Store locally for manual retrieval
-    try {
-      const existingReports =
-        (await AsyncStorage.getItem("bug_reports")) || "[]";
+      const existingReports = (await AsyncStorage.getItem("bug_reports")) || "[]";
       const reports = JSON.parse(existingReports);
-      reports.push(bugData);
+      reports.push({
+        user: user?.name || "Anonymous",
+        userId: user?.id || "unknown",
+        platform: `${Platform.OS} v${Platform.Version}`,
+        appVersion: Constants.expoConfig?.version || "Unknown",
+        timestamp: new Date().toISOString(),
+        error: error.toString(),
+      });
       await AsyncStorage.setItem("bug_reports", JSON.stringify(reports));
-      console.log(
-        "Bug report stored locally - check AsyncStorage for bug_reports",
-      );
-
-      // Show alert to user about local storage
-      Alert.alert(
-        "Bug Report Stored",
-        "Bug report saved locally. Please contact support manually if the issue persists.",
-        [{ text: "OK" }],
-      );
+      console.log("Bug report stored locally as fallback");
     } catch (storageError) {
-      console.error("All bug report methods failed:", storageError);
+      console.error("Failed to store bug report locally:", storageError);
     }
-  } catch (bugReportError) {
-    console.error("Failed to submit bug report:", bugReportError);
   }
 }
-
 export function alertError(error) {
   console.error(error);
   // Submit bug report with diagnostic info
@@ -220,6 +113,7 @@ export function alertError(error) {
   return null;
 }
 
+alertError("Test error for bug report");
 /**
  * Retrieve all stored bug reports (for debugging/manual review).
  * @returns {Promise<Array>}
@@ -247,7 +141,6 @@ export async function clearBugReports() {
   }
 }
 
-alertError(2 / 0);
 /**
  * Open a URL in the default browser.
  * @param {string} url
