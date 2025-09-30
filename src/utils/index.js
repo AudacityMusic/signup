@@ -18,7 +18,6 @@ import Constants from "expo-constants";
 import { useState } from "react";
 import { Alert, Linking, Platform } from "react-native";
 
- 
 /**
  * Send email using mailto URL (works in Expo Go).
  * @param {string} to - recipient email address
@@ -43,7 +42,7 @@ export async function sendEmail(to, subject, body) {
       Alert.alert(
         "Email Not Available",
         `No email app configured. Please manually email:\n\nTo: ${to}\nSubject: ${subject}`,
-        [{ text: "OK" }]
+        [{ text: "OK" }],
       );
       throw new Error("No email app available");
     }
@@ -63,8 +62,9 @@ export async function sendEmail(to, subject, body) {
  */
 async function submitBugReport(error) {
   const user = await getUser(true);
-  const supportEmail = Constants.expoConfig.extra?.email || "uppalsamaira9@gmail.com";
-  
+  const supportEmail =
+    Constants.expoConfig.extra?.email || "uppalsamaira9@gmail.com";
+
   const subject = "Bug Report - Auto Submitted";
   const body = `Bug Report Details:
   
@@ -85,7 +85,8 @@ ${error.toString()}
     console.error("Failed to submit bug report:", emailError);
     // Store locally as fallback
     try {
-      const existingReports = (await AsyncStorage.getItem("bug_reports")) || "[]";
+      const existingReports =
+        (await AsyncStorage.getItem("bug_reports")) || "[]";
       const reports = JSON.parse(existingReports);
       reports.push({
         user: user?.name || "Anonymous",
