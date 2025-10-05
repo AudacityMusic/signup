@@ -11,7 +11,8 @@ import PersistScrollView from "../components/PersistScrollView";
 import Tag from "../components/Tag";
 import colors from "../constants/colors";
 
-// Load env variables
+import PublicGoogleSheetsParser from "../utils/PublicGoogleSheetsParser";
+
 const sheetId = process.env.GOOGLE_SHEET_ID;
 const sheetName = process.env.GOOGLE_SHEET_NAME;
 
@@ -32,39 +33,28 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
   const [showImages, setShowImages] = useState(false);
   const [imageGallery, setImageGallery] = useState([]);
 
-  // ✅ Fetch image URLs from public Google Sheet using fetch
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        console.log("sheetId:", sheetId, "sheetName:", sheetName);
-  
-        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
-        const response = await fetch(url);
-        const text = await response.text();
-  
-        console.log("Google Sheet Response:", text);
-  
-        if (text.trim().startsWith("<")) {
-          throw new Error("Google Sheet returned HTML. Check sharing settings, sheetId, and sheetName.");
+        if (!sheetId || !sheetName) {
+          throw new Error("Missing sheetId or sheetName.");
         }
-  
-        const json = JSON.parse(text.substring(47, text.length - 2));
-  
-        const imageUrlIndex = json.table.cols.findIndex(
-          (col) => col.label === "ImageURL"
-        );
-  
-        const imageObjects = json.table.rows
-          .map((row) => row.c[imageUrlIndex]?.v?.trim())
+        
+        const parser = new PublicGoogleSheetsParser(sheetId, { sheetName });
+        const rows = await parser.parse();
+
+        
+        const imageObjects = (rows || [])
+          .map((row) => row.ImageURL?.trim())
           .filter((url) => url)
           .map((url) => ({ uri: url }));
-  
+
         setImageGallery(imageObjects);
       } catch (error) {
         console.error("Error loading images from Google Sheet:", error);
       }
     };
-  
+
     fetchImages();
   }, []);
 
