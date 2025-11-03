@@ -53,12 +53,6 @@ export default function SignInScreen({ navigation }) {
         alertError("Apple Sign-In is not available on this device.");
         return;
       }
-      const credential = await AppleAuth.signInAsync({
-        requestedScopes: [
-          AppleAuth.AppleAuthenticationScope.FULL_NAME,
-          AppleAuth.AppleAuthenticationScope.EMAIL,
-        ],
-      });
       // Store placeholder user for Apple (limited data)
       await AsyncStorage.setItem(
         "user",
@@ -125,7 +119,7 @@ export default function SignInScreen({ navigation }) {
         </Pressable>
 
         {/* Custom Apple Sign-In button */}
-        {AppleAuth.isAvailableAsync() && Platform.OS === "ios" ? (
+        {Platform.OS === "ios" ? (
           <Pressable
             style={[styles.OAuth, styles.OAuthBackground]}
             onPress={handleAppleSignIn}
