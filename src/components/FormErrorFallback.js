@@ -2,12 +2,12 @@ import React from 'react';
 import { View, Text, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const FormErrorFallback = ({ error, resetError }) => {
+const FormErrorFallback = ({ error, resetError, fallbackUrl }) => {
   const navigation = useNavigation();
 
   const handleRedirect = () => {
-    navigation.navigate('EmbeddedFormScreen', {
-      formURL: 'https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform', // <-- replace with real URL
+    navigation.navigate('Google Forms', {
+      formURL: fallbackUrl, // Use the fallbackUrl prop passed from VolunteerFormScreen
     });
   };
 
