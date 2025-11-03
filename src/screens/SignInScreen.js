@@ -80,6 +80,32 @@ export default function SignInScreen({ navigation }) {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      await AsyncStorage.setItem("user", JSON.stringify(userInfo.user));
+      await AsyncStorage.setItem(
+        "access-token",
+        (await GoogleSignin.getTokens()).accessToken,
+      );
+      navigation.navigate("Home", { forceRerender: true });
+    } catch (error) {
+      if (isErrorWithCode(error)) {
+        if (error.code == statusCodes.SIGN_IN_CANCELLED) {
+          return;
+        }
+        alertError(
+          `While signing in with Google: (${error.code}) ${error}`,
+        );
+      } else {
+        alertError(
+          `While signing in with Google: (no error code) ${error}`,
+        );
+      }
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.body}>
@@ -89,59 +115,33 @@ export default function SignInScreen({ navigation }) {
           concerts across the Bay Area a success! To begin, please sign in.
         </Text>
 
-        {/* Google Sign-In button */}
-        <Pressable
-          style={[styles.OAuth, styles.GoogleOAuth]}
-          onPress={async () => {
-            try {
-              await GoogleSignin.hasPlayServices();
-              const userInfo = await GoogleSignin.signIn();
-              await AsyncStorage.setItem("user", JSON.stringify(userInfo.user));
-              await AsyncStorage.setItem(
-                "access-token",
-                (await GoogleSignin.getTokens()).accessToken,
-              );
-              navigation.navigate("Home", { forceRerender: true });
-            } catch (error) {
-              if (isErrorWithCode(error)) {
-                if (error.code == statusCodes.SIGN_IN_CANCELLED) {
-                  return;
-                }
-                alertError(
-                  `While signing in with Google: (${error.code}) ${error}`,
-                );
-              } else {
-                alertError(
-                  `While signing in with Google: (no error code) ${error}`,
-                );
-              }
-            }
-          }}
-        >
-          <Image
-            style={styles.OAuthLogo}
-            source={require("../assets/google.png")}
-          />
-          <Text style={[styles.OAuthText]} selectable={true}>
-            {" "}
-            Sign in with Google
-          </Text>
-        </Pressable>
+        <View style={styles.OAuth}>
+          {/* Google Sign-In button */}
+          <Pressable onPress={handleGoogleSignIn}>
+            <Image
+              style={styles.OAuthLogo}
+              source={require("../assets/google.png")}
+            />
+            <Text style={styles.OAuthText} selectable={true}>
+              {" "}
+              Sign in with Google
+            </Text>
+          </Pressable>
 
-        {/* Custom Apple Sign-In button */}
-        <Pressable
-          style={[styles.OAuth, styles.AppleOAuth]}
-          onPress={handleAppleSignIn}
-        >
-          <Image
-            style={styles.AppleLogo}
-            source={require("../assets/apple.png")}
-          />
-          <Text style={styles.OAuthText} selectable={true}>
-            {" "}
-            Sign in with Apple
-          </Text>
-        </Pressable>
+          {/* Custom Apple Sign-In button */}
+          {AppleAuth.isAvailableAsync() ?
+            <Pressable onPress={handleAppleSignIn}>
+              <Image
+                style={styles.OAuthLogo}
+                source={require("../assets/apple.png")}
+              />
+              <Text style={styles.OAuthText} selectable={true}>
+                {" "}
+                Sign in with Apple
+              </Text>
+            </Pressable>
+          : null}
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -169,14 +169,11 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 5,
     margin: 5,
+    backgroundColor: "#000",
+    color: "#fff",
   },
   OAuthLogo: {
     width: 30,
-    height: 30,
-    resizeMode: "contain",
-  },
-  AppleLogo: {
-    width: 30, // <-- Adjust this for a larger Apple icon!
     height: 30,
     resizeMode: "contain",
   },
@@ -184,14 +181,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "600",
-  },
-  GoogleOAuth: {
-    backgroundColor: "#000",
-    color: "#fff",
-  },
-  AppleOAuth: {
-    backgroundColor: "#000",
-    color: "#fff",
   },
   loading: {
     flexDirection: "row",
