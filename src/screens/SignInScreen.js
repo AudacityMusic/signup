@@ -67,7 +67,7 @@ export default function SignInScreen({ navigation }) {
       await AsyncStorage.removeItem("access-token");
       navigation.navigate("Home", { forceRerender: true });
     } catch (error) {
-      if (error.code != "ERR_REQUEST_CANCELED") {
+      if (error.code !== "ERR_REQUEST_CANCELED") {
         alertError(`While signing in with Apple: (${error.code}) ${error}`);
       }
     }
@@ -85,7 +85,7 @@ export default function SignInScreen({ navigation }) {
       navigation.navigate("Home", { forceRerender: true });
     } catch (error) {
       if (isErrorWithCode(error)) {
-        if (error.code == statusCodes.SIGN_IN_CANCELLED) {
+        if (error.code === statusCodes.SIGN_IN_CANCELLED) {
           return;
         }
         alertError(`While signing in with Google: (${error.code}) ${error}`);
