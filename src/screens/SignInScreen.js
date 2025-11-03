@@ -53,15 +53,24 @@ export default function SignInScreen({ navigation }) {
         alertError("Apple Sign-In is not available on this device.");
         return;
       }
-      // Store placeholder user for Apple (limited data)
+      // Perform Apple sign-in and request full name and email scopes
+      const credential = await AppleAuth.signInAsync({
+        requestedScopes: [
+          AppleAuth.AppleAuthenticationScope.FULL_NAME,
+          AppleAuth.AppleAuthenticationScope.EMAIL,
+        ],
+      });
+      // Extract user info
+      const { user, email, fullName } = credential;
+      // Apple only provides fullName and email the first time
       await AsyncStorage.setItem(
         "user",
         JSON.stringify({
-          // Apple Auth only returns fullName and email once
-          // TODO: Use fullName and email while complying with data clearing policies
-          name: "",
-          email: "",
-          id: "apple",
+          id: user,
+          name: fullName
+            ? [fullName.givenName, fullName.familyName].filter(Boolean).join(" ")
+            : "",
+          email: email ?? "",
         }),
       );
       await AsyncStorage.removeItem("access-token");
