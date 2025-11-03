@@ -110,7 +110,10 @@ export default function SignInScreen({ navigation }) {
           concerts across the Bay Area a success! To begin, please sign in.
         </Text>
         {/* Google Sign-In button */}
-        <Pressable style={[styles.OAuth, styles.OAuthBackground]} onPress={handleGoogleSignIn}>
+        <Pressable
+          style={[styles.OAuth, styles.OAuthBackground]}
+          onPress={handleGoogleSignIn}
+        >
           <Image
             style={styles.OAuthLogo}
             source={require("../assets/google.png")}
@@ -122,8 +125,11 @@ export default function SignInScreen({ navigation }) {
         </Pressable>
 
         {/* Custom Apple Sign-In button */}
-        {(AppleAuth.isAvailableAsync() && Platform.OS === "ios") ? (
-          <Pressable style={[styles.OAuth, styles.OAuthBackground]} onPress={handleAppleSignIn}>
+        {AppleAuth.isAvailableAsync() && Platform.OS === "ios" ? (
+          <Pressable
+            style={[styles.OAuth, styles.OAuthBackground]}
+            onPress={handleAppleSignIn}
+          >
             <Image
               style={styles.OAuthLogo}
               source={require("../assets/apple.png")}
