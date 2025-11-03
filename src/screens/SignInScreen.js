@@ -91,7 +91,7 @@ export default function SignInScreen({ navigation }) {
       navigation.navigate("Home", { forceRerender: true });
     } catch (error) {
       if (isErrorWithCode(error)) {
-        if (error.code == statusCodes.SIGN_IN_CANCELLED) {
+        if (error.code === statusCodes.SIGN_IN_CANCELLED) {
           return;
         }
         alertError(`While signing in with Google: (${error.code}) ${error}`);
