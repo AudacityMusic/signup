@@ -175,7 +175,6 @@ const styles = StyleSheet.create({
   },
   OAuthBackground: {
     backgroundColor: "#000",
-    color: "#fff",
   },
   OAuthLogo: {
     width: 30,
