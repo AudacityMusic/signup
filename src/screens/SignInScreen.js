@@ -73,7 +73,7 @@ export default function SignInScreen({ navigation }) {
       await AsyncStorage.removeItem("access-token");
       navigation.navigate("Home", { forceRerender: true });
     } catch (error) {
-      if (error.code != "ERR_REQUEST_CANCELED") {
+      if (error.code !== "ERR_REQUEST_CANCELED") {
         alertError(`While signing in with Apple: (${error.code}) ${error}`);
       }
     }
