@@ -68,7 +68,9 @@ export default function SignInScreen({ navigation }) {
         JSON.stringify({
           id: user,
           name: fullName
-            ? [fullName.givenName, fullName.familyName].filter(Boolean).join(" ")
+            ? [fullName.givenName, fullName.familyName]
+                .filter(Boolean)
+                .join(" ")
             : "",
           email: email ?? "",
         }),
