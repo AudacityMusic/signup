@@ -9,6 +9,7 @@
 
 import {
   Image,
+  Platform,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -108,34 +109,31 @@ export default function SignInScreen({ navigation }) {
           Thank you for choosing to help make our volunteer opportunities and
           concerts across the Bay Area a success! To begin, please sign in.
         </Text>
+        {/* Google Sign-In button */}
+        <Pressable style={[styles.OAuth, styles.OAuthBackground]} onPress={handleGoogleSignIn}>
+          <Image
+            style={styles.OAuthLogo}
+            source={require("../assets/google.png")}
+          />
+          <Text style={styles.OAuthText} selectable={true}>
+            {" "}
+            Sign in with Google
+          </Text>
+        </Pressable>
 
-        <View style={styles.OAuth}>
-          {/* Google Sign-In button */}
-          <Pressable onPress={handleGoogleSignIn}>
+        {/* Custom Apple Sign-In button */}
+        {(AppleAuth.isAvailableAsync() && Platform.OS === "ios") ? (
+          <Pressable style={[styles.OAuth, styles.OAuthBackground]} onPress={handleAppleSignIn}>
             <Image
               style={styles.OAuthLogo}
-              source={require("../assets/google.png")}
+              source={require("../assets/apple.png")}
             />
             <Text style={styles.OAuthText} selectable={true}>
               {" "}
-              Sign in with Google
+              Sign in with Apple
             </Text>
           </Pressable>
-
-          {/* Custom Apple Sign-In button */}
-          {AppleAuth.isAvailableAsync() ? (
-            <Pressable onPress={handleAppleSignIn}>
-              <Image
-                style={styles.OAuthLogo}
-                source={require("../assets/apple.png")}
-              />
-              <Text style={styles.OAuthText} selectable={true}>
-                {" "}
-                Sign in with Apple
-              </Text>
-            </Pressable>
-          ) : null}
-        </View>
+        ) : null}
       </View>
     </SafeAreaView>
   );
@@ -163,6 +161,8 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 5,
     margin: 5,
+  },
+  OAuthBackground: {
     backgroundColor: "#000",
     color: "#fff",
   },
