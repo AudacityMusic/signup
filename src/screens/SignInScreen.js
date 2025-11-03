@@ -176,9 +176,8 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   AppleLogo: {
-    width: 38, // <-- Adjust this for a larger Apple icon!
-    height: 38,
-    marginRight: 4,
+    width: 30, // <-- Adjust this for a larger Apple icon!
+    height: 30,
     resizeMode: "contain",
   },
   OAuthText: {
