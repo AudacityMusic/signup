@@ -73,9 +73,7 @@ export default function SignInScreen({ navigation }) {
       navigation.navigate("Home", { forceRerender: true });
     } catch (error) {
       if (error.code != "ERR_REQUEST_CANCELED") {
-        alertError(
-          `While signing in with Apple: (${error.code}) ${error}`,
-        );
+        alertError(`While signing in with Apple: (${error.code}) ${error}`);
       }
     }
   };
@@ -95,13 +93,9 @@ export default function SignInScreen({ navigation }) {
         if (error.code == statusCodes.SIGN_IN_CANCELLED) {
           return;
         }
-        alertError(
-          `While signing in with Google: (${error.code}) ${error}`,
-        );
+        alertError(`While signing in with Google: (${error.code}) ${error}`);
       } else {
-        alertError(
-          `While signing in with Google: (no error code) ${error}`,
-        );
+        alertError(`While signing in with Google: (no error code) ${error}`);
       }
     }
   };
@@ -129,7 +123,7 @@ export default function SignInScreen({ navigation }) {
           </Pressable>
 
           {/* Custom Apple Sign-In button */}
-          {AppleAuth.isAvailableAsync() ?
+          {AppleAuth.isAvailableAsync() ? (
             <Pressable onPress={handleAppleSignIn}>
               <Image
                 style={styles.OAuthLogo}
@@ -140,7 +134,7 @@ export default function SignInScreen({ navigation }) {
                 Sign in with Apple
               </Text>
             </Pressable>
-          : null}
+          ) : null}
         </View>
       </View>
     </SafeAreaView>
