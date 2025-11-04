@@ -109,49 +109,53 @@ export async function alertError(error) {
   // Attempt to get user info
   let user;
   try {
-    const userString = await AsyncStorage.getItem('user');
+    const userString = await AsyncStorage.getItem("user");
     user = userString ? JSON.parse(userString) : {};
   } catch (err) {
-    console.error('Failed to get user info:', err);
+    console.error("Failed to get user info:", err);
     user = {};
   }
 
   // Prepare payload for server
   const payload = {
     errorMessage: error?.stack || String(error),
-    userId: user?.id || 'unknown',
-    userName: user?.name || 'Anonymous',
+    userId: user?.id || "unknown",
+    userName: user?.name || "Anonymous",
     platform: `${Platform.OS} v${Platform.Version}`,
-    appVersion: Constants.expoConfig?.version || 'Unknown',
+    appVersion: Constants.expoConfig?.version || "Unknown",
   };
 
   // Send error to backend server
   try {
-    const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/send-error`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/send-error`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      },
+    );
 
     if (!response.ok) {
-      console.warn('Failed to send error to server');
+      console.warn("Failed to send error to server");
     } else {
-      console.log('Error reported to server successfully');
+      console.log("Error reported to server successfully");
     }
   } catch (err) {
-    console.error('Error reporting failed:', err);
+    console.error("Error reporting failed:", err);
     // Optional fallback: store locally if server unreachable
     try {
-      const existingReports = (await AsyncStorage.getItem('bug_reports')) || '[]';
+      const existingReports =
+        (await AsyncStorage.getItem("bug_reports")) || "[]";
       const reports = JSON.parse(existingReports);
       reports.push({
         ...payload,
         timestamp: new Date().toISOString(),
       });
-      await AsyncStorage.setItem('bug_reports', JSON.stringify(reports));
-      console.log('Error stored locally as fallback');
+      await AsyncStorage.setItem("bug_reports", JSON.stringify(reports));
+      console.log("Error stored locally as fallback");
     } catch (storageErr) {
-      console.error('Failed to store error locally:', storageErr);
+      console.error("Failed to store error locally:", storageErr);
     }
   }
   Alert.alert(
@@ -161,7 +165,7 @@ export async function alertError(error) {
   return null;
 }
 
-alertError('Test error alert from index.js');
+alertError("Test error alert from index.js");
 /**
  * Retrieve all stored bug reports (for debugging/manual review).
  * @returns {Promise<Array>}
@@ -394,7 +398,7 @@ export function openInMaps(location) {
 // error-mailer.js
 // Node.js (requires nodemailer). Install: npm install nodemailer
 
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 
 /**
  * Configure transporter.
@@ -405,13 +409,12 @@ const nodemailer = require('nodemailer');
  * For production, prefer OAuth2 or a secret manager.
  */
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
+    pass: process.env.EMAIL_PASS,
+  },
 });
-
 
 /**
  * Send an error email.
@@ -424,27 +427,24 @@ async function sendErrorEmail(err, opts = {}) {
   console.log(process.env.EXPO_EMAIL_TO);
   const to = opts.to || process.env.EMAIL_TO || process.env.EMAIL_USER;
   const from = opts.from || process.env.EMAIL_FROM || process.env.EMAIL_USER;
-  const subjectPrefix = opts.subjectPrefix || '[ERROR ALERT]';
+  const subjectPrefix = opts.subjectPrefix || "[ERROR ALERT]";
 
-
-
-  const errorMessage = (err && err.stack) ? err.stack : String(err);
+  const errorMessage = err && err.stack ? err.stack : String(err);
 
   const mailOptions = {
-    from: process.env.EMAIL_FROM,   // sender
-    to: process.env.EMAIL_TO,       // recipient
+    from: process.env.EMAIL_FROM, // sender
+    to: process.env.EMAIL_TO, // recipient
     subject: `[ERROR ALERT] ${new Date().toISOString()}`,
-    text: `An error occurred from Samaira:\n\n${errorMessage}`
-    };
-
+    text: `An error occurred from Samaira:\n\n${errorMessage}`,
+  };
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log('Error email sent:', info.messageId || info);
+    console.log("Error email sent:", info.messageId || info);
     return info;
   } catch (sendErr) {
     // If sending fails, log but don't throw (to avoid recursive uncaughtException)
-    console.error('Failed to send error email:', sendErr);
+    console.error("Failed to send error email:", sendErr);
     return null;
   }
 }
@@ -461,26 +461,26 @@ function escapeHtml(s) {
  * This will attempt to email when anything crashes the process.
  */
 function installGlobalErrorHandlers() {
-  process.on('uncaughtException', async (err) => {
-    console.error('uncaughtException:', err);
+  process.on("uncaughtException", async (err) => {
+    console.error("uncaughtException:", err);
     // best-effort: send email, then exit
-    await sendErrorEmail(err, { subjectPrefix: '[UNCAUGHT EXCEPTION]' });
+    await sendErrorEmail(err, { subjectPrefix: "[UNCAUGHT EXCEPTION]" });
     // give a moment for transporter to try then exit
     setTimeout(() => process.exit(1), 2000);
   });
 
-  process.on('unhandledRejection', async (reason, promise) => {
-    console.error('unhandledRejection at:', promise, 'reason:', reason);
-    await sendErrorEmail(reason, { subjectPrefix: '[UNHANDLED REJECTION]' });
+  process.on("unhandledRejection", async (reason, promise) => {
+    console.error("unhandledRejection at:", promise, "reason:", reason);
+    await sendErrorEmail(reason, { subjectPrefix: "[UNHANDLED REJECTION]" });
     // do NOT exit automatically for unhandledRejection in all apps; here we choose to exit
     setTimeout(() => process.exit(1), 2000);
   });
 
-  console.log('Global error handlers installed.');
+  console.log("Global error handlers installed.");
 }
 
 // Export functions for reuse
 module.exports = {
   sendErrorEmail,
-  installGlobalErrorHandlers
+  installGlobalErrorHandlers,
 };
