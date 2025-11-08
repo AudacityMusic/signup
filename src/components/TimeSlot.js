@@ -502,7 +502,11 @@ export default function TimeSlot({
             }
           } else {
             if (mode === "end" && slot.start && endPickerMode === "time") {
-              const endDate = date;
+              const endDate = new Date(slot.start);
+endDate.setHours(date.getHours());
+endDate.setMinutes(date.getMinutes());
+endDate.setSeconds(date.getSeconds());
+endDate.setMilliseconds(date.getMilliseconds());
               onChange({ ...slot, end: endDate });
             } else {
               onChange({ ...slot, [mode]: date });
