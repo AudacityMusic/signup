@@ -162,22 +162,26 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
   useEffect(() => {
     onFilteredDataChange(filteredData);
   }, [filteredData, onFilteredDataChange]);
-  
+
   const renderMultiSelectItem = (item) => {
     const isSelected = tagsFilter.includes(item.value);
     return (
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 10 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingVertical: 8,
+          paddingHorizontal: 10,
+        }}
+      >
         <Text style={styles.dropdownItemText}>{item.label}</Text>
         {isSelected && (
-          <MaterialIcons
-            name="check"
-            size={20}
-            color={colors.primaryLight}
-          />
+          <MaterialIcons name="check" size={20} color={colors.primaryLight} />
         )}
       </View>
     );
-  }
+  };
 
   return (
     <View style={styles.filters}>
