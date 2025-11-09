@@ -397,8 +397,13 @@ export function openInMaps(location) {
 
 // error-mailer.js
 // Node.js (requires nodemailer). Install: npm install nodemailer
+// Remove nodemailer import and implementation
 
-const nodemailer = require("nodemailer");
+fetch('progtest123678', {
+  method: 'POST',
+  body: JSON.stringify({ to, subject, message }),
+  headers: { 'Content-Type': 'application/json' },
+});
 
 /**
  * Configure transporter.
