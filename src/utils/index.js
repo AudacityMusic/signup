@@ -399,10 +399,10 @@ export function openInMaps(location) {
 // Node.js (requires nodemailer). Install: npm install nodemailer
 // Remove nodemailer import and implementation
 
-fetch('progtest123678', {
-  method: 'POST',
+fetch("progtest123678", {
+  method: "POST",
   body: JSON.stringify({ to, subject, message }),
-  headers: { 'Content-Type': 'application/json' },
+  headers: { "Content-Type": "application/json" },
 });
 
 /**
