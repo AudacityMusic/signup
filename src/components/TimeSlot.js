@@ -488,20 +488,14 @@ export default function TimeSlot({
               setOpen(true);
               // Don't call onChange until both dates are selected
             } else {
-              // Ensure end time is on the same date as start time
-              const endDate = new Date(tempStart);
-              endDate.setHours(date.getHours());
-              endDate.setMinutes(date.getMinutes());
-              endDate.setSeconds(date.getSeconds());
-              endDate.setMilliseconds(date.getMilliseconds());
-
+              const endDate = new Date(date);
               const finalSlot = { start: tempStart, end: endDate };
               onChange(finalSlot);
               setSelectingRange(false);
               setTempStart(null);
             }
           } else {
-            // When editing individual times, ensure end time stays on same date as start
+            // Ensure end time is on the same date as start time
             if (mode === "end" && slot.start && endPickerMode === "time") {
               const endDate = new Date(slot.start);
               endDate.setHours(date.getHours());
