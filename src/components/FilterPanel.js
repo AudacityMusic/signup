@@ -19,6 +19,8 @@ import Fuse from "fuse.js";
 import TimeSlot from "./TimeSlot";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
+import colors from "../constants/colors";
+
 export default function FilterPanel({ data, onFilteredDataChange }) {
   // Filter states
   const [nameFilter, setNameFilter] = useState("");
@@ -161,6 +163,26 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
     onFilteredDataChange(filteredData);
   }, [filteredData, onFilteredDataChange]);
 
+  const renderMultiSelectItem = (item) => {
+    const isSelected = tagsFilter.includes(item.value);
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingVertical: 8,
+          paddingHorizontal: 10,
+        }}
+      >
+        <Text style={styles.dropdownItemText}>{item.label}</Text>
+        {isSelected && (
+          <MaterialIcons name="check" size={20} color={colors.primaryLight} />
+        )}
+      </View>
+    );
+  };
+
   return (
     <View style={styles.filters}>
       <TextInput
@@ -238,6 +260,7 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
             color="#666"
           />
         )}
+        renderItem={renderMultiSelectItem}
       />
       {/* Apply Filters Button */}
       <TouchableOpacity style={styles.applyButton} onPress={applyFilters}>
@@ -306,7 +329,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   dateFilterText: {
-    fontSize: 15,
+    fontSize: 14,
     color: "#666",
     textAlign: "left",
   },
