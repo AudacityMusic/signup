@@ -41,7 +41,7 @@ const NoInternetBanner = () => {
         friction: 8,
       }).start();
     }
-  }, [isConnected, slideAnim]);
+  }, [isConnected]);
 
   return (
     <Animated.View
