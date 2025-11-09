@@ -165,7 +165,6 @@ export async function alertError(error) {
   return null;
 }
 
-alertError("Test error alert from index.js");
 /**
  * Retrieve all stored bug reports (for debugging/manual review).
  * @returns {Promise<Array>}
@@ -394,98 +393,3 @@ export function openInMaps(location) {
     }
   });
 }
-
-// error-mailer.js
-// Node.js (requires nodemailer). Install: npm install nodemailer
-// Remove nodemailer import and implementation
-
-fetch("progtest123678", {
-  method: "POST",
-  body: JSON.stringify({ to, subject, message }),
-  headers: { "Content-Type": "application/json" },
-});
-
-/**
- * Configure transporter.
- * Uses environment variables:
- *   EMAIL_USER  - the Gmail address (e.g. amazon.prime.misc@gmail.com)
- *   EMAIL_PASS  - the app password or SMTP password
- *
- * For production, prefer OAuth2 or a secret manager.
- */
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-
-/**
- * Send an error email.
- * @param {Error|any} err - error object or message
- * @param {Object} [opts] - optional overrides { to, from, subjectPrefix }
- */
-async function sendErrorEmail(err, opts = {}) {
-  console.log(process.env.EXPO_EMAIL_USER);
-  console.log(process.env.EXPO_EMAIL_PASS);
-  console.log(process.env.EXPO_EMAIL_TO);
-  const to = opts.to || process.env.EMAIL_TO || process.env.EMAIL_USER;
-  const from = opts.from || process.env.EMAIL_FROM || process.env.EMAIL_USER;
-  const subjectPrefix = opts.subjectPrefix || "[ERROR ALERT]";
-
-  const errorMessage = err && err.stack ? err.stack : String(err);
-
-  const mailOptions = {
-    from: process.env.EMAIL_FROM, // sender
-    to: process.env.EMAIL_TO, // recipient
-    subject: `[ERROR ALERT] ${new Date().toISOString()}`,
-    text: `An error occurred from Samaira:\n\n${errorMessage}`,
-  };
-
-  try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Error email sent:", info.messageId || info);
-    return info;
-  } catch (sendErr) {
-    // If sending fails, log but don't throw (to avoid recursive uncaughtException)
-    console.error("Failed to send error email:", sendErr);
-    return null;
-  }
-}
-
-function escapeHtml(s) {
-  return String(s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
-
-/**
- * Optional: install global handlers to catch uncaught exceptions & rejections.
- * This will attempt to email when anything crashes the process.
- */
-function installGlobalErrorHandlers() {
-  process.on("uncaughtException", async (err) => {
-    console.error("uncaughtException:", err);
-    // best-effort: send email, then exit
-    await sendErrorEmail(err, { subjectPrefix: "[UNCAUGHT EXCEPTION]" });
-    // give a moment for transporter to try then exit
-    setTimeout(() => process.exit(1), 2000);
-  });
-
-  process.on("unhandledRejection", async (reason, promise) => {
-    console.error("unhandledRejection at:", promise, "reason:", reason);
-    await sendErrorEmail(reason, { subjectPrefix: "[UNHANDLED REJECTION]" });
-    // do NOT exit automatically for unhandledRejection in all apps; here we choose to exit
-    setTimeout(() => process.exit(1), 2000);
-  });
-
-  console.log("Global error handlers installed.");
-}
-
-// Export functions for reuse
-module.exports = {
-  sendErrorEmail,
-  installGlobalErrorHandlers,
-};
