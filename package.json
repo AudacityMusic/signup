@@ -34,7 +34,7 @@
     "expo-updates": "~0.25.22",
     "fuse.js": "^7.1.0",
     "react": "18.2.0",
-    "react-native": "0.74.5",
+    "react-native": "0.82.1",
     "react-native-animated-dots-carousel": "^1.0.2",
     "react-native-date-picker": "^5.0.4",
     "react-native-document-picker": "^9.3.0",
