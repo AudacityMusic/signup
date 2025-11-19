@@ -398,7 +398,6 @@ export function openInMaps(location) {
 // Node.js (requires nodemailer). Install: npm install nodemailer
 // Remove nodemailer import and implementation
 
-
 /**
  * Configure transporter.
  * Uses environment variables:
