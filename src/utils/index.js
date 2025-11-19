@@ -19,17 +19,177 @@ import { useState } from "react";
 import { Alert, Linking, Platform } from "react-native";
 
 /**
- * Log error and show user-friendly alert with diagnostic info.
- * @param {string} error - error message or object to display
- * @returns {null}
+ * Send email using mailto URL (works in Expo Go).
+ * @param {string} to - recipient email address
+ * @param {string} subject - email subject
+ * @param {string} body - email body content
+ * @returns {Promise<void>}
  */
-export function alertError(error) {
+export async function sendEmail(to, subject, body) {
+  try {
+    const encodedSubject = encodeURIComponent(subject);
+    const encodedBody = encodeURIComponent(body);
+    const emailUrl = `mailto:${to}?subject=${encodedSubject}&body=${encodedBody}`;
+
+    console.log("Attempting to send email via mailto URL");
+
+    const canOpen = await Linking.canOpenURL(emailUrl);
+    if (canOpen) {
+      await Linking.openURL(emailUrl);
+      console.log("Email client opened successfully");
+    } else {
+      console.warn("Cannot open mailto URL - no email app configured");
+      Alert.alert(
+        "Email Not Available",
+        `No email app configured. Please manually email:\n\nTo: ${to}\nSubject: ${subject}`,
+        [{ text: "OK" }],
+      );
+      throw new Error("No email app available");
+    }
+  } catch (error) {
+    console.error("Failed to send email:", error);
+    Alert.alert("Email Error", `Failed to send email: ${error.message}`, [
+      { text: "OK" },
+    ]);
+    throw error;
+  }
+}
+
+/**
+ * Submit bug report using email.
+ * @param {string} error - error message or object to display
+ * @returns {Promise<void>}
+ */
+async function submitBugReport(error) {
+  const user = await getUser(true);
+  const supportEmail =
+    Constants.expoConfig.extra?.email || "it@eternityband.org";
+
+  const subject = "Bug Report - Auto Submitted";
+  const body = `Bug Report Details:
+  
+User: ${user?.name || "Anonymous"}
+User ID: ${user?.id || "unknown"}
+Platform: ${Platform.OS} v${Platform.Version}
+App Version: ${Constants.expoConfig?.version || "Unknown"}
+Timestamp: ${new Date().toISOString()}
+
+Error Details:
+${error.toString()}
+`;
+
+  try {
+    await sendEmail(supportEmail, subject, body);
+    console.log("Bug report submitted successfully via email");
+  } catch (emailError) {
+    console.error("Failed to submit bug report:", emailError);
+    // Store locally as fallback
+    try {
+      const existingReports =
+        (await AsyncStorage.getItem("bug_reports")) || "[]";
+      const reports = JSON.parse(existingReports);
+      reports.push({
+        user: user?.name || "Anonymous",
+        userId: user?.id || "unknown",
+        platform: `${Platform.OS} v${Platform.Version}`,
+        appVersion: Constants.expoConfig?.version || "Unknown",
+        timestamp: new Date().toISOString(),
+        error: error.toString(),
+      });
+      await AsyncStorage.setItem("bug_reports", JSON.stringify(reports));
+      console.log("Bug report stored locally as fallback");
+    } catch (storageError) {
+      console.error("Failed to store bug report locally:", storageError);
+    }
+  }
+}
+export async function alertError(error) {
   console.error(error);
+
+  // Attempt to get user info
+  let user;
+  try {
+    const userString = await AsyncStorage.getItem("user");
+    user = userString ? JSON.parse(userString) : {};
+  } catch (err) {
+    console.error("Failed to get user info:", err);
+    user = {};
+  }
+
+  // Prepare payload for server
+  const payload = {
+    errorMessage: error?.stack || String(error),
+    userId: user?.id || "unknown",
+    userName: user?.name || "Anonymous",
+    platform: `${Platform.OS} v${Platform.Version}`,
+    appVersion: Constants.expoConfig?.version || "Unknown",
+  };
+
+  // Send error to backend server
+  try {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/send-error`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      },
+    );
+
+    if (!response.ok) {
+      console.warn("Failed to send error to server");
+    } else {
+      console.log("Error reported to server successfully");
+    }
+  } catch (err) {
+    console.error("Error reporting failed:", err);
+    // Optional fallback: store locally if server unreachable
+    try {
+      const existingReports =
+        (await AsyncStorage.getItem("bug_reports")) || "[]";
+      const reports = JSON.parse(existingReports);
+      reports.push({
+        ...payload,
+        timestamp: new Date().toISOString(),
+      });
+      await AsyncStorage.setItem("bug_reports", JSON.stringify(reports));
+      console.log("Error stored locally as fallback");
+    } catch (storageErr) {
+      console.error("Failed to store error locally:", storageErr);
+    }
+  }
   Alert.alert(
     "Error",
-    `Your request was not processed successfully due to an unexpected error. We apologize for the inconvenience. To help us identify and fix this error, please take a screenshot of this alert and send a bug report to ${Constants.expoConfig.extra.email}. Thank you!\n\nPlatform: ${Platform.OS} with v${Platform.Version}\n\n${error}`,
+    `Your request was not processed successfully due to an unexpected error. We apologize for the inconvenience. A bug report has been automatically submitted to ${Constants.expoConfig.extra?.email || "support"}. Thank you!\n\nPlatform: ${Platform.OS} with v${Platform.Version}\n\n${error}`,
   );
   return null;
+}
+
+/**
+ * Retrieve all stored bug reports (for debugging/manual review).
+ * @returns {Promise<Array>}
+ */
+export async function getBugReports() {
+  try {
+    const existingReports = (await AsyncStorage.getItem("bug_reports")) || "[]";
+    return JSON.parse(existingReports);
+  } catch (error) {
+    console.error("Failed to get bug reports:", error);
+    return [];
+  }
+}
+
+/**
+ * Clear all stored bug reports.
+ * @returns {Promise<void>}
+ */
+export async function clearBugReports() {
+  try {
+    await AsyncStorage.removeItem("bug_reports");
+    console.log("Bug reports cleared");
+  } catch (error) {
+    console.error("Failed to clear bug reports:", error);
+  }
 }
 
 /**
@@ -233,3 +393,92 @@ export function openInMaps(location) {
     }
   });
 }
+
+// error-mailer.js
+// Node.js (requires nodemailer). Install: npm install nodemailer
+// Remove nodemailer import and implementation
+
+/**
+ * Configure transporter.
+ * Uses environment variables:
+ *   EMAIL_USER  - the Gmail address (e.g. amazon.prime.misc@gmail.com)
+ *   EMAIL_PASS  - the app password or SMTP password
+ *
+ * For production, prefer OAuth2 or a secret manager.
+ */
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
+/**
+ * Send an error email.
+ * @param {Error|any} err - error object or message
+ * @param {Object} [opts] - optional overrides { to, from, subjectPrefix }
+ */
+async function sendErrorEmail(err, opts = {}) {
+  console.log(process.env.EXPO_EMAIL_USER);
+  console.log(process.env.EXPO_EMAIL_PASS);
+  console.log(process.env.EXPO_EMAIL_TO);
+  const to = opts.to || process.env.EMAIL_TO || process.env.EMAIL_USER;
+  const from = opts.from || process.env.EMAIL_FROM || process.env.EMAIL_USER;
+  const subjectPrefix = opts.subjectPrefix || "[ERROR ALERT]";
+
+  const errorMessage = err && err.stack ? err.stack : String(err);
+
+  const mailOptions = {
+    from: process.env.EMAIL_FROM, // sender
+    to: process.env.EMAIL_TO, // recipient
+    subject: `[ERROR ALERT] ${new Date().toISOString()}`,
+    text: `An error occurred from Samaira:\n\n${errorMessage}`,
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Error email sent:", info.messageId || info);
+    return info;
+  } catch (sendErr) {
+    // If sending fails, log but don't throw (to avoid recursive uncaughtException)
+    console.error("Failed to send error email:", sendErr);
+    return null;
+  }
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+/**
+ * Optional: install global handlers to catch uncaught exceptions & rejections.
+ * This will attempt to email when anything crashes the process.
+ */
+function installGlobalErrorHandlers() {
+  process.on("uncaughtException", async (err) => {
+    console.error("uncaughtException:", err);
+    // best-effort: send email, then exit
+    await sendErrorEmail(err, { subjectPrefix: "[UNCAUGHT EXCEPTION]" });
+    // give a moment for transporter to try then exit
+    setTimeout(() => process.exit(1), 2000);
+  });
+
+  process.on("unhandledRejection", async (reason, promise) => {
+    console.error("unhandledRejection at:", promise, "reason:", reason);
+    await sendErrorEmail(reason, { subjectPrefix: "[UNHANDLED REJECTION]" });
+    // do NOT exit automatically for unhandledRejection in all apps; here we choose to exit
+    setTimeout(() => process.exit(1), 2000);
+  });
+
+  console.log("Global error handlers installed.");
+}
+
+// Export functions for reuse
+module.exports = {
+  sendErrorEmail,
+  installGlobalErrorHandlers,
+};
