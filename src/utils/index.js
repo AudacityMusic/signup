@@ -18,7 +18,6 @@ import Constants from "expo-constants";
 import { useState } from "react";
 import { Alert, Linking, Platform } from "react-native";
 
-
 export async function alertError(error) {
   console.error(error);
 
@@ -309,4 +308,3 @@ export function openInMaps(location) {
     }
   });
 }
-
