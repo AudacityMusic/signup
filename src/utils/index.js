@@ -18,18 +18,93 @@ import Constants from "expo-constants";
 import { useState } from "react";
 import { Alert, Linking, Platform } from "react-native";
 
-/**
- * Log error and show user-friendly alert with diagnostic info.
- * @param {string} error - error message or object to display
- * @returns {null}
- */
-export function alertError(error) {
+export async function alertError(error) {
   console.error(error);
+
+  // Attempt to get user info
+  let user;
+  try {
+    const userString = await AsyncStorage.getItem("user");
+    user = userString ? JSON.parse(userString) : {};
+  } catch (err) {
+    console.error("Failed to get user info:", err);
+    user = {};
+  }
+
+  // Prepare payload for server
+  const payload = {
+    errorMessage: error?.stack || String(error),
+    userId: user?.id || "unknown",
+    userName: user?.name || "Anonymous",
+    platform: `${Platform.OS} v${Platform.Version}`,
+    appVersion: Constants.expoConfig?.version || "Unknown",
+  };
+
+  // Send error to backend server
+  try {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/send-error`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      },
+    );
+
+    if (!response.ok) {
+      console.warn("Failed to send error to server");
+    } else {
+      console.log("Error reported to server successfully");
+    }
+  } catch (err) {
+    console.error("Error reporting failed:", err);
+    // Optional fallback: store locally if server unreachable
+    try {
+      const existingReports =
+        (await AsyncStorage.getItem("bug_reports")) || "[]";
+      const reports = JSON.parse(existingReports);
+      reports.push({
+        ...payload,
+        timestamp: new Date().toISOString(),
+      });
+      await AsyncStorage.setItem("bug_reports", JSON.stringify(reports));
+      console.log("Error stored locally as fallback");
+    } catch (storageErr) {
+      console.error("Failed to store error locally:", storageErr);
+    }
+  }
   Alert.alert(
     "Error",
-    `Your request was not processed successfully due to an unexpected error. We apologize for the inconvenience. To help us identify and fix this error, please take a screenshot of this alert and send a bug report to ${Constants.expoConfig.extra.email}. Thank you!\n\nPlatform: ${Platform.OS} with v${Platform.Version}\n\n${error}`,
+    `Your request was not processed successfully due to an unexpected error. We apologize for the inconvenience. A bug report has been automatically submitted to ${Constants.expoConfig.extra?.email || "support"}. Thank you!\n\nPlatform: ${Platform.OS} with v${Platform.Version}\n\n${error}`,
   );
   return null;
+}
+
+/**
+ * Retrieve all stored bug reports (for debugging/manual review).
+ * @returns {Promise<Array>}
+ */
+export async function getBugReports() {
+  try {
+    const existingReports = (await AsyncStorage.getItem("bug_reports")) || "[]";
+    return JSON.parse(existingReports);
+  } catch (error) {
+    console.error("Failed to get bug reports:", error);
+    return [];
+  }
+}
+
+/**
+ * Clear all stored bug reports.
+ * @returns {Promise<void>}
+ */
+export async function clearBugReports() {
+  try {
+    await AsyncStorage.removeItem("bug_reports");
+    console.log("Bug reports cleared");
+  } catch (error) {
+    console.error("Failed to clear bug reports:", error);
+  }
 }
 
 /**
