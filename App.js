@@ -50,6 +50,8 @@ export default function App() {
     })();
   }, []);
 
+  // initGlobalErrorReporting is not exported from ./src/utils; global error reporting is not initialized here.
+
   // Show a full-screen spinner while initializing app state
   if (loading) {
     return <ActivityIndicator size="large" />;
