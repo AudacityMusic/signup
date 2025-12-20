@@ -25,7 +25,7 @@ import {
 } from "@react-native-google-signin/google-signin";
 import * as AppleAuth from "expo-apple-authentication";
 
-import { alertError } from "../utils";
+import { alertError, reportError } from "../utils";
 
 // Initialize Google Sign-In configuration
 GoogleSignin.configure({
@@ -78,6 +78,7 @@ export default function SignInScreen({ navigation }) {
       await AsyncStorage.removeItem("access-token");
       navigation.navigate("Home", { forceRerender: true });
     } catch (error) {
+      reportError(error, "Apple Sign-In Error");
       if (error.code !== "ERR_REQUEST_CANCELED") {
         alertError(`While signing in with Apple: (${error.code}) ${error}`);
       }
@@ -95,6 +96,7 @@ export default function SignInScreen({ navigation }) {
       );
       navigation.navigate("Home", { forceRerender: true });
     } catch (error) {
+      reportError(error, "Google Sign-In Error");
       if (isErrorWithCode(error)) {
         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
           return;

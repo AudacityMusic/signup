@@ -22,6 +22,7 @@ import {
   hashForm,
   request,
   strToDate,
+  reportError,
 } from "../utils";
 import PublicGoogleSheetsParser from "../utils/PublicGoogleSheetsParser";
 import {
@@ -57,7 +58,7 @@ export default function HomeScreen({ navigation, route }) {
           data.map((event) => scheduleEventNotifications(event)),
         );
       } catch (err) {
-        console.error("Failed to schedule notifications:", err);
+        reportError(err, "error reported from HomeScreen useEffect");
       }
     })();
   }, [data]);
