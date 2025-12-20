@@ -17,49 +17,48 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import { useState } from "react";
 import { Alert, Linking, Platform } from "react-native";
-import { send, EmailJSResponseStatus } from '@emailjs/react-native';
+import { send, EmailJSResponseStatus } from "@emailjs/react-native";
 
-const emailJsConfig={
-  serviceID:process.env.EXPO_PUBLIC_EMAILJS_SERVICE_ID,
-  templateID:process.env.EXPO_PUBLIC_EMAILJS_TEMPLATE_ID,
-  publicKey:process.env.EXPO_PUBLIC_EMAILJS_PUBLIC_KEY,
+const emailJsConfig = {
+  serviceID: process.env.EXPO_PUBLIC_EMAILJS_SERVICE_ID,
+  templateID: process.env.EXPO_PUBLIC_EMAILJS_TEMPLATE_ID,
+  publicKey: process.env.EXPO_PUBLIC_EMAILJS_PUBLIC_KEY,
 };
 
-export function reportError(error, context="") {
+export function reportError(error, context = "") {
   console.error("Error reported:", error);
   sendErrorEmail(error, context);
 }
 
-export async function sendErrorEmail(error, context="") {
+export async function sendErrorEmail(error, context = "") {
   const templateParams = {
-    email:process.env.EXPO_PUBLIC_EMAILJS_EMAIL,
-    title:context ? `Signup App Error: ${context}` : "Signup App Error",
+    email: process.env.EXPO_PUBLIC_EMAILJS_EMAIL,
+    title: context ? `Signup App Error: ${context}` : "Signup App Error",
     name: "Signup App Error Reporter",
     message: `Error: ${error}\nContext: ${context}\nPlatform: ${Platform.OS} with v${Platform.Version}`,
   };
   try {
     await send(
-        emailJsConfig.serviceID,
-        emailJsConfig.templateID,
-        {
-          email: process.env.EXPO_PUBLIC_EMAILJS_EMAIL,
-          title: context ? `Signup App Error: ${context}` : "Signup App Error",
-          name: 'Signup App Error Reporter',
-          message: `Error: ${error}\nContext: ${context}\nPlatform: ${Platform.OS} with v${Platform.Version}`,
-        },
-        {
-          publicKey: emailJsConfig.publicKey,
-        },
-      );
+      emailJsConfig.serviceID,
+      emailJsConfig.templateID,
+      {
+        email: process.env.EXPO_PUBLIC_EMAILJS_EMAIL,
+        title: context ? `Signup App Error: ${context}` : "Signup App Error",
+        name: "Signup App Error Reporter",
+        message: `Error: ${error}\nContext: ${context}\nPlatform: ${Platform.OS} with v${Platform.Version}`,
+      },
+      {
+        publicKey: emailJsConfig.publicKey,
+      },
+    );
 
-    console.log('SUCCESS!');
-
+    console.log("SUCCESS!");
   } catch (err) {
     if (err instanceof EmailJSResponseStatus) {
-        console.log('EmailJS Request Failed...', err);
-      }
+      console.log("EmailJS Request Failed...", err);
+    }
 
-      console.log('ERROR', err);
+    console.log("ERROR", err);
   }
 }
 
