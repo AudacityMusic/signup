@@ -7,6 +7,7 @@
  * - Custom Apple sign-in button (icon size adjustable)
  */
 
+
 import {
   Image,
   Platform,
@@ -17,6 +18,7 @@ import {
   View,
 } from "react-native";
 
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   GoogleSignin,
@@ -25,7 +27,9 @@ import {
 } from "@react-native-google-signin/google-signin";
 import * as AppleAuth from "expo-apple-authentication";
 
-import { alertError, reportError } from "../utils";
+
+import { alertError } from "../utils";
+
 
 // Initialize Google Sign-In configuration
 GoogleSignin.configure({
@@ -43,6 +47,7 @@ GoogleSignin.configure({
   ],
   offlineAccess: true,
 });
+
 
 export default function SignInScreen({ navigation }) {
   // Apple sign-in logic
@@ -78,12 +83,12 @@ export default function SignInScreen({ navigation }) {
       await AsyncStorage.removeItem("access-token");
       navigation.navigate("Home", { forceRerender: true });
     } catch (error) {
-      reportError(error, "Apple Sign-In Error");
       if (error.code !== "ERR_REQUEST_CANCELED") {
         alertError(`While signing in with Apple: (${error.code}) ${error}`);
       }
     }
   };
+
 
   const handleGoogleSignIn = async () => {
     try {
@@ -96,7 +101,6 @@ export default function SignInScreen({ navigation }) {
       );
       navigation.navigate("Home", { forceRerender: true });
     } catch (error) {
-      reportError(error, "Google Sign-In Error");
       if (isErrorWithCode(error)) {
         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
           return;
@@ -107,6 +111,7 @@ export default function SignInScreen({ navigation }) {
       }
     }
   };
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -131,6 +136,7 @@ export default function SignInScreen({ navigation }) {
           </Text>
         </Pressable>
 
+
         {/* Custom Apple Sign-In button */}
         {Platform.OS === "ios" ? (
           <Pressable
@@ -151,6 +157,7 @@ export default function SignInScreen({ navigation }) {
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -195,3 +202,4 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
+
