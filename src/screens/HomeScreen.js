@@ -6,6 +6,7 @@
  * - Manages push notifications for each event
  */
 
+
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { StyleSheet, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -22,7 +23,6 @@ import {
   hashForm,
   request,
   strToDate,
-  reportError,
 } from "../utils";
 import PublicGoogleSheetsParser from "../utils/PublicGoogleSheetsParser";
 import {
@@ -30,6 +30,7 @@ import {
   scheduleEventNotifications,
   cancelAllScheduled,
 } from "../utils/notifications";
+
 
 /**
  * HomeScreen: displays upcoming events in a carousel, other opportunities, and websites.
@@ -42,10 +43,12 @@ export default function HomeScreen({ navigation, route }) {
   // State: array of event objects
   const [data, setData] = useState([]);
 
+
   // Request notification permissions and set up channel on mount
   useEffect(() => {
     initNotificationHandling();
   }, []);
+
 
   // Whenever event data changes, clear and reschedule notifications
   useEffect(() => {
@@ -58,10 +61,11 @@ export default function HomeScreen({ navigation, route }) {
           data.map((event) => scheduleEventNotifications(event)),
         );
       } catch (err) {
-        reportError(err, "error reported from HomeScreen useEffect");
+        alertError(`From HomeScreen useEffect: ${err}`);
       }
     })();
   }, [data]);
+
 
   /**
    * Group flat event list into rows of 3 for the carousel layout.
@@ -82,6 +86,7 @@ export default function HomeScreen({ navigation, route }) {
     return formatted;
   }, []);
 
+
   /**
    * Fetch events from Google Sheets, filter by date and submission status,
    * then update state for display and scheduling.
@@ -98,6 +103,7 @@ export default function HomeScreen({ navigation, route }) {
       },
     );
 
+
     const submittedForms = [];
     try {
       const storedForms = await AsyncStorage.getItem("submittedForms");
@@ -105,8 +111,9 @@ export default function HomeScreen({ navigation, route }) {
         submittedForms.push(...JSON.parse(storedForms));
       }
     } catch (error) {
-      alertError("In onRefresh: " + error);
+      alertError(`In onRefresh: ${error}`);
     }
+
 
     // Fetch raw data with retry logic via request()
     const unparsedData = await request(() => parser.parse());
@@ -116,10 +123,13 @@ export default function HomeScreen({ navigation, route }) {
     const newData = [];
     const user = await getUser();
 
+
     const currentDate = new Date();
+
 
     const twoMonthsLater = new Date();
     twoMonthsLater.setMonth(currentDate.getMonth() + 2);
+
 
     // Transform and filter each record:
     // - Provide default Title/Location
@@ -128,14 +138,17 @@ export default function HomeScreen({ navigation, route }) {
     // - Mark isSubmitted based on stored hashes
     // - Collect valid events
 
+
     for (let i = 0; i < unparsedData.length; i++) {
       const opportunity = unparsedData[i];
       opportunity.Title ??= "Untitled Event";
       opportunity.Location ??= "Unknown Location";
       opportunity.Date = strToDate(opportunity.Date) ?? new Date(0);
 
+
       const event_midnight = new Date(opportunity.Date);
       event_midnight.setHours(23, 59, 59, 999);
+
 
       if (event_midnight < currentDate || opportunity.Date > twoMonthsLater) {
         continue;
@@ -150,38 +163,47 @@ export default function HomeScreen({ navigation, route }) {
       newData.push(opportunity);
     }
 
+
     // Sort events chronologically
     newData.sort((a, b) => a.Date - b.Date);
+
 
     // Update state to re-render and trigger scheduling
     setData(newData);
 
+
     // Return count for pull-to-refresh control
     return newData.length;
   }, []);
+
 
   // Trigger data load on initial mount
   useEffect(() => {
     onRefresh().catch((err) => console.error("Error refreshing events:", err));
   }, []);
 
+
   // Filtered data from FilterPanel
   const [filteredData, setFilteredData] = useState(data);
+
 
   // Callback to receive filtered data from FilterPanel
   const handleFilteredDataChange = useCallback((newFilteredData) => {
     setFilteredData(newFilteredData);
   }, []);
 
+
   // Memoized formatted data for carousel to prevent excessive re-renders
   const formattedData = useMemo(() => {
     return formatData(filteredData);
   }, [filteredData]);
 
+
   // Update filteredData to match new data when no filters applied
   useEffect(() => {
     setFilteredData(data);
   }, [data]);
+
 
   const renderItem = ({ item, index }) => {
     if (index === 0) {
@@ -211,6 +233,7 @@ export default function HomeScreen({ navigation, route }) {
     return null;
   };
 
+
   const listData = [
     { key: "filter" },
     { key: "carousel" },
@@ -219,6 +242,7 @@ export default function HomeScreen({ navigation, route }) {
     { key: "websites-heading" },
     { key: "websites" },
   ];
+
 
   return (
     <FlatList
@@ -231,9 +255,11 @@ export default function HomeScreen({ navigation, route }) {
   );
 }
 
+
 // Styles for HomeScreen
 const styles = StyleSheet.create({
   container: {
     margin: 15,
   },
 });
+
