@@ -13,20 +13,17 @@
  *  - openInMaps: launch maps app for a location
  */
 
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import { useState } from "react";
 import { Alert, Linking, Platform } from "react-native";
 import { send, EmailJSResponseStatus } from "@emailjs/react-native";
 
-
 const emailJsConfig = {
   serviceID: process.env.EXPO_PUBLIC_EMAILJS_SERVICE_ID,
   templateID: process.env.EXPO_PUBLIC_EMAILJS_TEMPLATE_ID,
   publicKey: process.env.EXPO_PUBLIC_EMAILJS_PUBLIC_KEY,
 };
-
 
 export function alertError(error) {
   console.error("Error reported:", error);
@@ -39,7 +36,6 @@ export function alertError(error) {
       ` Platform: ${Platform.OS} with v${Platform.Version}\n\n${error}`,
   );
 }
-
 
 export async function sendErrorEmail(error) {
   try {
@@ -57,25 +53,21 @@ export async function sendErrorEmail(error) {
       },
     );
 
-
     console.log("SUCCESS!");
   } catch (err) {
     if (err instanceof EmailJSResponseStatus) {
       console.log("EmailJS Request Failed...", err);
     }
 
-
     console.log("ERROR", err);
   }
 }
-
 
 /**
  * Log error and show user-friendly alert with diagnostic info.
  * @param {string} error - error message or object to display
  * @returns {null}
  */
-
 
 /**
  * Open a URL in the default browser.
@@ -89,7 +81,6 @@ export function openURL(url) {
     );
   });
 }
-
 
 /**
  * Try to open URL, fallback to app store if scheme fails.
@@ -115,7 +106,6 @@ export function maybeOpenURL(url, appName, appStoreID, playStoreID) {
   });
 }
 
-
 /**
  * Retrieve the stored user object from AsyncStorage.
  * @param {boolean} [isEmptySafe=false]
@@ -136,7 +126,6 @@ export async function getUser(isEmptySafe = false) {
   }
 }
 
-
 /**
  * Utility delay function for retry backoff.
  */
@@ -146,7 +135,6 @@ function wait(time) {
   });
 }
 
-
 /**
  * Retry network request with exponential backoff: delays of 1/25/5/25 seconds.
  * @param {Function} fn - async function that returns data or throws
@@ -154,7 +142,6 @@ function wait(time) {
  */
 export async function request(fn) {
   let data;
-
 
   // Request after 0, 1/5, 1, and 5 seconds
   for (let i = -2; i <= 1; i++) {
@@ -176,10 +163,8 @@ export async function request(fn) {
     }
   }
 
-
   return data;
 }
-
 
 /**
  * Convert serialized Sheet date string 'Date(YYYY,MM,DD,hh,mm,ss)' into Date object.
@@ -192,10 +177,8 @@ export function strToDate(str) {
     .split(",")
     .map(Number);
 
-
   return new Date(year, month, day, hour, minute, second);
 }
-
 
 /**
  * Format Date object to human-readable string 'Weekday, Month Day, Year Time'.
@@ -210,16 +193,13 @@ export function formatDate(date) {
     year: "numeric",
   });
 
-
   const timePart = date.toLocaleTimeString("en-us", {
     hour: "numeric",
     minute: "numeric",
   });
 
-
   return `${datePart} ${timePart}`;
 }
-
 
 /**
  * Question helper: binds form question component state and validation.
@@ -241,7 +221,6 @@ export class Question {
   }
 }
 
-
 /**
  * Hook to initialize question state.
  * @param {*} initial
@@ -249,7 +228,6 @@ export class Question {
 export function emptyQuestionState(initial = null) {
   return useState({ value: initial, y: null, valid: true });
 }
-
 
 // Validation predicates
 export const isAtLeast = (value, len) =>
@@ -259,7 +237,6 @@ export const isAtLeast = (value, len) =>
 export const isNotEmpty = (value) => isAtLeast(value, 1);
 export const isExactly = (value, len) =>
   !isAtLeast(value, len + 1) && isAtLeast(value, len);
-
 
 /**
  * Hash event details deterministically for submission tracking.
@@ -271,7 +248,6 @@ export const isExactly = (value, len) =>
 export function hashForm(userID, title, location, date) {
   return `${userID}&&&${title}&&&${location}&&&${date}`;
 }
-
 
 /**
  * Launch maps application or fallback to web URL for a location.
