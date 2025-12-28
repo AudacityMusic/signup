@@ -57,7 +57,7 @@ export default function HomeScreen({ navigation, route }) {
           data.map((event) => scheduleEventNotifications(event)),
         );
       } catch (err) {
-        console.error("Failed to schedule notifications:", err);
+        alertError(`From HomeScreen useEffect: ${err}`);
       }
     })();
   }, [data]);
@@ -104,7 +104,7 @@ export default function HomeScreen({ navigation, route }) {
         submittedForms.push(...JSON.parse(storedForms));
       }
     } catch (error) {
-      alertError("In onRefresh: " + error);
+      alertError(`In onRefresh: ${error}`);
     }
 
     // Fetch raw data with retry logic via request()
