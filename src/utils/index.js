@@ -17,20 +17,57 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import { useState } from "react";
 import { Alert, Linking, Platform } from "react-native";
+import { send, EmailJSResponseStatus } from "@emailjs/react-native";
+
+const emailJsConfig = {
+  serviceID: process.env.EXPO_PUBLIC_EMAILJS_SERVICE_ID,
+  templateID: process.env.EXPO_PUBLIC_EMAILJS_TEMPLATE_ID,
+  publicKey: process.env.EXPO_PUBLIC_EMAILJS_PUBLIC_KEY,
+};
+
+export function alertError(error) {
+  console.error("Error reported:", error);
+  sendErrorEmail(error);
+  Alert.alert(
+    "Error",
+    `Your request was not processed successfully due to an unexpected error.` +
+      ` We apologize for the inconvenience.` +
+      ` Please submit a bug report to ${Constants.expoConfig.extra.email} explaining how the following error occurred. Thank you!\n\n` +
+      ` Platform: ${Platform.OS} with v${Platform.Version}\n\n${error}`,
+  );
+}
+
+export async function sendErrorEmail(error) {
+  try {
+    await send(
+      emailJsConfig.serviceID,
+      emailJsConfig.templateID,
+      {
+        email: process.env.EXPO_PUBLIC_EMAILJS_EMAIL,
+        title: "Signup App Error",
+        name: "Signup App Error Reporter",
+        message: `Error: ${error}\nPlatform: ${Platform.OS} with v${Platform.Version}`,
+      },
+      {
+        publicKey: emailJsConfig.publicKey,
+      },
+    );
+
+    console.log("SUCCESS!");
+  } catch (err) {
+    if (err instanceof EmailJSResponseStatus) {
+      console.log("EmailJS Request Failed...", err);
+    }
+
+    console.log("ERROR", err);
+  }
+}
 
 /**
  * Log error and show user-friendly alert with diagnostic info.
  * @param {string} error - error message or object to display
  * @returns {null}
  */
-export function alertError(error) {
-  console.error(error);
-  Alert.alert(
-    "Error",
-    `Your request was not processed successfully due to an unexpected error. We apologize for the inconvenience. To help us identify and fix this error, please take a screenshot of this alert and send a bug report to ${Constants.expoConfig.extra.email}. Thank you!\n\nPlatform: ${Platform.OS} with v${Platform.Version}\n\n${error}`,
-  );
-  return null;
-}
 
 /**
  * Open a URL in the default browser.

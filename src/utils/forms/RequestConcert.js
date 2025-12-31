@@ -33,7 +33,7 @@ export default class RequestConcert extends Form {
     this.publicity = emptyQuestionState(); // Public/private
     this.stipend = emptyQuestionState(); // Stipend availability
     this.donatable = emptyQuestionState(); // Donation option
-    this.timeSlots = emptyQuestionState([]); // Available time slots array
+    this.timeSlots = emptyQuestionState([]); // Available time slots array (start with empty list)
     this.audience = emptyQuestionState(); // Audience description
     this.distance = emptyQuestionState(); // Distance details
     this.provided = emptyQuestionState([]); // Provided resources
@@ -151,9 +151,13 @@ export default class RequestConcert extends Form {
         component: (
           <TimeSlotList
             title="Possible Concert Times"
+            subheader="Each concert must start between 10:30 am and 5 pm while also ending before 6 pm."
             key="timeSlots"
             state={this.timeSlots[0]}
             setState={this.timeSlots[1]}
+            startTitle="Select Starting Date & Time"
+            endTitle="Select Ending Time"
+            combinedTitle="Select Time Slot"
           />
         ),
         validate: (slots) =>
@@ -239,7 +243,7 @@ export default class RequestConcert extends Form {
         name: "otherInfo",
         component: (
           <TextField
-            title="Additional Comments"
+            title="Other Information (optional)"
             key="otherInfo"
             state={this.otherInfo[0]}
             setState={this.otherInfo[1]}

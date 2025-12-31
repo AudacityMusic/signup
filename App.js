@@ -11,8 +11,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
-import { ActivityIndicator } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
 
 import AccountScreen from "./src/screens/AccountScreen";
 import EmbeddedFormScreen from "./src/screens/EmbeddedFormScreen";
@@ -23,6 +23,7 @@ import VolunteerFormScreen from "./src/screens/VolunteerFormScreen";
 import VolunteerOpportunityScreen from "./src/screens/VolunteerOpportunityScreen";
 
 import HomeHeader from "./src/components/HomeHeader";
+import NoInternetBanner from "./src/components/NoInternetBanner";
 import colors from "./src/constants/colors";
 import { alertError } from "./src/utils";
 
@@ -56,54 +57,57 @@ export default function App() {
 
   // Once ready, render the navigation container with all screens
   return (
-    <NavigationContainer>
-      {/* Light-content status bar to match header styling */}
-      <StatusBar style="light" />
-      <Stack.Navigator
-        initialRouteName={isLoggedIn ? "Home" : "Sign In"}
-        screenOptions={{
-          headerStyle: { backgroundColor: colors.primary },
-          headerTintColor: colors.white,
-        }}
-      >
-        {/* Sign In screen for authentication */}
-        <Stack.Screen
-          name="Sign In"
-          component={SignInScreen}
-          options={{ headerBackVisible: false }}
-        />
-        {/* Main Home screen with custom header */}
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{ header: (props) => <HomeHeader {...props} /> }}
-        />
-        {/* Account management screen */}
-        <Stack.Screen
-          name="Account"
-          component={AccountScreen}
-          options={{ animation: "slide_from_bottom" }}
-        />
-        {/* Detailed volunteer opportunity view */}
-        <Stack.Screen
-          name="Volunteer Opportunity"
-          component={VolunteerOpportunityScreen}
-          options={{
-            title: null,
-            headerStyle: { backgroundColor: colors.black },
+    <View style={{ flex: 1 }}>
+      <NavigationContainer>
+        {/* Light-content status bar to match header styling */}
+        <StatusBar style="light" />
+        <Stack.Navigator
+          initialRouteName={isLoggedIn ? "Home" : "Sign In"}
+          screenOptions={{
+            headerStyle: { backgroundColor: colors.primary },
+            headerTintColor: colors.white,
           }}
-        />
-        {/* Form submission screen for events */}
-        <Stack.Screen name="Sign Up Form" component={VolunteerFormScreen} />
-        {/* Embedded Google Forms web view */}
-        <Stack.Screen name="Google Forms" component={EmbeddedFormScreen} />
-        {/* End screen showing submission success/failure */}
-        <Stack.Screen
-          name="End"
-          component={EndScreen}
-          options={{ title: null, headerBackVisible: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+        >
+          {/* Sign In screen for authentication */}
+          <Stack.Screen
+            name="Sign In"
+            component={SignInScreen}
+            options={{ headerBackVisible: false }}
+          />
+          {/* Main Home screen with custom header */}
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{ header: (props) => <HomeHeader {...props} /> }}
+          />
+          {/* Account management screen */}
+          <Stack.Screen
+            name="Account"
+            component={AccountScreen}
+            options={{ animation: "slide_from_bottom" }}
+          />
+          {/* Detailed volunteer opportunity view */}
+          <Stack.Screen
+            name="Volunteer Opportunity"
+            component={VolunteerOpportunityScreen}
+            options={{
+              title: null,
+              headerStyle: { backgroundColor: colors.black },
+            }}
+          />
+          {/* Form submission screen for events */}
+          <Stack.Screen name="Sign Up Form" component={VolunteerFormScreen} />
+          {/* Embedded Google Forms web view */}
+          <Stack.Screen name="Google Forms" component={EmbeddedFormScreen} />
+          {/* End screen showing submission success/failure */}
+          <Stack.Screen
+            name="End"
+            component={EndScreen}
+            options={{ title: null, headerBackVisible: false }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+      <NoInternetBanner />
+    </View>
   );
 }
