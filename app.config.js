@@ -1,3 +1,4 @@
+import 'dotenv/config';
 export default {
   name: "Audacity Sign Up",
   slug: "audacity-music-club",

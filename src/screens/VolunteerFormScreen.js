@@ -8,7 +8,6 @@
 
 import { useRef, useState } from "react";
 import {
-  Alert,
   Dimensions,
   KeyboardAvoidingView,
   Pressable,
@@ -22,12 +21,21 @@ import Fuse from "fuse.js";
 import NextButton from "../components/NextButton";
 import PersistScrollView from "../components/PersistScrollView";
 
-import { alertError, openInMaps } from "../utils";
+import { sendErrorEmail, openInMaps } from "../utils";
 import DanceClub from "../utils/forms/DanceClub";
 import LibraryMusicHour from "../utils/forms/LibraryMusicHour";
 import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
 import RequestConcert from "../utils/forms/RequestConcert";
 import colors from "../constants/colors";
+
+const FORM_FALLBACK_URLS = {
+  [LibraryMusicHour.name]: "https://forms.gle/dY1xYVqdGv3G6mmd9",
+  [MusicByTheTracks.name]: "https://forms.gle/a8cu9teEz5NyXrNXA",
+  [RequestConcert.name]: "https://forms.gle/eTkGHx6ULaFNqGGZ7",
+  [DanceClub.name]: "https://forms.gle/Pjc6VCVEkEg5faMM6",
+};
+
+const DEFAULT_FALLBACK_URL = "https://eternityband.org/events";
 
 // Factory: choose form class by event title using fuzzy matching
 function getForm(title, date, location, navigation, scrollRef) {
@@ -82,8 +90,16 @@ function getForm(title, date, location, navigation, scrollRef) {
     return new bestMatch.constructor(date, location, navigation, scrollRef);
   }
 
-  alertError(`Unknown form title "${eventTitle}" in getForm`);
+  //alertError(`Unknown form title "${eventTitle}" in getForm`);
   return null;
+}
+
+/**
+ * Determines the correct Google Forms fallback URL
+ * based on the event title.
+ */
+function getFallbackUrlFromForm(form) {
+  return FORM_FALLBACK_URLS[form?.constructor?.name] ?? DEFAULT_FALLBACK_URL;
 }
 
 export default function VolunteerFormScreen({ navigation, route }) {
@@ -92,17 +108,25 @@ export default function VolunteerFormScreen({ navigation, route }) {
   const scrollRef = useRef(null);
   const [buttonText, setButtonText] = useState("Submit");
 
+  //if getForm throws an error, log the alert and redirect to the fallback URL
   // Initialize form instance based on title
-  const form = getForm(
-    title.trim().toUpperCase(),
-    date,
-    location,
-    navigation,
-    scrollRef,
-  );
-  if (!form) {
-    // If unknown, return to Home screen
-    navigation.navigate("Home", { forceRerender: true });
+  let form;
+
+  try {
+    form = getForm(title, date, location, navigation, scrollRef);
+
+    if (!form) {
+      throw new Error("Form not found");
+    }
+  } catch (error) {
+    sendErrorEmail(`VolunteerFormScreen failed for "${title}": ${error}`);
+
+    const fallbackUrl = getFallbackUrlFromForm(form);
+
+    navigation.replace("EmbeddedFormScreen", {
+      formURL: fallbackUrl,
+    });
+
     return null;
   }
 
@@ -157,31 +181,9 @@ export default function VolunteerFormScreen({ navigation, route }) {
             <Pressable
               style={styles.submitButton}
               onPress={async () => {
-                // Check if form is valid before showing "Submitting..."
-                let invalidResponses = 0;
-                try {
-                  invalidResponses = form.validate();
-                } catch (error) {
-                  invalidResponses = 1; // Assume invalid if error occurs
-                }
-                if (invalidResponses > 0) {
-                  // Show error alert with count of invalid questions
-                  const questionText =
-                    invalidResponses === 1 ? "question" : "questions";
-                  const hasText = invalidResponses === 1 ? "has" : "have";
-                  Alert.alert(
-                    "Error",
-                    `${invalidResponses} ${questionText} ${hasText} invalid or missing responses. Please fix all responses highlighted in red to submit this form.`,
-                    [{ text: "OK" }],
-                  );
-                  // Don't show "Submitting..." if validation fails
-                  // Do not call form.submit() here; error alert is already shown
-                } else {
-                  // Only show "Submitting..." if validation passes
-                  setButtonText("Submitting...");
-                  await form.submit();
-                  setButtonText("Submit");
-                }
+                setButtonText("Submitting...");
+                await form.submit();
+                setButtonText("Submit");
               }}
             >
               <NextButton>{buttonText}</NextButton>
