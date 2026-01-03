@@ -6,7 +6,6 @@
  * - Handles submission and updates button state
  */
 
-
 import { useRef, useState } from "react";
 import {
   Dimensions,
@@ -95,15 +94,12 @@ function getForm(title, date, location, navigation, scrollRef) {
   return null;
 }
 
-/** 
+/**
  * Determines the correct Google Forms fallback URL
  * based on the event title.
  */
 function getFallbackUrlFromForm(form) {
-  return (
-    FORM_FALLBACK_URLS[form?.constructor?.name] ??
-    DEFAULT_FALLBACK_URL
-  );
+  return FORM_FALLBACK_URLS[form?.constructor?.name] ?? DEFAULT_FALLBACK_URL;
 }
 
 export default function VolunteerFormScreen({ navigation, route }) {
@@ -112,38 +108,27 @@ export default function VolunteerFormScreen({ navigation, route }) {
   const scrollRef = useRef(null);
   const [buttonText, setButtonText] = useState("Submit");
 
-
   //if getForm throws an error, log the alert and redirect to the fallback URL
   // Initialize form instance based on title
   let form;
 
-try {
-  form = getForm(
-  title,
-  date,
-  location,
-  navigation,
-  scrollRef
-);
+  try {
+    form = getForm(title, date, location, navigation, scrollRef);
 
+    if (!form) {
+      throw new Error("Form not found");
+    }
+  } catch (error) {
+    sendErrorEmail(`VolunteerFormScreen failed for "${title}": ${error}`);
 
-  if (!form) {
-    throw new Error("Form not found");
+    const fallbackUrl = getFallbackUrlFromForm(form);
+
+    navigation.replace("EmbeddedFormScreen", {
+      formURL: fallbackUrl,
+    });
+
+    return null;
   }
-} catch (error) {
-  sendErrorEmail(
-    `VolunteerFormScreen failed for "${title}": ${error}`
-  );
-
-  const fallbackUrl = getFallbackUrlFromForm(form);
-
-  navigation.replace("EmbeddedFormScreen", {
-    formURL: fallbackUrl,
-  });
-        
-  return null;
-
-}
 
   return (
     <SafeAreaView style={styles.container}>
