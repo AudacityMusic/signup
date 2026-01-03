@@ -10,8 +10,8 @@
  */
 
 import { Linking } from "react-native";
-import React from 'react';
-import { View, Text, Button } from 'react-native';
+import React from "react";
+import { View, Text, Button } from "react-native";
 //import { useNavigation } from '@react-navigation/native';
 
 const FormErrorFallback = ({ error, resetError, fallbackUrl }) => {
@@ -23,7 +23,7 @@ const FormErrorFallback = ({ error, resetError, fallbackUrl }) => {
 
   return (
     <View style={{ padding: 20 }}>
-      <Text style={{ color: 'red', marginBottom: 10 }}>
+      <Text style={{ color: "red", marginBottom: 10 }}>
         Something went wrong: {error.message}
       </Text>
       <Button title="Use embedded form instead" onPress={handleRedirect} />
