@@ -6,8 +6,7 @@
  * - Handles submission and updates button state
  */
 
-import { ErrorBoundary } from 'react-native-error-boundary';
-import FormErrorFallback from '../components/FormErrorFallback';
+
 import { useRef, useState } from "react";
 import {
   Alert,
@@ -24,12 +23,21 @@ import Fuse from "fuse.js";
 import NextButton from "../components/NextButton";
 import PersistScrollView from "../components/PersistScrollView";
 
-import { alertError, openInMaps } from "../utils";
+import { sendErrorEmail, openInMaps } from "../utils";
 import DanceClub from "../utils/forms/DanceClub";
 import LibraryMusicHour from "../utils/forms/LibraryMusicHour";
 import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
 import RequestConcert from "../utils/forms/RequestConcert";
 import colors from "../constants/colors";
+
+const FORM_FALLBACK_URLS = {
+  [LibraryMusicHour.name]: "https://forms.gle/dY1xYVqdGv3G6mmd9",
+  [MusicByTheTracks.name]: "https://forms.gle/a8cu9teEz5NyXrNXA",
+  [RequestConcert.name]: "https://forms.gle/eTkGHx6ULaFNqGGZ7",
+  [DanceClub.name]: "https://forms.gle/Pjc6VCVEkEg5faMM6",
+};
+
+const DEFAULT_FALLBACK_URL = "https://eternityband.org/events";
 
 // Factory: choose form class by event title using fuzzy matching
 function getForm(title, date, location, navigation, scrollRef) {
@@ -84,14 +92,20 @@ function getForm(title, date, location, navigation, scrollRef) {
     return new bestMatch.constructor(date, location, navigation, scrollRef);
   }
 
-  alertError(`Unknown form title "${eventTitle}" in getForm`);
+  //alertError(`Unknown form title "${eventTitle}" in getForm`);
   return null;
 }
 
-// Custom fallback component that accepts the fallbackUrl prop
-const CustomFallback = (props) => (
-  <FormErrorFallback {...props} fallbackUrl={props.fallbackUrl} />
-);
+/** 
+ * Determines the correct Google Forms fallback URL
+ * based on the event title.
+ */
+function getFallbackUrlFromForm(form) {
+  return (
+    FORM_FALLBACK_URLS[form?.constructor?.name] ??
+    DEFAULT_FALLBACK_URL
+  );
+}
 
 export default function VolunteerFormScreen({ navigation, route }) {
   // Extract parameters from navigation
@@ -99,125 +113,89 @@ export default function VolunteerFormScreen({ navigation, route }) {
   const scrollRef = useRef(null);
   const [buttonText, setButtonText] = useState("Submit");
 
-  const fallbackUrls = {
-    // add all your events here
-    "Cultural Variety Show @ Newark State Of City Address": "http://www.eternityband.org/events",
-    "Music by the Tracks 2nd Anniversary": "https://forms.gle/a8cu9teEz5NyXrNXA",
-    "Library Music Hour Special Feature": "https://forms.gle/g659PdzrnvLPsT949",
-    "Summer Splash Concert": "www.eternityband.org/events",
-    "Library Music Hour": "https://forms.gle/dY1xYVqdGv3G6mmd9",
-    "Audacity Academy Student Online Tutoring": "https://forms.gle/1KVrVutYBg8pMdva9",
-    "Live @ SJC 2025": "www.eternityband.org/events",
-    "Independence Day Concert": "www.eternityband.org/events",
-    "Library Music Hour Chinese Music Special Feature": "https://forms.gle/g659PdzrnvLPsT949",
-    "Wellness Seminars - Audacity STEM Forum": "www.goaudacity.com/stem",
-    "Music by the Tracks": "https://forms.gle/a8cu9teEz5NyXrNXA",
-    "ColorVision Student Art Fair": "www.funyouth.us/art",
-    "Library Music Hour Indian Music Special Feature": "https://forms.gle/g659PdzrnvLPsT949",
-    "Summer Blast Concert": "www.eternityband.org/events",
-    "Green Trek @ Mission Peak": "www.goaudacity.com/projects",
-    "Eternity Band Live @ The Splatter Concert": "www.eternityband.org/events",
-    "Eternity Band Live Newark Concert @ Newark Days": "www.eternityband.org/events",
-    "Audacity Dance Club Runway By The Lake": "https://forms.gle/Pjc6VCVEkEg5faMM6",
-    "Library Music Hour Moon Festival Variety Show": "https://forms.gle/dY1xYVqdGv3G6mmd9",
-    "Diwali Variety Show 2025": "https://forms.gle/T1kC4qbtdBmaW5Vs7",
-    "ADC Demo Team Recruitment": "https://forms.gle/eTkGHx6ULaFNqGGZ7",
-    "Wellness Fair - Audacity STEM Forum": "www.goaudacity.com/stem",
-    "AI Workshop - Audacity STEM Forum": "www.goaudacity.com/stem",
-  };
 
-  // Normalize the event title to match fallbackUrls keys (case-insensitive)
-  const normalizedTitle = Object.keys(fallbackUrls).find(
-    key => key.trim().toLowerCase() === title.trim().toLowerCase()
-  );
-
-  const fallbackUrl = fallbackUrls[normalizedTitle] || "https://eternityband.org/events/";
-
-
+  //if getForm throws an error, the user sees an alert and is redirected to the fallback URL
   // Initialize form instance based on title
-  const form = getForm(
-    title.trim().toUpperCase(),
-    date,
-    location,
-    navigation,
-    scrollRef,
-  );
+  let form;
+
+try {
+  form = getForm(
+  title,
+  date,
+  location,
+  navigation,
+  scrollRef
+);
+
+
   if (!form) {
-    // If unknown, return to Home screen
-    navigation.navigate("Home", { forceRerender: true });
-    return null;
+    throw new Error("Form not found");
   }
+} catch (error) {
+  sendErrorEmail(
+    `VolunteerFormScreen failed for "${title}": ${error}`
+  );
+
+  Alert.alert(
+    "Form unavailable",
+    "Something went wrong. We’ll open the online form instead.",
+    [
+      {
+        text: "OK",
+        onPress: () => {
+          const fallbackUrl = getFallbackUrlFromForm(form);
+
+          navigation.replace("EmbeddedFormScreen", {
+            formURL: fallbackUrl,
+          });
+        },
+      },
+    ]
+  );
+
+  return null;
+}
 
   return (
-    <ErrorBoundary
-      FallbackComponent={(props) => (
-        <FormErrorFallback {...props} fallbackUrl={fallbackUrl} />
-      )}
-     > 
-      <SafeAreaView style={styles.container}>
-        {/* Keyboard-aware container to avoid hiding inputs */}
-        <KeyboardAvoidingView
-          style={[
-            styles.body,
-            {
-              height: Dimensions.get("window").height - 100,
-              width: Dimensions.get("window").width,
-            },
-          ]}
-          behavior="height"
-        >
-          {/* Scrollable form questions area */}
-          <PersistScrollView scrollRef={scrollRef}>
-            <View style={styles.questions}>
-              {/* Event title, date, and optional location with map link */}
-              <View style={styles.header}>
-                <Text
-                  style={[styles.headerText, { fontWeight: "bold" }]}
-                  selectable={true}
-                >
-                  {title}
-                </Text>
-                {date == null ? null : (
-                  <Text style={styles.headerText} selectable={true}>
-                    {date}
-                  </Text>
-                )}
-                {location == null ? null : (
-                  <Pressable onPress={() => openInMaps(location)}>
-                    <Text
-                      style={[styles.headerText, styles.locationText]}
-                      selectable={true}
-                    >
-                      {location}
-                    </Text>
-                  </Pressable>
-                )}
-              </View>
-              {/* Render each question component from form */}
-              <View style={styles.form}>
-                {form
-                  .questions()
-                  .filter((question) => question?.isVisible())
-                  .map((question) => question.component)}
-              </View>
-              {/* Submit button triggers form.submit() */}
-              <Pressable
-                style={styles.submitButton}
-                onPress={async () => {
-                  setButtonText("Submitting...");
-                  await form.submit();
-                  setButtonText("Submit");
-                }}
+    <SafeAreaView style={styles.container}>
+      {/* Keyboard-aware container to avoid hiding inputs */}
+      <KeyboardAvoidingView
+        style={[
+          styles.body,
+          {
+            height: Dimensions.get("window").height - 100,
+            width: Dimensions.get("window").width,
+          },
+        ]}
+        behavior="height"
+      >
+        {/* Scrollable form questions area */}
+        <PersistScrollView scrollRef={scrollRef}>
+          <View style={styles.questions}>
+            {/* Event title, date, and optional location with map link */}
+            <View style={styles.header}>
+              <Text
+                style={[styles.headerText, { fontWeight: "bold" }]}
+                selectable={true}
               >
-                <NextButton>{buttonText}</NextButton>
-              </Pressable>
+                {title}
+              </Text>
+              {date == null ? null : (
+                <Text style={styles.headerText} selectable={true}>
+                  {date}
+                </Text>
+              )}
+              {location == null ? null : (
+                <Pressable onPress={() => openInMaps(location)}>
+                  <Text
+                    style={[styles.headerText, styles.locationText]}
+                    selectable={true}
+                  >
+                    {location}
+                  </Text>
+                </Pressable>
+              )}
             </View>
-<<<<<<< HEAD
-          </PersistScrollView>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </ErrorBoundary>
-=======
             {/* Render each question component from form */}
             <View style={styles.form}>
               {form
@@ -229,31 +207,9 @@ export default function VolunteerFormScreen({ navigation, route }) {
             <Pressable
               style={styles.submitButton}
               onPress={async () => {
-                // Check if form is valid before showing "Submitting..."
-                let invalidResponses = 0;
-                try {
-                  invalidResponses = form.validate();
-                } catch (error) {
-                  invalidResponses = 1; // Assume invalid if error occurs
-                }
-                if (invalidResponses > 0) {
-                  // Show error alert with count of invalid questions
-                  const questionText =
-                    invalidResponses === 1 ? "question" : "questions";
-                  const hasText = invalidResponses === 1 ? "has" : "have";
-                  Alert.alert(
-                    "Error",
-                    `${invalidResponses} ${questionText} ${hasText} invalid or missing responses. Please fix all responses highlighted in red to submit this form.`,
-                    [{ text: "OK" }],
-                  );
-                  // Don't show "Submitting..." if validation fails
-                  // Do not call form.submit() here; error alert is already shown
-                } else {
-                  // Only show "Submitting..." if validation passes
-                  setButtonText("Submitting...");
-                  await form.submit();
-                  setButtonText("Submit");
-                }
+                setButtonText("Submitting...");
+                await form.submit();
+                setButtonText("Submit");
               }}
             >
               <NextButton>{buttonText}</NextButton>
@@ -262,7 +218,6 @@ export default function VolunteerFormScreen({ navigation, route }) {
         </PersistScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
->>>>>>> origin/main
   );
 }
 
