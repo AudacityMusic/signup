@@ -9,7 +9,6 @@
 
 import { useRef, useState } from "react";
 import {
-  Alert,
   Dimensions,
   KeyboardAvoidingView,
   Pressable,
@@ -114,7 +113,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
   const [buttonText, setButtonText] = useState("Submit");
 
 
-  //if getForm throws an error, the user sees an alert and is redirected to the fallback URL
+  //if getForm throws an error, log the alert and redirect to the fallback URL
   // Initialize form instance based on title
   let form;
 
@@ -136,24 +135,14 @@ try {
     `VolunteerFormScreen failed for "${title}": ${error}`
   );
 
-  Alert.alert(
-    "Form unavailable",
-    "Something went wrong. We’ll open the online form instead.",
-    [
-      {
-        text: "OK",
-        onPress: () => {
-          const fallbackUrl = getFallbackUrlFromForm(form);
+  const fallbackUrl = getFallbackUrlFromForm(form);
 
-          navigation.replace("EmbeddedFormScreen", {
-            formURL: fallbackUrl,
-          });
-        },
-      },
-    ]
-  );
-
+  navigation.replace("EmbeddedFormScreen", {
+    formURL: fallbackUrl,
+  });
+        
   return null;
+
 }
 
   return (
