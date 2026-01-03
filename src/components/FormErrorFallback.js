@@ -1,14 +1,24 @@
+/**
+ * FormErrorFallback.js
+ *
+ * This component is shown whenever a volunteer form crashes or fails to load.
+ * - Displays the error message to the user.
+ * - Provides a "Use embedded form instead" button to redirect to a fallback URL.
+ * - Provides a "Try again" button to retry loading the form.
+ *
+ * Used in VolunteerFormScreen inside an ErrorBoundary from 'react-native-error-boundary'.
+ */
+
+import { Linking } from "react-native";
 import React from 'react';
 import { View, Text, Button } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+//import { useNavigation } from '@react-navigation/native';
 
 const FormErrorFallback = ({ error, resetError, fallbackUrl }) => {
-  const navigation = useNavigation();
+  //const navigation = useNavigation();
 
   const handleRedirect = () => {
-    navigation.navigate('Google Forms', {
-      formURL: fallbackUrl, // Use the fallbackUrl prop passed from VolunteerFormScreen
-    });
+    Linking.openURL(fallbackUrl);
   };
 
   return (
