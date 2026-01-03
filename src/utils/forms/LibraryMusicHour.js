@@ -266,7 +266,7 @@ export default class LibraryMusicHour extends Form {
             return false;
           }
           return true;
-        }
+        },
       }),
 
       new Question({
