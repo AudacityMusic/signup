@@ -6,7 +6,7 @@
  * - Handles submission and updates button state
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   Alert,
   Dimensions,
@@ -18,7 +18,6 @@ import {
   View,
 } from "react-native";
 import Fuse from "fuse.js";
-
 import ErrorBoundary from "react-native-error-boundary";
 
 import NextButton from "../components/NextButton";
@@ -100,7 +99,6 @@ export default function VolunteerFormScreen({ navigation, route }) {
   const scrollRef = useRef(null);
   const [buttonText, setButtonText] = useState("Submit");
 
-  //if getForm throws an error, log the alert and redirect to the fallback URL
   // Initialize form instance based on title
   const form = getForm(
     title.trim().toUpperCase(),
@@ -118,16 +116,15 @@ export default function VolunteerFormScreen({ navigation, route }) {
 
   return (
     <ErrorBoundary
-      FallbackComponent={({ resetError }) => {
-        useEffect(() => {
-          resetError();
-          navigation.navigate("Google Forms", formIDs[form.title]);
-        }, []);
-        return null;
+      FallbackComponent={() => null}
+      onError={async (error, stackTrace) => {
+        await sendErrorEmail(`${error}\n${stackTrace}`);
+        setTimeout(() => {
+          navigation.navigate("Google Forms", {
+            formURL: `https://docs.google.com/forms/d/e/${formIDs[form.title].id}/viewform`,
+          });
+        }, 0);
       }}
-      onError={(error, stackTrace) => (
-        sendErrorEmail(`${error}\n${stackTrace}`)
-      )}
     >
       <SafeAreaView style={styles.container}>
         {/* Keyboard-aware container to avoid hiding inputs */}

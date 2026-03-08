@@ -172,6 +172,7 @@ export async function request(fn) {
  * @returns {Date}
  */
 export function strToDate(str) {
+  if (!str) return null;
   const [year, month, day, hour, minute, second] = str
     .slice(5, -1)
     .split(",")
