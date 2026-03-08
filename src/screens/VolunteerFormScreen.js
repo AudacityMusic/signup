@@ -6,8 +6,9 @@
  * - Handles submission and updates button state
  */
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
+  Alert,
   Dimensions,
   KeyboardAvoidingView,
   Pressable,
@@ -18,24 +19,18 @@ import {
 } from "react-native";
 import Fuse from "fuse.js";
 
+import ErrorBoundary from "react-native-error-boundary";
+
 import NextButton from "../components/NextButton";
 import PersistScrollView from "../components/PersistScrollView";
 
-import { sendErrorEmail, openInMaps } from "../utils";
+import { alertError, sendErrorEmail, openInMaps } from "../utils";
 import DanceClub from "../utils/forms/DanceClub";
 import LibraryMusicHour from "../utils/forms/LibraryMusicHour";
 import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
 import RequestConcert from "../utils/forms/RequestConcert";
 import colors from "../constants/colors";
-
-const FORM_FALLBACK_URLS = {
-  [LibraryMusicHour.name]: "https://forms.gle/dY1xYVqdGv3G6mmd9",
-  [MusicByTheTracks.name]: "https://forms.gle/a8cu9teEz5NyXrNXA",
-  [RequestConcert.name]: "https://forms.gle/eTkGHx6ULaFNqGGZ7",
-  [DanceClub.name]: "https://forms.gle/Pjc6VCVEkEg5faMM6",
-};
-
-const DEFAULT_FALLBACK_URL = "https://eternityband.org/events";
+import formIDs from "../constants/formIDs";
 
 // Factory: choose form class by event title using fuzzy matching
 function getForm(title, date, location, navigation, scrollRef) {
@@ -90,7 +85,7 @@ function getForm(title, date, location, navigation, scrollRef) {
     return new bestMatch.constructor(date, location, navigation, scrollRef);
   }
 
-  //alertError(`Unknown form title "${eventTitle}" in getForm`);
+  alertError(`Unknown form title "${eventTitle}" in getForm`);
   return null;
 }
 
@@ -98,9 +93,6 @@ function getForm(title, date, location, navigation, scrollRef) {
  * Determines the correct Google Forms fallback URL
  * based on the event title.
  */
-function getFallbackUrlFromForm(form) {
-  return FORM_FALLBACK_URLS[form?.constructor?.name] ?? DEFAULT_FALLBACK_URL;
-}
 
 export default function VolunteerFormScreen({ navigation, route }) {
   // Extract parameters from navigation
@@ -110,88 +102,120 @@ export default function VolunteerFormScreen({ navigation, route }) {
 
   //if getForm throws an error, log the alert and redirect to the fallback URL
   // Initialize form instance based on title
-  let form;
+  const form = getForm(
+    title.trim().toUpperCase(),
+    date,
+    location,
+    navigation,
+    scrollRef,
+  );
 
-  try {
-    form = getForm(title, date, location, navigation, scrollRef);
-
-    if (!form) {
-      throw new Error("Form not found");
-    }
-  } catch (error) {
-    sendErrorEmail(`VolunteerFormScreen failed for "${title}": ${error}`);
-
-    const fallbackUrl = getFallbackUrlFromForm(form);
-
-    navigation.replace("EmbeddedFormScreen", {
-      formURL: fallbackUrl,
-    });
-
+  if (!form) {
+    // If unknown, return to Home screen
+    navigation.navigate("Home", { forceRerender: true });
     return null;
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Keyboard-aware container to avoid hiding inputs */}
-      <KeyboardAvoidingView
-        style={[
-          styles.body,
-          {
-            height: Dimensions.get("window").height - 100,
-            width: Dimensions.get("window").width,
-          },
-        ]}
-        behavior="height"
-      >
-        {/* Scrollable form questions area */}
-        <PersistScrollView scrollRef={scrollRef}>
-          <View style={styles.questions}>
-            {/* Event title, date, and optional location with map link */}
-            <View style={styles.header}>
-              <Text
-                style={[styles.headerText, { fontWeight: "bold" }]}
-                selectable={true}
-              >
-                {title}
-              </Text>
-              {date == null ? null : (
-                <Text style={styles.headerText} selectable={true}>
-                  {date}
+    <ErrorBoundary
+      FallbackComponent={({ resetError }) => {
+        useEffect(() => {
+          resetError();
+          navigation.navigate("Google Forms", formIDs[form.title]);
+        }, []);
+        return null;
+      }}
+      onError={(error, stackTrace) => (
+        sendErrorEmail(`${error}\n${stackTrace}`)
+      )}
+    >
+      <SafeAreaView style={styles.container}>
+        {/* Keyboard-aware container to avoid hiding inputs */}
+        <KeyboardAvoidingView
+          style={[
+            styles.body,
+            {
+              height: Dimensions.get("window").height - 100,
+              width: Dimensions.get("window").width,
+            },
+          ]}
+          behavior="height"
+        >
+          {/* Scrollable form questions area */}
+          <PersistScrollView scrollRef={scrollRef}>
+            <View style={styles.questions}>
+              {/* Event title, date, and optional location with map link */}
+              <View style={styles.header}>
+                <Text
+                  style={[styles.headerText, { fontWeight: "bold" }]}
+                  selectable={true}
+                >
+                  {title}
                 </Text>
-              )}
-              {location == null ? null : (
-                <Pressable onPress={() => openInMaps(location)}>
-                  <Text
-                    style={[styles.headerText, styles.locationText]}
-                    selectable={true}
-                  >
-                    {location}
+                {date == null ? null : (
+                  <Text style={styles.headerText} selectable={true}>
+                    {date}
                   </Text>
-                </Pressable>
-              )}
+                )}
+                {location == null ? null : (
+                  <Pressable onPress={() => openInMaps(location)}>
+                    <Text
+                      style={[styles.headerText, styles.locationText]}
+                      selectable={true}
+                    >
+                      {location}
+                    </Text>
+                  </Pressable>
+                )}
+              </View>
+              {/* Render each question component from form */}
+              <View style={styles.form}>
+                {form
+                  .questions()
+                  .filter((question) => question?.isVisible())
+                  .map((question) => question.component)}
+              </View>
+              {/* Submit button triggers form.submit() */}
+              <Pressable
+                style={styles.submitButton}
+                onPress={async () => {
+                  // Check if form is valid before showing "Submitting..."
+                  let invalidResponses = 0;
+                  try {
+                    invalidResponses = form.validate();
+                  } catch (error) {
+                    invalidResponses = 1; // Assume invalid if error occurs
+                  }
+                  if (invalidResponses > 0) {
+                    // Show error alert with count of invalid questions
+                    const questionText =
+                      invalidResponses === 1 ? "question" : "questions";
+                    const hasText = invalidResponses === 1 ? "has" : "have";
+                    Alert.alert(
+                      "Error",
+                      `${invalidResponses} ${questionText} ${hasText} invalid or missing responses. Please fix all responses highlighted in red to submit this form.`,
+                      [{ text: "OK" }],
+                    );
+                    // Don't show "Submitting..." if validation fails
+                    // Do not call form.submit() here; error alert is already shown
+                  } else {
+                    // Only show "Submitting..." if validation passes
+                    setButtonText("Submitting...");
+                    await form.submit();
+                    setButtonText("Submit");
+                  }
+                  setButtonText("Submitting...");
+                  await form.submit();
+                  setButtonText("Submit");
+                }}
+              >
+                <NextButton>{buttonText}</NextButton>
+              </Pressable>
             </View>
-            {/* Render each question component from form */}
-            <View style={styles.form}>
-              {form
-                .questions()
-                .filter((question) => question?.isVisible())
-                .map((question) => question.component)}
-            </View>
-            {/* Submit button triggers form.submit() */}
-            <Pressable
-              style={styles.submitButton}
-              onPress={async () => {
-                setButtonText("Submitting...");
-                await form.submit();
-                setButtonText("Submit");
-              }}
-            >
-              <NextButton>{buttonText}</NextButton>
-            </Pressable>
-          </View>
-        </PersistScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+          </PersistScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </ErrorBoundary>
   );
 }
 
