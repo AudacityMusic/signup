@@ -60,30 +60,32 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
             "Missing sheetId or sheetName. Ensure EXPO_PUBLIC_SHEET_ID and EXPO_PUBLIC_SHEET_NAME are set.",
           );
         }
-  
+
         const parser = new PublicGoogleSheetsParser(sheetId, {
           sheetName,
         });
-  
+
         const rows = await parser.parse();
-  
+
         // Find the row that matches the current event by title
         const eventRow = rows.find((row) => row.Title === title);
-  
+
         // Collect all ProgramList columns from that row
         const imageObjects = [];
         let i = 1;
         while (eventRow && eventRow[`ProgramList${i}`]) {
-          imageObjects.push({ uri: String(eventRow[`ProgramList${i}`]).trim() });
+          imageObjects.push({
+            uri: String(eventRow[`ProgramList${i}`]).trim(),
+          });
           i++;
         }
-  
+
         setImageGallery(imageObjects);
       } catch (error) {
         console.error("Error loading images from Google Sheet:", error);
       }
     };
-  
+
     fetchImages();
   }, []);
   return (
