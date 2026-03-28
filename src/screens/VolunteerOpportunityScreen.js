@@ -7,15 +7,21 @@
  * - Provides Sign Up button (navigates to form or Google Forms URL)
  * - Provides Show Posters & Programs button to display all show programs and posters associated with the event
  * - Show Posters & Programs are clickable and pop-up when clicked
-*/
-
+ */
 
 import { useState, useEffect } from "react";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { Image, ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { Modal, Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  Modal,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 import Heading from "../components/Heading";
 import NextButton from "../components/NextButton";
@@ -46,7 +52,6 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
   const [imageGallery, setImageGallery] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
 
-
   useEffect(() => {
     const fetchImages = async () => {
       try {
@@ -59,20 +64,22 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
           );
         }
 
-
         const parser = new PublicGoogleSheetsParser(sheetId, {
           sheetName,
         });
 
         const rows = await parser.parse();
 
-        console.log("rows from parser:", rows?.length ?? 0, rows?.slice?.(0, 3));
-
+        console.log(
+          "rows from parser:",
+          rows?.length ?? 0,
+          rows?.slice?.(0, 3),
+        );
 
         const imageObjects = (rows || [])
           .map((row) => {
-
-            const url = row && row.ProgramList ? String(row.ProgramList).trim() : "";
+            const url =
+              row && row.ProgramList ? String(row.ProgramList).trim() : "";
             return url;
           })
           .filter((url) => url && url.length > 0)
@@ -144,57 +151,59 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
 
           <Pressable onPress={() => setShowImages(!showImages)}>
             <NextButton>
-              {showImages ? "Hide Posters & Programs" : "Show Posters & Programs"}
+              {showImages
+                ? "Hide Posters & Programs"
+                : "Show Posters & Programs"}
             </NextButton>
           </Pressable>
 
-    {showImages && imageGallery.length > 0 && (
-      <View style={{ marginTop: 15 }}>
-      <Heading>Gallery</Heading>
-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
-        {imageGallery.map((img, index) => (
-          <Pressable key={index} onPress={() => setSelectedImage(img)}>
-            <Image
-              source={img}
-              style={{
-                width: 100,
-                height: 140,
-                borderRadius: 10,
-                marginRight: 10,
-                marginBottom: 10,
-              }}
-            contentFit="cover"
-          />
-        </Pressable>
-      ))}
-    </View>
-  </View>
-)}
+          {showImages && imageGallery.length > 0 && (
+            <View style={{ marginTop: 15 }}>
+              <Heading>Gallery</Heading>
+              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
+                {imageGallery.map((img, index) => (
+                  <Pressable key={index} onPress={() => setSelectedImage(img)}>
+                    <Image
+                      source={img}
+                      style={{
+                        width: 100,
+                        height: 140,
+                        borderRadius: 10,
+                        marginRight: 10,
+                        marginBottom: 10,
+                      }}
+                      contentFit="cover"
+                    />
+                  </Pressable>
+                ))}
+              </View>
+            </View>
+          )}
 
-<Modal
-  visible={selectedImage !== null}
-  transparent={true}
-  animationType="fade"
-  onRequestClose={() => setSelectedImage(null)}
->
-  <Pressable
-    style={{
-      flex: 1,
-      backgroundColor: "rgba(0,0,0,0.9)",
-      justifyContent: "center",
-      alignItems: "center",
-    }}
-    onPress={() => setSelectedImage(null)}
-  >
-    {selectedImage && (
-      <Image
-        source={selectedImage}
-        style={{ width: "90%", height: "80%" }}
-        resizeMode="contain"
-      />
-    )}
-  </Pressable>
-</Modal>
+          <Modal
+            visible={selectedImage !== null}
+            transparent={true}
+            animationType="fade"
+            onRequestClose={() => setSelectedImage(null)}
+          >
+            <Pressable
+              style={{
+                flex: 1,
+                backgroundColor: "rgba(0,0,0,0.9)",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onPress={() => setSelectedImage(null)}
+            >
+              {selectedImage && (
+                <Image
+                  source={selectedImage}
+                  style={{ width: "90%", height: "80%" }}
+                  resizeMode="contain"
+                />
+              )}
+            </Pressable>
+          </Modal>
 
           <View style={styles.lowerRight}>
             {isSubmitted ? (
