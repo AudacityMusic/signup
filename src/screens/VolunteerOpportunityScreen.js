@@ -257,7 +257,7 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
 
           <View style={styles.lowerRight}>
             {isSubmitted && (
-              <Text style={styles.alreadySubmitted}>
+              <Text style={styles.alreadySubmitted} selectable>
                 Warning: You have already submitted this form.
               </Text>
             )}
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "flex-end",
-    marginTop: 20,
+    marginTop: 50,
   },
   headerText: {
     position: "absolute",
