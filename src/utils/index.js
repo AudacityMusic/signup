@@ -22,12 +22,6 @@ import { send, EmailJSResponseStatus } from "@emailjs/react-native";
 
 export const navigationRef = createNavigationContainerRef();
 
-const emailJsConfig = {
-  serviceID: process.env.EXPO_PUBLIC_EMAIL_SERVICE_ID,
-  templateID: process.env.EXPO_PUBLIC_EMAIL_TEMPLATE_ID,
-  publicKey: process.env.EXPO_PUBLIC_EMAIL_PUBLIC_KEY,
-};
-
 export function alertError(error) {
   console.error("Error reported:", error);
   sendErrorEmail(error);
@@ -43,16 +37,16 @@ export function alertError(error) {
 export async function sendErrorEmail(error) {
   try {
     await send(
-      emailJsConfig.serviceID,
-      emailJsConfig.templateID,
+      process.env.EXPO_PUBLIC_EMAIL_SERVICE_ID,
+      process.env.EXPO_PUBLIC_EMAIL_TEMPLATE_ID,
       {
         email: process.env.EXPO_PUBLIC_EMAIL,
-        title: "Signup App Error",
-        name: "Signup App Error Reporter",
-        message: `Error: ${error}\nPlatform: ${Platform.OS} with v${Platform.Version}`,
+        title: "Audacity Sign Up Error Report",
+        name: `A ${Platform.OS} v${Platform.Version} User`,
+        message: `${error}`,
       },
       {
-        publicKey: emailJsConfig.publicKey,
+        publicKey: process.env.EXPO_PUBLIC_EMAIL_PUBLIC_KEY,
       },
     );
 
@@ -94,7 +88,7 @@ export function openURL(url) {
  */
 export function maybeOpenURL(url, appName, appStoreID, playStoreID) {
   Linking.openURL(url).catch((error) => {
-    if (error.code == "EUNSPECIFIED") {
+    if (error.code == "UNSPECIFIED") {
       if (Platform.OS == "ios") {
         openURL(`https://apps.apple.com/us/app/${appName}/id${appStoreID}`);
       } else {
