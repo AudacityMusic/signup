@@ -88,7 +88,7 @@ export function openURL(url) {
  */
 export function maybeOpenURL(url, appName, appStoreID, playStoreID) {
   Linking.openURL(url).catch((error) => {
-    if (error.code == "UNSPECIFIED") {
+    if (error.code == "EUNSPECIFIED") {
       if (Platform.OS == "ios") {
         openURL(`https://apps.apple.com/us/app/${appName}/id${appStoreID}`);
       } else {
