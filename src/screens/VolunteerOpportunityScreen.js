@@ -9,12 +9,14 @@
  * - Show Posters & Programs are clickable and pop-up when clicked
  */
 
+import Markdown from "react-native-markdown-display";
 import { useState, useEffect } from "react";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { Image, ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import {
+  Linking,
   Modal,
   Pressable,
   SafeAreaView,
@@ -28,6 +30,7 @@ import NextButton from "../components/NextButton";
 import PersistScrollView from "../components/PersistScrollView";
 import Tag from "../components/Tag";
 import colors from "../constants/colors";
+import { openInMaps } from "../utils";
 
 import PublicGoogleSheetsParser from "../utils/PublicGoogleSheetsParser";
 
@@ -35,6 +38,7 @@ const sheetId = process.env.EXPO_PUBLIC_SHEET_ID;
 const sheetName = process.env.EXPO_PUBLIC_SHEET_NAME;
 
 export default function VolunteerOpportunityScreen({ route, navigation }) {
+  // Destructure parameters passed via navigation
   const {
     title,
     location,
@@ -44,8 +48,13 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
     tags = [],
     formURL,
     isSubmitted,
+    max,
+    signedUp,
   } = route.params;
 
+  const remainingSpots = parseInt(max) - parseInt(signedUp);
+
+  // Map tags to Tag components
   const tagsIcons = tags.map((text) => <Tag key={text} text={text} />);
 
   const [showImages, setShowImages] = useState(false);
@@ -90,6 +99,7 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
   }, []);
   return (
     <SafeAreaView style={styles.container}>
+      {/* Banner with background image and gradient overlay */}
       <View style={styles.banner}>
         <ImageBackground
           source={{ width: 0, height: 0, uri: image }}
@@ -103,13 +113,17 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
             style={{ width: "100%", height: "100%", position: "absolute" }}
           />
         </ImageBackground>
+        {/* Overlay title text at bottom-left of banner */}
         <View style={{ justifyContent: "flex-end", marginLeft: 20 }}>
-          <Text style={styles.headerText}>{title}</Text>
+          <Text style={styles.headerText} selectable>
+            {title}
+          </Text>
         </View>
       </View>
-
+      {/* Scrollable content area */}
       <PersistScrollView style={styles.scrollContainer}>
         <View style={styles.subContainer}>
+          {/* Event details: date and location */}
           <View style={styles.details}>
             <View style={styles.icon}>
               <MaterialCommunityIcons
@@ -117,7 +131,9 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
                 size={20}
                 color={colors.black}
               />
-              <Text style={styles.detailsText}>{date}</Text>
+              <Text style={styles.detailsText} selectable>
+                {date}
+              </Text>
             </View>
             <View style={styles.icon}>
               <SimpleLineIcons
@@ -125,23 +141,63 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
                 size={20}
                 color={colors.black}
               />
-              <Text style={styles.detailsText}>{location}</Text>
+              <Pressable onPress={() => openInMaps(location)}>
+                <Text
+                  style={[styles.detailsText, styles.locationText]}
+                  selectable
+                >
+                  {location}
+                </Text>
+              </Pressable>
             </View>
           </View>
-
-          {description !== "" ? (
+          {/* Optional description section */}
+          {typeof description === "string" && description.trim() !== "" && (
             <View style={styles.about}>
               <Heading>About</Heading>
-              <Text style={{ fontSize: 14 }}>{description}</Text>
+              <Markdown
+                style={{
+                  heading1: {
+                    flexDirection: "row",
+                    fontSize: 30,
+                  },
+                  heading2: {
+                    flexDirection: "row",
+                    fontSize: 25,
+                  },
+                  heading3: {
+                    flexDirection: "row",
+                    fontSize: 22,
+                  },
+                  heading4: {
+                    flexDirection: "row",
+                    fontSize: 19,
+                  },
+                  heading5: {
+                    flexDirection: "row",
+                    fontSize: 17,
+                  },
+                  heading6: {
+                    flexDirection: "row",
+                    fontSize: 15,
+                  },
+                  body: {
+                    fontSize: 14,
+                  },
+                }}
+              >
+                {description}
+              </Markdown>
             </View>
-          ) : null}
+          )}
 
-          {tags.length > 0 ? (
+          {/* Optional tags section */}
+          {tags.length > 0 && (
             <View style={styles.tagsContainer}>
               <Heading>Tags</Heading>
               <View style={styles.tags}>{tagsIcons}</View>
             </View>
-          ) : null}
+          )}
 
           <Pressable onPress={() => setShowImages(!showImages)}>
             <NextButton>
@@ -173,7 +229,7 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
               </View>
             </View>
           )}
-
+          {/* Sign Up button with warning if already submitted */}
           <Modal
             visible={selectedImage !== null}
             transparent={true}
@@ -200,23 +256,54 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
           </Modal>
 
           <View style={styles.lowerRight}>
-            {isSubmitted ? (
+            {isSubmitted && (
               <Text style={styles.alreadySubmitted}>
                 Warning: You have already submitted this form.
               </Text>
-            ) : null}
+            )}
             <Pressable
               onPress={() =>
-                formURL == null
-                  ? navigation.navigate("Sign Up Form", {
-                      title,
-                      location,
-                      date,
-                    })
-                  : navigation.navigate("Google Forms", { formURL })
+                remainingSpots <= 0 || isSubmitted
+                  ? null
+                  : navigation.navigate(
+                      formURL == null ? "Sign Up Form" : "Google Forms",
+                      formURL == null
+                        ? {
+                            title,
+                            location,
+                            date,
+                          }
+                        : { formURL },
+                    )
               }
             >
               <NextButton>Sign Up</NextButton>
+              {/* Show remaining spots if applicable */}
+              {!isNaN(remainingSpots) &&
+                (remainingSpots <= 0 ? (
+                  <Text
+                    style={{
+                      color: "red",
+                      fontSize: 18,
+                      fontWeight: "bold",
+                      marginTop: 10,
+                    }}
+                  >
+                    Registration is full.
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      color: "green",
+                      fontSize: 18,
+                      fontWeight: "bold",
+                      marginTop: 10,
+                    }}
+                  >
+                    {remainingSpots} spot{remainingSpots !== 1 ? "s" : ""}{" "}
+                    remaining
+                  </Text>
+                ))}
             </Pressable>
           </View>
         </View>
@@ -286,5 +373,9 @@ const styles = StyleSheet.create({
   },
   detailsText: {
     fontSize: 18,
+  },
+  locationText: {
+    textDecorationLine: "underline",
+    color: colors.primary,
   },
 });
