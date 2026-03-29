@@ -17,6 +17,7 @@ import {
   Text,
   View,
 } from "react-native";
+import WebView from "react-native-webview";
 import Fuse from "fuse.js";
 import ErrorBoundary from "react-native-error-boundary";
 
@@ -108,6 +109,10 @@ export default function VolunteerFormScreen({ navigation, route }) {
     scrollRef,
   );
 
+  const formURL = form
+    ? `https://docs.google.com/forms/d/e/${formIDs[form.title].id}/viewform`
+    : null;
+
   if (!form) {
     // If unknown, return to Home screen
     navigation.navigate("Home", { forceRerender: true });
@@ -116,14 +121,23 @@ export default function VolunteerFormScreen({ navigation, route }) {
 
   return (
     <ErrorBoundary
-      FallbackComponent={() => null}
+      FallbackComponent={() =>
+        formURL ? (
+          <WebView
+            source={{
+              uri: formURL,
+              width: Dimensions.get("window").width,
+              height: Dimensions.get("window").height - 100,
+            }}
+          />
+        ) : null
+      }
       onError={async (error, stackTrace) => {
-        await sendErrorEmail(`${error}\n${stackTrace}`);
-        setTimeout(() => {
-          navigation.navigate("Google Forms", {
-            formURL: `https://docs.google.com/forms/d/e/${formIDs[form.title].id}/viewform`,
-          });
-        }, 0);
+        try {
+          await sendErrorEmail(`${error}\n${stackTrace}`);
+        } catch (e) {
+          console.error("Failed to send error email:", e);
+        }
       }}
     >
       <SafeAreaView style={styles.container}>
@@ -167,6 +181,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
               </View>
               {/* Render each question component from form */}
               <View style={styles.form}>
+                {(() => { const Bad = () => { throw new Error("Test error"); }; return <Bad />; })()}
                 {form
                   .questions()
                   .filter((question) => question?.isVisible())

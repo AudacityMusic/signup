@@ -15,14 +15,17 @@
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
+import { createNavigationContainerRef } from "@react-navigation/native";
 import { useState } from "react";
 import { Alert, Linking, Platform } from "react-native";
 import { send, EmailJSResponseStatus } from "@emailjs/react-native";
 
+export const navigationRef = createNavigationContainerRef();
+
 const emailJsConfig = {
-  serviceID: process.env.EXPO_PUBLIC_EMAILJS_SERVICE_ID,
-  templateID: process.env.EXPO_PUBLIC_EMAILJS_TEMPLATE_ID,
-  publicKey: process.env.EXPO_PUBLIC_EMAILJS_PUBLIC_KEY,
+  serviceID: process.env.EXPO_PUBLIC_EMAIL_SERVICE_ID,
+  templateID: process.env.EXPO_PUBLIC_EMAIL_TEMPLATE_ID,
+  publicKey: process.env.EXPO_PUBLIC_EMAIL_PUBLIC_KEY,
 };
 
 export function alertError(error) {
@@ -43,7 +46,7 @@ export async function sendErrorEmail(error) {
       emailJsConfig.serviceID,
       emailJsConfig.templateID,
       {
-        email: process.env.EXPO_PUBLIC_EMAILJS_EMAIL,
+        email: process.env.EXPO_PUBLIC_EMAIL,
         title: "Signup App Error",
         name: "Signup App Error Reporter",
         message: `Error: ${error}\nPlatform: ${Platform.OS} with v${Platform.Version}`,
