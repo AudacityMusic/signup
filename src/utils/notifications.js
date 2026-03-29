@@ -81,7 +81,7 @@ export async function scheduleEventNotifications(event) {
           body: `${labelText} until ${Title} at ${Location} on ${eventDate.toLocaleString()}`,
           data: { eventId: id },
         },
-        trigger: triggerDate, // Date object-based trigger
+        trigger: { type: "date", date: triggerDate },
       });
     }
   }
