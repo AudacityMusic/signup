@@ -53,6 +53,8 @@ export default function PostersButton({ posters }) {
     setCurrentIndex(normalized);
   }
 
+  if (count === 0) return null;
+
   return (
     <View>
       <Pressable onPress={openGallery} style={styles.button}>
