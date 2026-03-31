@@ -10,19 +10,11 @@
  */
 
 import Markdown from "react-native-markdown-display";
-import { useState, useEffect } from "react";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  Linking,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 import Heading from "../components/Heading";
 import NextButton from "../components/NextButton";
@@ -31,11 +23,6 @@ import PostersButton from "../components/PostersButton";
 import Tag from "../components/Tag";
 import colors from "../constants/colors";
 import { openInMaps } from "../utils";
-
-import PublicGoogleSheetsParser from "../utils/PublicGoogleSheetsParser";
-
-const sheetId = process.env.EXPO_PUBLIC_SHEET_ID;
-const sheetName = process.env.EXPO_PUBLIC_SHEET_NAME;
 
 export default function VolunteerOpportunityScreen({ route, navigation }) {
   // Destructure parameters passed via navigation
@@ -284,22 +271,5 @@ const styles = StyleSheet.create({
   locationText: {
     textDecorationLine: "underline",
     color: colors.primary,
-  },
-  postersButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colors.primary,
-    alignSelf: "flex-start",
-    marginVertical: 10,
-  },
-  postersButtonText: {
-    fontSize: 14,
-    color: colors.primary,
-    fontWeight: "500",
   },
 });
