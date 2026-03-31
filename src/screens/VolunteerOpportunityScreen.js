@@ -13,11 +13,10 @@ import Markdown from "react-native-markdown-display";
 import { useState, useEffect } from "react";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
-import { Image, ImageBackground } from "expo-image";
+import { ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   Linking,
-  Modal,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -28,6 +27,7 @@ import {
 import Heading from "../components/Heading";
 import NextButton from "../components/NextButton";
 import PersistScrollView from "../components/PersistScrollView";
+import PostersButton from "../components/PostersButton";
 import Tag from "../components/Tag";
 import colors from "../constants/colors";
 import { openInMaps } from "../utils";
@@ -44,8 +44,9 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
     location,
     date,
     image,
+    posters,
     description,
-    tags = [],
+    tags,
     formURL,
     isSubmitted,
     max,
@@ -57,46 +58,6 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
   // Map tags to Tag components
   const tagsIcons = tags.map((text) => <Tag key={text} text={text} />);
 
-  const [showImages, setShowImages] = useState(false);
-  const [imageGallery, setImageGallery] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        if (!sheetId || !sheetName) {
-          throw new Error(
-            "Missing sheetId or sheetName. Ensure EXPO_PUBLIC_SHEET_ID and EXPO_PUBLIC_SHEET_NAME are set.",
-          );
-        }
-
-        const parser = new PublicGoogleSheetsParser(sheetId, {
-          sheetName,
-        });
-
-        const rows = await parser.parse();
-
-        // Find the row that matches the current event by title
-        const eventRow = rows.find((row) => row.Title === title);
-
-        // Collect all ProgramList columns from that row
-        const imageObjects = [];
-        let i = 1;
-        while (eventRow && eventRow[`ProgramList${i}`]) {
-          imageObjects.push({
-            uri: String(eventRow[`ProgramList${i}`]).trim(),
-          });
-          i++;
-        }
-
-        setImageGallery(imageObjects);
-      } catch (error) {
-        console.error("Error loading images from Google Sheet:", error);
-      }
-    };
-
-    fetchImages();
-  }, []);
   return (
     <SafeAreaView style={styles.container}>
       {/* Banner with background image and gradient overlay */}
@@ -199,61 +160,7 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
             </View>
           )}
 
-          <Pressable onPress={() => setShowImages(!showImages)}>
-            <NextButton>
-              {showImages
-                ? "Hide Posters & Programs"
-                : "Show Posters & Programs"}
-            </NextButton>
-          </Pressable>
-
-          {showImages && imageGallery.length > 0 && (
-            <View style={{ marginTop: 15 }}>
-              <Heading>Gallery</Heading>
-              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
-                {imageGallery.map((img, index) => (
-                  <Pressable key={index} onPress={() => setSelectedImage(img)}>
-                    <Image
-                      source={img}
-                      style={{
-                        width: 100,
-                        height: 140,
-                        borderRadius: 10,
-                        marginRight: 10,
-                        marginBottom: 10,
-                      }}
-                      contentFit="cover"
-                    />
-                  </Pressable>
-                ))}
-              </View>
-            </View>
-          )}
-          {/* Sign Up button with warning if already submitted */}
-          <Modal
-            visible={selectedImage !== null}
-            transparent={true}
-            animationType="fade"
-            onRequestClose={() => setSelectedImage(null)}
-          >
-            <Pressable
-              style={{
-                flex: 1,
-                backgroundColor: "rgba(0,0,0,0.9)",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              onPress={() => setSelectedImage(null)}
-            >
-              {selectedImage && (
-                <Image
-                  source={selectedImage}
-                  style={{ width: "90%", height: "80%" }}
-                  resizeMode="contain"
-                />
-              )}
-            </Pressable>
-          </Modal>
+          <PostersButton posters={posters} />
 
           <View style={styles.lowerRight}>
             {isSubmitted && (
@@ -377,5 +284,22 @@ const styles = StyleSheet.create({
   locationText: {
     textDecorationLine: "underline",
     color: colors.primary,
+  },
+  postersButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    alignSelf: "flex-start",
+    marginVertical: 10,
+  },
+  postersButtonText: {
+    fontSize: 14,
+    color: colors.primary,
+    fontWeight: "500",
   },
 });
