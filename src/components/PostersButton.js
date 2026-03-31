@@ -20,7 +20,7 @@ export default function PostersButton({ posters }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
 
-  const images = posters.filter((uri, i) => posters.indexOf(uri) === i);
+  const images = Array.from(new Set(posters));
   const count = images.length;
   const looped = count > 0 ? [...images, ...images, ...images] : [];
 
