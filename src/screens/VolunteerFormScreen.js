@@ -181,12 +181,6 @@ export default function VolunteerFormScreen({ navigation, route }) {
               </View>
               {/* Render each question component from form */}
               <View style={styles.form}>
-                {(() => {
-                  const Bad = () => {
-                    throw new Error("Test error");
-                  };
-                  return <Bad />;
-                })()}
                 {form
                   .questions()
                   .filter((question) => question?.isVisible())
