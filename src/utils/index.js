@@ -49,8 +49,6 @@ export async function sendErrorEmail(error) {
         publicKey: process.env.EXPO_PUBLIC_EMAIL_PUBLIC_KEY,
       },
     );
-
-    console.log("SUCCESS!");
   } catch (err) {
     if (err instanceof EmailJSResponseStatus) {
       console.log("EmailJS Request Failed...", err);

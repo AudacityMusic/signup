@@ -37,6 +37,7 @@ function CarouselSection({ navigation, data, onRefresh }) {
                 location={event.Location}
                 date={formatDate(event.Date)}
                 image={event.Image}
+                posters={event.Posters}
                 description={event.Description ?? ""}
                 tags={
                   event.Tags == null
