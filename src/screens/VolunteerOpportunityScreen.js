@@ -1,10 +1,12 @@
-/**
+/* VolunteerOpportunityScreen.js
  * VolunteerOpportunityScreen.js
  * Detailed view of a volunteer event.
  * - Displays banner image with gradient overlay and title
  * - Shows event date and location (tap to open in maps)
  * - Optionally displays description and tags
  * - Provides Sign Up button (navigates to form or Google Forms URL)
+ * - Provides Show Posters & Programs button to display all show programs and posters associated with the event
+ * - Show Posters & Programs are clickable and pop-up when clicked
  */
 
 import Markdown from "react-native-markdown-display";
@@ -12,18 +14,12 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  Linking,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 import Heading from "../components/Heading";
 import NextButton from "../components/NextButton";
 import PersistScrollView from "../components/PersistScrollView";
+import PostersButton from "../components/PostersButton";
 import Tag from "../components/Tag";
 import colors from "../constants/colors";
 import { openInMaps } from "../utils";
@@ -35,6 +31,7 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
     location,
     date,
     image,
+    posters,
     description,
     tags,
     formURL,
@@ -53,7 +50,7 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
       {/* Banner with background image and gradient overlay */}
       <View style={styles.banner}>
         <ImageBackground
-          source={{ uri: image, width: 0, height: 0 }}
+          source={{ width: 0, height: 0, uri: image }}
           style={styles.backgroundImage}
           placeholder={{ blurhash: "LT9Hq#RPVrt8%%RjWCkCR:WWtSWB" }}
           transition={500}
@@ -61,7 +58,7 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
         >
           <LinearGradient
             colors={["transparent", "rgba(0,0,0,0.8)"]}
-            style={{ position: "absolute", width: "100%", height: "100%" }}
+            style={{ width: "100%", height: "100%", position: "absolute" }}
           />
         </ImageBackground>
         {/* Overlay title text at bottom-left of banner */}
@@ -71,7 +68,6 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
           </Text>
         </View>
       </View>
-
       {/* Scrollable content area */}
       <PersistScrollView style={styles.scrollContainer}>
         <View style={styles.subContainer}>
@@ -103,7 +99,6 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
               </Pressable>
             </View>
           </View>
-
           {/* Optional description section */}
           {typeof description === "string" && description.trim() !== "" && (
             <View style={styles.about}>
@@ -151,7 +146,9 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
               <View style={styles.tags}>{tagsIcons}</View>
             </View>
           )}
-          {/* Sign Up button with warning if already submitted */}
+
+          <PostersButton posters={posters} />
+
           <View style={styles.lowerRight}>
             {isSubmitted && (
               <Text style={styles.alreadySubmitted} selectable>

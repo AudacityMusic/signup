@@ -133,6 +133,12 @@ export default function HomeScreen({ navigation, route }) {
       opportunity.Location ??= "Unknown Location";
       opportunity.Date = strToDate(opportunity.Date) ?? new Date(0);
 
+      opportunity.Posters = opportunity.Posters
+        ? opportunity.Posters.split(",")
+            .map((s) => s.trim())
+            .filter(Boolean)
+        : [];
+
       const event_midnight = new Date(opportunity.Date);
       event_midnight.setHours(23, 59, 59, 999);
 

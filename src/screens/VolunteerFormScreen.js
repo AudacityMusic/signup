@@ -17,17 +17,20 @@ import {
   Text,
   View,
 } from "react-native";
+import WebView from "react-native-webview";
 import Fuse from "fuse.js";
+import ErrorBoundary from "react-native-error-boundary";
 
 import NextButton from "../components/NextButton";
 import PersistScrollView from "../components/PersistScrollView";
 
-import { alertError, openInMaps } from "../utils";
+import { alertError, sendErrorEmail, openInMaps } from "../utils";
 import DanceClub from "../utils/forms/DanceClub";
 import LibraryMusicHour from "../utils/forms/LibraryMusicHour";
 import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
 import RequestConcert from "../utils/forms/RequestConcert";
 import colors from "../constants/colors";
+import formIDs from "../constants/formIDs";
 
 // Factory: choose form class by event title using fuzzy matching
 function getForm(title, date, location, navigation, scrollRef) {
@@ -86,6 +89,11 @@ function getForm(title, date, location, navigation, scrollRef) {
   return null;
 }
 
+/**
+ * Determines the correct Google Forms fallback URL
+ * based on the event title.
+ */
+
 export default function VolunteerFormScreen({ navigation, route }) {
   // Extract parameters from navigation
   const { title, location, date } = route.params;
@@ -100,6 +108,11 @@ export default function VolunteerFormScreen({ navigation, route }) {
     navigation,
     scrollRef,
   );
+
+  const formURL = form
+    ? `https://docs.google.com/forms/d/e/${formIDs[form.title].id}/viewform`
+    : null;
+
   if (!form) {
     // If unknown, return to Home screen
     navigation.navigate("Home", { forceRerender: true });
@@ -107,89 +120,113 @@ export default function VolunteerFormScreen({ navigation, route }) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Keyboard-aware container to avoid hiding inputs */}
-      <KeyboardAvoidingView
-        style={[
-          styles.body,
-          {
-            height: Dimensions.get("window").height - 100,
-            width: Dimensions.get("window").width,
-          },
-        ]}
-        behavior="height"
-      >
-        {/* Scrollable form questions area */}
-        <PersistScrollView scrollRef={scrollRef}>
-          <View style={styles.questions}>
-            {/* Event title, date, and optional location with map link */}
-            <View style={styles.header}>
-              <Text
-                style={[styles.headerText, { fontWeight: "bold" }]}
-                selectable={true}
-              >
-                {title}
-              </Text>
-              {date == null ? null : (
-                <Text style={styles.headerText} selectable={true}>
-                  {date}
+    <ErrorBoundary
+      FallbackComponent={() =>
+        formURL ? (
+          <WebView
+            source={{
+              uri: formURL,
+              width: Dimensions.get("window").width,
+              height: Dimensions.get("window").height - 100,
+            }}
+          />
+        ) : null
+      }
+      onError={async (error, stackTrace) => {
+        try {
+          await sendErrorEmail(`${error}\n${stackTrace}`);
+        } catch (e) {
+          console.error("Failed to send error email:", e);
+        }
+      }}
+    >
+      <SafeAreaView style={styles.container}>
+        {/* Keyboard-aware container to avoid hiding inputs */}
+        <KeyboardAvoidingView
+          style={[
+            styles.body,
+            {
+              height: Dimensions.get("window").height - 100,
+              width: Dimensions.get("window").width,
+            },
+          ]}
+          behavior="height"
+        >
+          {/* Scrollable form questions area */}
+          <PersistScrollView scrollRef={scrollRef}>
+            <View style={styles.questions}>
+              {/* Event title, date, and optional location with map link */}
+              <View style={styles.header}>
+                <Text
+                  style={[styles.headerText, { fontWeight: "bold" }]}
+                  selectable={true}
+                >
+                  {title}
                 </Text>
-              )}
-              {location == null ? null : (
-                <Pressable onPress={() => openInMaps(location)}>
-                  <Text
-                    style={[styles.headerText, styles.locationText]}
-                    selectable={true}
-                  >
-                    {location}
+                {date == null ? null : (
+                  <Text style={styles.headerText} selectable={true}>
+                    {date}
                   </Text>
-                </Pressable>
-              )}
-            </View>
-            {/* Render each question component from form */}
-            <View style={styles.form}>
-              {form
-                .questions()
-                .filter((question) => question?.isVisible())
-                .map((question) => question.component)}
-            </View>
-            {/* Submit button triggers form.submit() */}
-            <Pressable
-              style={styles.submitButton}
-              onPress={async () => {
-                // Check if form is valid before showing "Submitting..."
-                let invalidResponses = 0;
-                try {
-                  invalidResponses = form.validate();
-                } catch (error) {
-                  invalidResponses = 1; // Assume invalid if error occurs
-                }
-                if (invalidResponses > 0) {
-                  // Show error alert with count of invalid questions
-                  const questionText =
-                    invalidResponses === 1 ? "question" : "questions";
-                  const hasText = invalidResponses === 1 ? "has" : "have";
-                  Alert.alert(
-                    "Error",
-                    `${invalidResponses} ${questionText} ${hasText} invalid or missing responses. Please fix all responses highlighted in red to submit this form.`,
-                    [{ text: "OK" }],
-                  );
-                  // Don't show "Submitting..." if validation fails
-                  // Do not call form.submit() here; error alert is already shown
-                } else {
-                  // Only show "Submitting..." if validation passes
+                )}
+                {location == null ? null : (
+                  <Pressable onPress={() => openInMaps(location)}>
+                    <Text
+                      style={[styles.headerText, styles.locationText]}
+                      selectable={true}
+                    >
+                      {location}
+                    </Text>
+                  </Pressable>
+                )}
+              </View>
+              {/* Render each question component from form */}
+              <View style={styles.form}>
+                {form
+                  .questions()
+                  .filter((question) => question?.isVisible())
+                  .map((question) => question.component)}
+              </View>
+              {/* Submit button triggers form.submit() */}
+              <Pressable
+                style={styles.submitButton}
+                onPress={async () => {
+                  // Check if form is valid before showing "Submitting..."
+                  let invalidResponses = 0;
+                  try {
+                    invalidResponses = form.validate();
+                  } catch (error) {
+                    invalidResponses = 1; // Assume invalid if error occurs
+                  }
+                  if (invalidResponses > 0) {
+                    // Show error alert with count of invalid questions
+                    const questionText =
+                      invalidResponses === 1 ? "question" : "questions";
+                    const hasText = invalidResponses === 1 ? "has" : "have";
+                    Alert.alert(
+                      "Error",
+                      `${invalidResponses} ${questionText} ${hasText} invalid or missing responses. Please fix all responses highlighted in red to submit this form.`,
+                      [{ text: "OK" }],
+                    );
+                    // Don't show "Submitting..." if validation fails
+                    // Do not call form.submit() here; error alert is already shown
+                  } else {
+                    // Only show "Submitting..." if validation passes
+                    setButtonText("Submitting...");
+                    await form.submit();
+                    setButtonText("Submit");
+                  }
                   setButtonText("Submitting...");
                   await form.submit();
                   setButtonText("Submit");
-                }
-              }}
-            >
-              <NextButton>{buttonText}</NextButton>
-            </Pressable>
-          </View>
-        </PersistScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+                }}
+              >
+                <NextButton>{buttonText}</NextButton>
+              </Pressable>
+            </View>
+          </PersistScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </ErrorBoundary>
   );
 }
 
