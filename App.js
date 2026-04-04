@@ -25,7 +25,7 @@ import VolunteerOpportunityScreen from "./src/screens/VolunteerOpportunityScreen
 import HomeHeader from "./src/components/HomeHeader";
 import NoInternetBanner from "./src/components/NoInternetBanner";
 import colors from "./src/constants/colors";
-import { alertError } from "./src/utils";
+import { alertError, navigationRef } from "./src/utils";
 
 const Stack = createNativeStackNavigator();
 
@@ -58,7 +58,7 @@ export default function App() {
   // Once ready, render the navigation container with all screens
   return (
     <View style={{ flex: 1 }}>
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         {/* Light-content status bar to match header styling */}
         <StatusBar style="light" />
         <Stack.Navigator
