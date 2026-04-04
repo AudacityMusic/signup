@@ -15,22 +15,54 @@
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
+import { createNavigationContainerRef } from "@react-navigation/native";
 import { useState } from "react";
 import { Alert, Linking, Platform } from "react-native";
+import { send, EmailJSResponseStatus } from "@emailjs/react-native";
+
+export const navigationRef = createNavigationContainerRef();
+
+export function alertError(error) {
+  console.error("Error reported:", error);
+  sendErrorEmail(error);
+  Alert.alert(
+    "Error",
+    `Your request was not processed successfully due to an unexpected error.` +
+      ` We apologize for the inconvenience.` +
+      ` Please submit a bug report to ${Constants.expoConfig.extra.email} explaining how the following error occurred. Thank you!\n\n` +
+      ` Platform: ${Platform.OS} with v${Platform.Version}\n\n${error}`,
+  );
+}
+
+export async function sendErrorEmail(error) {
+  try {
+    await send(
+      process.env.EXPO_PUBLIC_EMAIL_SERVICE_ID,
+      process.env.EXPO_PUBLIC_EMAIL_TEMPLATE_ID,
+      {
+        email: process.env.EXPO_PUBLIC_EMAIL,
+        title: "Audacity Sign Up Error Report",
+        name: `A ${Platform.OS} v${Platform.Version} User`,
+        message: `${error}`,
+      },
+      {
+        publicKey: process.env.EXPO_PUBLIC_EMAIL_PUBLIC_KEY,
+      },
+    );
+  } catch (err) {
+    if (err instanceof EmailJSResponseStatus) {
+      console.log("EmailJS Request Failed...", err);
+    }
+
+    console.log("ERROR", err);
+  }
+}
 
 /**
  * Log error and show user-friendly alert with diagnostic info.
  * @param {string} error - error message or object to display
  * @returns {null}
  */
-export function alertError(error) {
-  console.error(error);
-  Alert.alert(
-    "Error",
-    `Your request was not processed successfully due to an unexpected error. We apologize for the inconvenience. To help us identify and fix this error, please take a screenshot of this alert and send a bug report to ${Constants.expoConfig.extra.email}. Thank you!\n\nPlatform: ${Platform.OS} with v${Platform.Version}\n\n${error}`,
-  );
-  return null;
-}
 
 /**
  * Open a URL in the default browser.
@@ -135,6 +167,7 @@ export async function request(fn) {
  * @returns {Date}
  */
 export function strToDate(str) {
+  if (!str) return null;
   const [year, month, day, hour, minute, second] = str
     .slice(5, -1)
     .split(",")

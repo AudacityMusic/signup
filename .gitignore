@@ -45,4 +45,7 @@ build
 
 # Native folders
 ios/
-android/
+
+# Environment-Specific
+local.properties
+

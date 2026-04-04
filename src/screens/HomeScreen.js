@@ -57,7 +57,7 @@ export default function HomeScreen({ navigation, route }) {
           data.map((event) => scheduleEventNotifications(event)),
         );
       } catch (err) {
-        console.error("Failed to schedule notifications:", err);
+        alertError(`From HomeScreen useEffect: ${err}`);
       }
     })();
   }, [data]);
@@ -104,7 +104,7 @@ export default function HomeScreen({ navigation, route }) {
         submittedForms.push(...JSON.parse(storedForms));
       }
     } catch (error) {
-      alertError("In onRefresh: " + error);
+      alertError(`In onRefresh: ${error}`);
     }
 
     // Fetch raw data with retry logic via request()
@@ -132,6 +132,12 @@ export default function HomeScreen({ navigation, route }) {
       opportunity.Title ??= "Untitled Event";
       opportunity.Location ??= "Unknown Location";
       opportunity.Date = strToDate(opportunity.Date) ?? new Date(0);
+
+      opportunity.Posters = opportunity.Posters
+        ? opportunity.Posters.split(",")
+            .map((s) => s.trim())
+            .filter(Boolean)
+        : [];
 
       const event_midnight = new Date(opportunity.Date);
       event_midnight.setHours(23, 59, 59, 999);

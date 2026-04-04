@@ -500,8 +500,8 @@ export default function TimeSlot({
               const endDate = new Date(slot.start);
               endDate.setHours(date.getHours());
               endDate.setMinutes(date.getMinutes());
-              endDate.setSeconds(date.getSeconds());
-              endDate.setMilliseconds(date.getMilliseconds());
+              endDate.setSeconds(0);
+              endDate.setMilliseconds(0);
               onChange({ ...slot, end: endDate });
             } else {
               onChange({ ...slot, [mode]: date });
