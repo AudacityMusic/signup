@@ -1,3 +1,4 @@
+import 'dotenv/config';
 export default {
   name: "Audacity Sign Up",
   slug: "audacity-music-club",
@@ -34,9 +35,7 @@ export default {
   updates: {
     url: "https://u.expo.dev/56bb99cb-9cbe-423d-9a88-3f82a0cf3aa0",
   },
-  runtimeVersion: {
-    policy: "appVersion",
-  },
+  runtimeVersion: "1.0.0",
   plugins: [
     [
       "@react-native-google-signin/google-signin",
