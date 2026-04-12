@@ -14,7 +14,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { Linking, Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 import Heading from "../components/Heading";
 import NextButton from "../components/NextButton";
@@ -104,6 +104,7 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
             <View style={styles.about}>
               <Heading>About</Heading>
               <Markdown
+                onLinkPress={(url) => { Linking.openURL(url); return false; }}
                 style={{
                   heading1: {
                     flexDirection: "row",
