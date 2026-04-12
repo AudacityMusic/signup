@@ -13,6 +13,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import AccountScreen from "./src/screens/AccountScreen";
 import EmbeddedFormScreen from "./src/screens/EmbeddedFormScreen";
@@ -57,6 +58,7 @@ export default function App() {
 
   // Once ready, render the navigation container with all screens
   return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
     <View style={{ flex: 1 }}>
       <NavigationContainer ref={navigationRef}>
         {/* Light-content status bar to match header styling */}
@@ -109,5 +111,6 @@ export default function App() {
       </NavigationContainer>
       <NoInternetBanner />
     </View>
+    </GestureHandlerRootView>
   );
 }
