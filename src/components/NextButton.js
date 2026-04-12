@@ -9,9 +9,9 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { StyleSheet, Text, View } from "react-native";
 import colors from "../constants/colors";
 
-export default function NextButton({ children }) {
+export default function NextButton({ children, disabled = false }) {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, disabled && styles.disabled]}>
       {/* Button label */}
       <Text style={styles.nextText}>{children}</Text>
       {/* Chevron icon indicating next action */}
@@ -38,5 +38,8 @@ const styles = StyleSheet.create({
     color: "white",
     textAlignVertical: "center",
     includeFontPadding: false,
+  },
+  disabled: {
+    backgroundColor: "#aaa",
   },
 });

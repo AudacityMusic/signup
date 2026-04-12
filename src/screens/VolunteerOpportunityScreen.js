@@ -172,7 +172,7 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
                     )
               }
             >
-              <NextButton>Sign Up</NextButton>
+              <NextButton disabled={remainingSpots <= 0 || isSubmitted}>Sign Up</NextButton>
               {/* Show remaining spots if applicable */}
               {!isNaN(remainingSpots) &&
                 (remainingSpots <= 0 ? (
