@@ -14,7 +14,14 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { Linking, Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  Linking,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 import Heading from "../components/Heading";
 import NextButton from "../components/NextButton";
@@ -104,7 +111,10 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
             <View style={styles.about}>
               <Heading>About</Heading>
               <Markdown
-                onLinkPress={(url) => { Linking.openURL(url); return false; }}
+                onLinkPress={(url) => {
+                  Linking.openURL(url);
+                  return false;
+                }}
                 style={{
                   heading1: {
                     flexDirection: "row",
@@ -172,7 +182,9 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
                     )
               }
             >
-              <NextButton disabled={remainingSpots <= 0 || isSubmitted}>Sign Up</NextButton>
+              <NextButton disabled={remainingSpots <= 0 || isSubmitted}>
+                Sign Up
+              </NextButton>
               {/* Show remaining spots if applicable */}
               {!isNaN(remainingSpots) &&
                 (remainingSpots <= 0 ? (

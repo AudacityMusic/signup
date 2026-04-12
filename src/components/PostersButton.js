@@ -27,7 +27,7 @@ export default function PostersButton({ posters }) {
   const count = images.length;
   const looped = useMemo(
     () => (count > 0 ? [...images, ...images, ...images] : []),
-    [count, images]
+    [count, images],
   );
 
   function openGallery() {
@@ -67,18 +67,22 @@ export default function PostersButton({ posters }) {
       offset: width * i,
       index: i,
     }),
-    []
+    [],
   );
 
   const renderItem = useCallback(
     ({ item }) => (
       <View style={styles.imagePage}>
         <Zoom style={styles.image}>
-          <Image source={{ uri: item }} style={styles.image} contentFit="contain" />
+          <Image
+            source={{ uri: item }}
+            style={styles.image}
+            contentFit="contain"
+          />
         </Zoom>
       </View>
     ),
-    []
+    [],
   );
 
   if (count === 0) return null;
