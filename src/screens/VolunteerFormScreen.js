@@ -37,6 +37,7 @@ function getForm(title, date, location, navigation, scrollRef) {
   const eventTitle = title.trim();
 
   // Define form options with their exact names and constructors
+  // RequestConcert is intentionally excluded since it is not for this.
   const formOptions = [
     {
       name: "LIBRARY MUSIC HOUR",
@@ -47,11 +48,6 @@ function getForm(title, date, location, navigation, scrollRef) {
       name: "MUSIC BY THE TRACKS",
       constructor: MusicByTheTracks,
       aliases: ["Music by the Tracks", "Music Tracks", "By the Tracks"],
-    },
-    {
-      name: "REQUEST A CONCERT",
-      constructor: RequestConcert,
-      aliases: ["Request a Concert", "Request Concert", "Concert Request"],
     },
     {
       name: "AUDACITY DANCE CLUB",
@@ -69,15 +65,15 @@ function getForm(title, date, location, navigation, scrollRef) {
     })),
   ]);
 
-  // Configure Fuse for fuzzy search
+  // Configure Fuse for fuzzy search — always pick closest match
   const fuse = new Fuse(searchList, {
     keys: ["name"],
-    threshold: 0.2, // Lower = more strict matching (0.0 = exact, 1.0 = match anything)
+    threshold: 1.0,
     ignoreLocation: true,
     ignoreFieldNorm: true,
+    includeScore: true,
   });
 
-  // Search for the best match
   const results = fuse.search(eventTitle);
 
   if (results.length > 0) {
@@ -85,8 +81,8 @@ function getForm(title, date, location, navigation, scrollRef) {
     return new bestMatch.constructor(date, location, navigation, scrollRef);
   }
 
-  alertError(`Unknown form title "${eventTitle}" in getForm`);
-  return null;
+  // Absolute fallback (shouldn't be reached with threshold 1.0)
+  return new RequestConcert(date, location, navigation, scrollRef);
 }
 
 /**

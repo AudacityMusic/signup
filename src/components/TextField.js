@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     color: colors.secondary,
   },
   inputField: {
-    height: 40,
+    height: 45,
     fontSize: 18,
     borderRadius: 10,
     borderWidth: 1.5,
