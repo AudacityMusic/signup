@@ -28,16 +28,16 @@ import { alertError, sendErrorEmail, openInMaps } from "../utils";
 import DanceClub from "../utils/forms/DanceClub";
 import LibraryMusicHour from "../utils/forms/LibraryMusicHour";
 import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
-import RequestConcert from "../utils/forms/RequestConcert";
 import colors from "../constants/colors";
 import formIDs from "../constants/formIDs";
+
+const MAX_FORM_MATCH_SCORE = 0.4;
 
 // Factory: choose form class by event title using fuzzy matching
 function getForm(title, date, location, navigation, scrollRef) {
   const eventTitle = title.trim();
 
   // Define form options with their exact names and constructors
-  // RequestConcert is intentionally excluded since it is not for this.
   const formOptions = [
     {
       name: "LIBRARY MUSIC HOUR",
@@ -74,15 +74,14 @@ function getForm(title, date, location, navigation, scrollRef) {
     includeScore: true,
   });
 
-  const results = fuse.search(eventTitle);
+  const [bestResult] = fuse.search(eventTitle);
 
-  if (results.length > 0) {
-    const bestMatch = results[0].item;
+  if (bestResult && bestResult.score <= MAX_FORM_MATCH_SCORE) {
+    const bestMatch = bestResult.item;
     return new bestMatch.constructor(date, location, navigation, scrollRef);
   }
 
-  // Absolute fallback (shouldn't be reached with threshold 1.0)
-  return new RequestConcert(date, location, navigation, scrollRef);
+  return null;
 }
 
 /**
@@ -110,6 +109,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
     : null;
 
   if (!form) {
+    alertError(`Unable to determine volunteer form for event title: ${title}`);
     // If unknown, return to Home screen
     navigation.navigate("Home", { forceRerender: true });
     return null;
