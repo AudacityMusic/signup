@@ -102,7 +102,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
     scrollRef,
   );
 
-  const formURL = `https://docs.google.com/forms/d/e/${formIDs[form.title].id}/viewform`
+  const formURL = `https://docs.google.com/forms/d/e/${formIDs[form.title].id}/viewform`;
 
   return (
     <ErrorBoundary
