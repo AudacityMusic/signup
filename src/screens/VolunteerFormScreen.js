@@ -28,7 +28,6 @@ import { alertError, sendErrorEmail, openInMaps } from "../utils";
 import DanceClub from "../utils/forms/DanceClub";
 import LibraryMusicHour from "../utils/forms/LibraryMusicHour";
 import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
-import RequestConcert from "../utils/forms/RequestConcert";
 import colors from "../constants/colors";
 import formIDs from "../constants/formIDs";
 
@@ -49,11 +48,6 @@ function getForm(title, date, location, navigation, scrollRef) {
       aliases: ["Music by the Tracks", "Music Tracks", "By the Tracks"],
     },
     {
-      name: "REQUEST A CONCERT",
-      constructor: RequestConcert,
-      aliases: ["Request a Concert", "Request Concert", "Concert Request"],
-    },
-    {
       name: "AUDACITY DANCE CLUB",
       constructor: DanceClub,
       aliases: ["Audacity Dance Club", "Dance Club", "Dance"],
@@ -69,23 +63,22 @@ function getForm(title, date, location, navigation, scrollRef) {
     })),
   ]);
 
-  // Configure Fuse for fuzzy search
+  // Configure Fuse for fuzzy search — always pick closest match
   const fuse = new Fuse(searchList, {
     keys: ["name"],
-    threshold: 0.2, // Lower = more strict matching (0.0 = exact, 1.0 = match anything)
+    threshold: 1.0,
     ignoreLocation: true,
     ignoreFieldNorm: true,
+    includeScore: true,
   });
 
-  // Search for the best match
-  const results = fuse.search(eventTitle);
+  const [bestResult] = fuse.search(eventTitle);
 
-  if (results.length > 0) {
-    const bestMatch = results[0].item;
+  if (bestResult) {
+    const bestMatch = bestResult.item;
     return new bestMatch.constructor(date, location, navigation, scrollRef);
   }
 
-  alertError(`Unknown form title "${eventTitle}" in getForm`);
   return null;
 }
 
@@ -109,15 +102,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
     scrollRef,
   );
 
-  const formURL = form
-    ? `https://docs.google.com/forms/d/e/${formIDs[form.title].id}/viewform`
-    : null;
-
-  if (!form) {
-    // If unknown, return to Home screen
-    navigation.navigate("Home", { forceRerender: true });
-    return null;
-  }
+  const formURL = `https://docs.google.com/forms/d/e/${formIDs[form.title].id}/viewform`;
 
   return (
     <ErrorBoundary

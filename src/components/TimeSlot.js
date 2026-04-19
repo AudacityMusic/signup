@@ -33,6 +33,14 @@ export default function TimeSlot({
   const [mode, setMode] = useState("start");
   const [selectingRange, setSelectingRange] = useState(false);
   const [tempStart, setTempStart] = useState(null);
+  const [pendingEndOpen, setPendingEndOpen] = useState(false);
+
+  useEffect(() => {
+    if (pendingEndOpen && !open) {
+      setPendingEndOpen(false);
+      setOpen(true);
+    }
+  }, [pendingEndOpen, open]);
 
   function label(date, placeholder) {
     return date ? date.toDateString() : placeholder;
@@ -485,7 +493,7 @@ export default function TimeSlot({
             if (mode === "start") {
               setTempStart(date);
               setMode("end");
-              setOpen(true);
+              setPendingEndOpen(true);
               // Don't call onChange until both dates are selected
             } else {
               const endDate = new Date(date);

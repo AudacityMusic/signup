@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "checkJs": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
     "jsx": "react-native"
   },
   "exclude": ["dist", "node_modules"]

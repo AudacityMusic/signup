@@ -1,6 +1,6 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Image } from "expo-image";
-import { useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -10,9 +10,12 @@ import {
   Text,
   View,
 } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Zoom, createZoomListComponent } from "react-native-reanimated-zoom";
 
 import colors from "../constants/colors";
 
+const ZoomFlatList = createZoomListComponent(FlatList);
 const { width, height } = Dimensions.get("window");
 
 export default function PostersButton({ posters }) {
@@ -20,9 +23,12 @@ export default function PostersButton({ posters }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
 
-  const images = Array.from(new Set(posters));
+  const images = useMemo(() => Array.from(new Set(posters ?? [])), [posters]);
   const count = images.length;
-  const looped = count > 0 ? [...images, ...images, ...images] : [];
+  const looped = useMemo(
+    () => (count > 0 ? [...images, ...images, ...images] : []),
+    [count, images],
+  );
 
   function openGallery() {
     setCurrentIndex(count);
@@ -53,6 +59,32 @@ export default function PostersButton({ posters }) {
     setCurrentIndex(normalized);
   }
 
+  const keyExtractor = useCallback((_, i) => String(i), []);
+
+  const getItemLayout = useCallback(
+    (_, i) => ({
+      length: width,
+      offset: width * i,
+      index: i,
+    }),
+    [],
+  );
+
+  const renderItem = useCallback(
+    ({ item }) => (
+      <View style={styles.imagePage}>
+        <Zoom style={styles.image}>
+          <Image
+            source={{ uri: item }}
+            style={styles.image}
+            contentFit="contain"
+          />
+        </Zoom>
+      </View>
+    ),
+    [],
+  );
+
   if (count === 0) return null;
 
   return (
@@ -72,7 +104,7 @@ export default function PostersButton({ posters }) {
         animationType="fade"
         onRequestClose={() => setShowGallery(false)}
       >
-        <View style={styles.modalContainer}>
+        <GestureHandlerRootView style={styles.modalContainer}>
           <Pressable
             style={styles.closeButton}
             onPress={() => setShowGallery(false)}
@@ -80,35 +112,27 @@ export default function PostersButton({ posters }) {
             <MaterialCommunityIcons name="close" size={28} color="white" />
           </Pressable>
 
-          <FlatList
+          <ZoomFlatList
             ref={flatListRef}
             data={looped}
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
-            keyExtractor={(_, i) => String(i)}
-            getItemLayout={(_, i) => ({
-              length: width,
-              offset: width * i,
-              index: i,
-            })}
+            keyExtractor={keyExtractor}
+            getItemLayout={getItemLayout}
             initialScrollIndex={count}
             onMomentumScrollEnd={onMomentumScrollEnd}
-            renderItem={({ item }) => (
-              <View style={styles.imagePage}>
-                <Image
-                  source={{ uri: item }}
-                  style={styles.image}
-                  contentFit="contain"
-                />
-              </View>
-            )}
+            renderItem={renderItem}
+            initialNumToRender={1}
+            maxToRenderPerBatch={2}
+            windowSize={3}
+            removeClippedSubviews
           />
 
           <Text style={styles.footer}>
             {(currentIndex % count) + 1} / {count}
           </Text>
-        </View>
+        </GestureHandlerRootView>
       </Modal>
     </View>
   );
