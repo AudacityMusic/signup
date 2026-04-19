@@ -3,7 +3,7 @@
  * Handles user authentication via Google and Apple sign-in.
  * - Configures GoogleSignin on load
  * - Provides buttons for Google and Apple login
- * - Stores user info and access token in AsyncStorage
+ * - Stores user info in AsyncStorage
  * - Custom Apple sign-in button (icon size adjustable)
  */
 
@@ -74,7 +74,6 @@ export default function SignInScreen({ navigation }) {
           email: email ?? "",
         }),
       );
-      await AsyncStorage.removeItem("access-token");
       navigation.navigate("Home", { forceRerender: true });
     } catch (error) {
       if (error.code !== "ERR_REQUEST_CANCELED") {
