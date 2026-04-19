@@ -1,7 +1,6 @@
 /**
  * SignInScreen.js
  * Handles user authentication via Google and Apple sign-in.
- * - Configures GoogleSignin on load
  * - Provides buttons for Google and Apple login
  * - Stores user info in AsyncStorage
  * - Custom Apple sign-in button (icon size adjustable)
@@ -26,22 +25,6 @@ import {
 import * as AppleAuth from "expo-apple-authentication";
 
 import { alertError } from "../utils";
-
-// Initialize Google Sign-In configuration
-GoogleSignin.configure({
-  webClientId:
-    process.env.EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID ??
-    alertError("Undefined EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID env variable"),
-  iosClientId:
-    process.env.EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID ??
-    alertError("Undefined EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID env variable"),
-  scopes: [
-    "https://www.googleapis.com/auth/userinfo.profile",
-    "https://www.googleapis.com/auth/userinfo.email",
-    "https://www.googleapis.com/auth/drive.file",
-    "openid",
-  ],
-});
 
 export default function SignInScreen({ navigation }) {
   // Apple sign-in logic

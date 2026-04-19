@@ -8,6 +8,7 @@
 
 import "@expo/metro-runtime";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
@@ -29,6 +30,21 @@ import colors from "./src/constants/colors";
 import { alertError, navigationRef } from "./src/utils";
 
 const Stack = createNativeStackNavigator();
+
+GoogleSignin.configure({
+  webClientId:
+    process.env.EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID ??
+    alertError("Undefined EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID env variable"),
+  iosClientId:
+    process.env.EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID ??
+    alertError("Undefined EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID env variable"),
+  scopes: [
+    "https://www.googleapis.com/auth/userinfo.profile",
+    "https://www.googleapis.com/auth/userinfo.email",
+    "https://www.googleapis.com/auth/drive.file",
+    "openid",
+  ],
+});
 
 export default function App() {
   // Local state: loading indicator and logged-in status
