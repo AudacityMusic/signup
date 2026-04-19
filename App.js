@@ -31,20 +31,29 @@ import { alertError, navigationRef } from "./src/utils";
 
 const Stack = createNativeStackNavigator();
 
-GoogleSignin.configure({
-  webClientId:
-    process.env.EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID ??
-    alertError("Undefined EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID env variable"),
-  iosClientId:
-    process.env.EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID ??
-    alertError("Undefined EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID env variable"),
-  scopes: [
-    "https://www.googleapis.com/auth/userinfo.profile",
-    "https://www.googleapis.com/auth/userinfo.email",
-    "https://www.googleapis.com/auth/drive.file",
-    "openid",
-  ],
-});
+const webClientId = process.env.EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID;
+const iosClientId = process.env.EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID;
+
+if (!webClientId) {
+  alertError("Undefined EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID env variable");
+}
+
+if (!iosClientId) {
+  alertError("Undefined EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID env variable");
+}
+
+if (webClientId && iosClientId) {
+  GoogleSignin.configure({
+    webClientId,
+    iosClientId,
+    scopes: [
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/drive.file",
+      "openid",
+    ],
+  });
+}
 
 export default function App() {
   // Local state: loading indicator and logged-in status
