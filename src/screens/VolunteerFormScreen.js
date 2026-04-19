@@ -31,8 +31,6 @@ import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
 import colors from "../constants/colors";
 import formIDs from "../constants/formIDs";
 
-const MAX_FORM_MATCH_SCORE = 0.4;
-
 // Factory: choose form class by event title using fuzzy matching
 function getForm(title, date, location, navigation, scrollRef) {
   const eventTitle = title.trim();
@@ -76,7 +74,7 @@ function getForm(title, date, location, navigation, scrollRef) {
 
   const [bestResult] = fuse.search(eventTitle);
 
-  if (bestResult && bestResult.score <= MAX_FORM_MATCH_SCORE) {
+  if (bestResult) {
     const bestMatch = bestResult.item;
     return new bestMatch.constructor(date, location, navigation, scrollRef);
   }
@@ -104,16 +102,7 @@ export default function VolunteerFormScreen({ navigation, route }) {
     scrollRef,
   );
 
-  const formURL = form
-    ? `https://docs.google.com/forms/d/e/${formIDs[form.title].id}/viewform`
-    : null;
-
-  if (!form) {
-    alertError(`Unable to determine volunteer form for event title: ${title}`);
-    // If unknown, return to Home screen
-    navigation.navigate("Home", { forceRerender: true });
-    return null;
-  }
+  const formURL = `https://docs.google.com/forms/d/e/${formIDs[form.title].id}/viewform`
 
   return (
     <ErrorBoundary
