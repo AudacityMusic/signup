@@ -41,7 +41,6 @@ GoogleSignin.configure({
     "https://www.googleapis.com/auth/drive.file",
     "openid",
   ],
-  offlineAccess: true,
 });
 
 export default function SignInScreen({ navigation }) {

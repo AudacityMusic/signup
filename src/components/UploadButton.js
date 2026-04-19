@@ -14,7 +14,7 @@
  */
 
 import Feather from "@expo/vector-icons/Feather";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import {
   GDrive,
   MimeTypes,
@@ -42,10 +42,10 @@ const selectFile = async () => {
   }
 };
 
-// Helper: retrieve stored Google access token for API calls
 async function getAccessToken() {
   try {
-    const accessToken = await AsyncStorage.getItem("access-token");
+    if (GoogleSignin.getCurrentUser() == null) return null;
+    const { accessToken } = await GoogleSignin.getTokens();
     return accessToken;
   } catch (error) {
     alertError(`In getAccessToken: ${error}`);
