@@ -70,10 +70,6 @@ export default function SignInScreen({ navigation }) {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       await AsyncStorage.setItem("user", JSON.stringify(userInfo.user));
-      await AsyncStorage.setItem(
-        "access-token",
-        (await GoogleSignin.getTokens()).accessToken,
-      );
       navigation.navigate("Home", { forceRerender: true });
     } catch (error) {
       if (isErrorWithCode(error)) {

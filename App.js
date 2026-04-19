@@ -13,7 +13,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, Platform, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import AccountScreen from "./src/screens/AccountScreen";
@@ -34,31 +34,33 @@ const Stack = createNativeStackNavigator();
 const webClientId = process.env.EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID;
 const iosClientId = process.env.EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID;
 
-if (!webClientId) {
-  alertError("Undefined EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID env variable");
-}
-
-if (!iosClientId) {
-  alertError("Undefined EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID env variable");
-}
-
-if (webClientId && iosClientId) {
-  GoogleSignin.configure({
-    webClientId,
-    iosClientId,
-    scopes: [
-      "https://www.googleapis.com/auth/userinfo.profile",
-      "https://www.googleapis.com/auth/userinfo.email",
-      "https://www.googleapis.com/auth/drive.file",
-      "openid",
-    ],
-  });
-}
-
 export default function App() {
   // Local state: loading indicator and logged-in status
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (!webClientId) {
+      alertError("Undefined EXPO_PUBLIC_GOOGLE_OAUTH_WEB_ID env variable");
+      return;
+    }
+
+    if (Platform.OS === "ios" && !iosClientId) {
+      alertError("Undefined EXPO_PUBLIC_GOOGLE_OAUTH_IOS_ID env variable");
+      return;
+    }
+
+    GoogleSignin.configure({
+      webClientId,
+      ...(iosClientId ? { iosClientId } : {}),
+      scopes: [
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/drive.file",
+        "openid",
+      ],
+    });
+  }, []);
 
   useEffect(() => {
     // On mount, retrieve user info to determine if already signed in

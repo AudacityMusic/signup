@@ -87,7 +87,6 @@ export default function AccountScreen({ navigation }) {
                 }
                 try {
                   await AsyncStorage.removeItem("user");
-                  await AsyncStorage.removeItem("access-token");
                 } catch (error) {
                   alertError(`Unable to remove user data: ${error}`);
                 }
