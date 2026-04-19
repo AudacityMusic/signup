@@ -44,11 +44,17 @@ const selectFile = async () => {
 
 async function getAccessToken() {
   try {
-    if (GoogleSignin.getCurrentUser() == null) return null;
     const { accessToken } = await GoogleSignin.getTokens();
     return accessToken;
   } catch (error) {
-    alertError(`In getAccessToken: ${error}`);
+    try {
+      await GoogleSignin.signInSilently();
+      const { accessToken } = await GoogleSignin.getTokens();
+      return accessToken;
+    } catch (silentSignInError) {
+      alertError(`In getAccessToken: ${silentSignInError}`);
+      return null;
+    }
   }
 }
 
