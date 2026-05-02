@@ -18,7 +18,6 @@ import Websites from "../components/Websites";
 import {
   alertError,
   formatDate,
-  getUser,
   hashForm,
   request,
   strToDate,
@@ -113,8 +112,6 @@ export default function HomeScreen({ navigation, route }) {
       return null;
     }
     const newData = [];
-    const user = await getUser();
-
     const currentDate = new Date();
 
     const twoMonthsLater = new Date();
@@ -146,7 +143,7 @@ export default function HomeScreen({ navigation, route }) {
         continue;
       }
       const hash = hashForm(
-        user.id,
+        "local",
         opportunity.Title,
         opportunity.Location,
         formatDate(opportunity.Date),

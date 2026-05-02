@@ -13,7 +13,6 @@
  *  - openInMaps: launch maps app for a location
  */
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import { createNavigationContainerRef } from "@react-navigation/native";
 import { useState } from "react";
@@ -99,26 +98,6 @@ export function maybeOpenURL(url, appName, appStoreID, playStoreID) {
       );
     }
   });
-}
-
-/**
- * Retrieve the stored user object from AsyncStorage.
- * @param {boolean} [isEmptySafe=false]
- * @returns {Promise<object|undefined>}
- */
-export async function getUser(isEmptySafe = false) {
-  try {
-    const userString = await AsyncStorage.getItem("user");
-    if (userString === null) {
-      if (!isEmptySafe) {
-        alertError("Empty getUser");
-      }
-      return;
-    }
-    return JSON.parse(userString);
-  } catch (error) {
-    alertError("Unexpected error in getUser: " + error);
-  }
 }
 
 /**

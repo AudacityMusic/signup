@@ -14,7 +14,6 @@ export default {
   ios: {
     supportsTablet: true,
     bundleIdentifier: "org.eternityband.signup",
-    usesAppleSignIn: true,
   },
   android: {
     adaptiveIcon: {
@@ -27,7 +26,7 @@ export default {
     favicon: "./src/assets/eternity-band.png",
   },
   extra: {
-    email: "it@eternityband.org",
+    email: process.env.EXPO_PUBLIC_EMAIL,
     eas: {
       projectId: "56bb99cb-9cbe-423d-9a88-3f82a0cf3aa0",
     },
@@ -36,18 +35,6 @@ export default {
     url: "https://u.expo.dev/56bb99cb-9cbe-423d-9a88-3f82a0cf3aa0",
   },
   runtimeVersion: "1.0.0",
-  plugins: [
-    [
-      "@react-native-google-signin/google-signin",
-      {
-        iosUrlScheme:
-          process.env.EXPO_PUBLIC_GOOGLE_OAUTH_IOS_SCHEME ??
-          console.error(
-            "Error: Undefined EXPO_PUBLIC_GOOGLE_OAUTH_IOS_SCHEME env variable",
-          ),
-      },
-    ],
-    "expo-apple-authentication",
-  ],
+  plugins: [],
   owner: "audacitymusic",
 };

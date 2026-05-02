@@ -9,7 +9,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { Alert } from "react-native";
-import { alertError, getUser, hashForm, request } from "..";
+import { alertError, hashForm, request } from "..";
 import formIDs from "../../constants/formIDs";
 
 /**
@@ -184,8 +184,7 @@ export default class Form {
       return;
     }
 
-    const user = await getUser();
-    const hash = hashForm(user.id, this.title, this.location, this.date);
+    const hash = hashForm("local", this.title, this.location, this.date);
 
     try {
       const submittedForms = await AsyncStorage.getItem("submittedForms");

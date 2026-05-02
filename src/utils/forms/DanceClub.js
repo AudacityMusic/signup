@@ -5,12 +5,9 @@
  * - Fields include full name, contact, favorite pieces, age group, styles, and consents
  */
 
-import { useEffect } from "react";
-
 import {
   Question,
   emptyQuestionState,
-  getUser,
   isAtLeast,
   isExactly,
   isNotEmpty,
@@ -35,14 +32,7 @@ export default class DanceClub extends Form {
     super("Audacity Dance Club", date, location, navigation, scrollRef);
 
     // State hooks for each question
-    this.fullName = emptyQuestionState(); // Performer name
-    useEffect(() => {
-      // Prefill name if available
-      (async () => {
-        const user = await getUser();
-        this.fullName[1]((prev) => ({ ...prev, value: user?.name }));
-      })();
-    }, []);
+    this.fullName = emptyQuestionState();
     this.phoneNumber = emptyQuestionState(); // Contact number
     this.favoritePieces = emptyQuestionState(["", "", "", ""]); // Top 4 music pieces
     this.age = emptyQuestionState(); // Age selection

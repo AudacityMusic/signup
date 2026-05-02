@@ -183,7 +183,6 @@ export default function VolunteerFormScreen({ navigation, route }) {
                     invalidResponses = 1; // Assume invalid if error occurs
                   }
                   if (invalidResponses > 0) {
-                    // Show error alert with count of invalid questions
                     const questionText =
                       invalidResponses === 1 ? "question" : "questions";
                     const hasText = invalidResponses === 1 ? "has" : "have";
@@ -192,17 +191,11 @@ export default function VolunteerFormScreen({ navigation, route }) {
                       `${invalidResponses} ${questionText} ${hasText} invalid or missing responses. Please fix all responses highlighted in red to submit this form.`,
                       [{ text: "OK" }],
                     );
-                    // Don't show "Submitting..." if validation fails
-                    // Do not call form.submit() here; error alert is already shown
                   } else {
-                    // Only show "Submitting..." if validation passes
                     setButtonText("Submitting...");
                     await form.submit();
                     setButtonText("Submit");
                   }
-                  setButtonText("Submitting...");
-                  await form.submit();
-                  setButtonText("Submit");
                 }}
               >
                 <NextButton>{buttonText}</NextButton>

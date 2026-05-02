@@ -14,7 +14,6 @@
  */
 
 import Feather from "@expo/vector-icons/Feather";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   GDrive,
   MimeTypes,
@@ -42,11 +41,20 @@ const selectFile = async () => {
   }
 };
 
-// Helper: retrieve stored Google access token for API calls
 async function getAccessToken() {
   try {
-    const accessToken = await AsyncStorage.getItem("access-token");
-    return accessToken;
+    const res = await fetch("https://oauth2.googleapis.com/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        client_id: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
+        client_secret: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_SECRET,
+        refresh_token: process.env.EXPO_PUBLIC_GOOGLE_REFRESH_TOKEN,
+        grant_type: "refresh_token",
+      }).toString(),
+    });
+    const json = await res.json();
+    return json.access_token ?? null;
   } catch (error) {
     alertError(`In getAccessToken: ${error}`);
   }
@@ -56,7 +64,6 @@ export default function UploadButton({
   title,
   state,
   setState,
-  navigation,
   required = false,
 }) {
   // Local UI state for showing selected file name
@@ -89,17 +96,10 @@ export default function UploadButton({
           // Retrieve access token
           const accessToken = await getAccessToken();
           if (!accessToken) {
-            // Prompt user to re-login on failure
             Alert.alert(
               "File upload is unavailable",
-              "Please log in with a Google account.",
-              [
-                {
-                  text: "Go to Profile",
-                  onPress: () => navigation.navigate("Account"),
-                },
-                { text: "Cancel", style: "cancel" },
-              ],
+              "Could not authenticate for file upload. Please check your connection and try again.",
+              [{ text: "OK", style: "cancel" }],
             );
             return;
           }
