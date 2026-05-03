@@ -33,7 +33,8 @@ export default class DanceClub extends Form {
 
     // State hooks for each question
     this.fullName = emptyQuestionState();
-    this.phoneNumber = emptyQuestionState(); // Contact number
+    this.email = emptyQuestionState();
+    this.phoneNumber = emptyQuestionState();
     this.favoritePieces = emptyQuestionState(["", "", "", ""]); // Top 4 music pieces
     this.age = emptyQuestionState(); // Age selection
     this.favoriteDanceStyles = emptyQuestionState([]); // Styles selection
@@ -58,6 +59,20 @@ export default class DanceClub extends Form {
           />
         ),
         validate: (value) => value.trim().split(" ").length >= 2,
+      }),
+
+      new Question({
+        name: "email",
+        component: (
+          <TextField
+            title="Email"
+            keyboardType="email-address"
+            key="email"
+            state={this.email[0]}
+            setState={this.email[1]}
+          />
+        ),
+        validate: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
       }),
 
       new Question({

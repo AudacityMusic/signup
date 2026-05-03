@@ -33,6 +33,7 @@ export default class LibraryMusicHour extends Form {
 
     // Question states: [stateValue, setState] hooks for each input
     this.fullName = emptyQuestionState();
+    this.email = emptyQuestionState();
 
     // Other fields
     this.city = emptyQuestionState(); // City of residence
@@ -95,6 +96,20 @@ export default class LibraryMusicHour extends Form {
           />
         ),
         validate: isNotEmpty,
+      }),
+
+      new Question({
+        name: "email",
+        component: (
+          <TextField
+            title="Email"
+            keyboardType="email-address"
+            key="email"
+            state={this.email[0]}
+            setState={this.email[1]}
+          />
+        ),
+        validate: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
       }),
 
       new Question({

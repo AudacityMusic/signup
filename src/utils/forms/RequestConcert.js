@@ -26,7 +26,8 @@ export default class RequestConcert extends Form {
     super("Request a Concert", date, location, navigation, scrollRef);
 
     // State hooks for each question field
-    this.phoneNumber = emptyQuestionState(); // Contact phone
+    this.email = emptyQuestionState();
+    this.phoneNumber = emptyQuestionState();
     this.organization = emptyQuestionState(); // Org name/description
     this.eventInfo = emptyQuestionState(); // Event details
     this.venue = emptyQuestionState(); // Venue info
@@ -48,7 +49,20 @@ export default class RequestConcert extends Form {
    */
   questions() {
     return [
-      // Phone number field
+      new Question({
+        name: "email",
+        component: (
+          <TextField
+            title="Email"
+            keyboardType="email-address"
+            key="email"
+            state={this.email[0]}
+            setState={this.email[1]}
+          />
+        ),
+        validate: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+      }),
+
       new Question({
         name: "phoneNumber",
         component: (

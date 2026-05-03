@@ -28,6 +28,7 @@ import { alertError, sendErrorEmail, openInMaps } from "../utils";
 import DanceClub from "../utils/forms/DanceClub";
 import LibraryMusicHour from "../utils/forms/LibraryMusicHour";
 import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
+import RequestConcert from "../utils/forms/RequestConcert";
 import colors from "../constants/colors";
 import formIDs from "../constants/formIDs";
 
@@ -37,6 +38,11 @@ function getForm(title, date, location, navigation, scrollRef) {
 
   // Define form options with their exact names and constructors
   const formOptions = [
+    {
+      name: "REQUEST A CONCERT",
+      constructor: RequestConcert,
+      aliases: ["Request a Concert", "Request Concert"],
+    },
     {
       name: "LIBRARY MUSIC HOUR",
       constructor: LibraryMusicHour,
