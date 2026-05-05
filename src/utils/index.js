@@ -3,7 +3,6 @@
  * Shared utility functions:
  *  - alertError: standardized error alert
  *  - openURL / maybeOpenURL: external link handling
- *  - getUser: retrieve cached user from AsyncStorage
  *  - request: retry wrapper for network calls
  *  - strToDate / formatDate: date parsing and formatting
  *  - Question: form question helper class
@@ -58,9 +57,14 @@ export async function sendErrorEmail(error) {
   }
 }
 
-export const isValidEmail = (value) => isEmail(value ?? "");
+const normalizeValidationInput = (value) => (value ?? "").trim();
+const normalizePhoneValidationInput = (value) =>
+  normalizeValidationInput(value).replace(/[^\d+]/g, "");
+export const isValidEmail = (value) => isEmail(normalizeValidationInput(value));
 export const isValidPhoneNumber = (value) =>
-  isMobilePhone(value ?? "", "any", { strictMode: false });
+  isMobilePhone(normalizePhoneValidationInput(value), "any", {
+    strictMode: false,
+  });
 
 /**
  * Open a URL in the default browser.

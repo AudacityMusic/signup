@@ -1,9 +1,6 @@
 /**
  * HomeHeader.js
- * Custom app header with gradient background, title, and user profile action.
- * Props:
- *  - navigation: React Navigation prop for screen navigation
- *  - route: React Navigation route prop to detect focus changes
+ * Custom app header with gradient background and title
  */
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -41,10 +38,5 @@ const styles = StyleSheet.create({
   headerText: {
     color: colors.white,
     fontSize: 23,
-  },
-  profile: {
-    width: 40,
-    height: 40,
-    borderRadius: 100,
   },
 });

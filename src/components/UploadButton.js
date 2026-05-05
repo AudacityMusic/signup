@@ -55,17 +55,17 @@ async function getAccessToken() {
       }).toString(),
     });
     if (!res.ok) {
-      alertError("Unable to authenticate with Google Drive. Please try again.");
+      Alert.alert("Unable to upload file. Please try again.");
       return null;
     }
     const json = await res.json();
     if (!json.access_token) {
-      alertError("Unable to authenticate with Google Drive. Please try again.");
+      Alert.alert("Unable to upload file. Please try again.");
       return null;
     }
     return json.access_token;
   } catch (error) {
-    alertError("Unable to connect to Google Drive. Please try again.");
+    Alert.alert("Unable to upload file. Please try again.");
     return null;
   }
 }

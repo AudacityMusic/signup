@@ -1,9 +1,7 @@
 /**
  * App.js
  * The main entry point of the Audacity Sign Up app.
- * - Initializes user authentication state from AsyncStorage
- * - Displays a loading indicator until auth status is resolved
- * - Sets up React Navigation stack with screens for Sign In, Home, Account, and volunteer flows
+ * - Sets up React Navigation stack with screens for Home and volunteer flows
  */
 
 import "@expo/metro-runtime";

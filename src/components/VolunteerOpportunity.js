@@ -92,7 +92,7 @@ export default function VolunteerOpportunity({
           </Text>
         </View>
       </View>
-      {/* Right-side indicator: checkmark if submitted, else chevron */}
+      {/* Right-side indicator chevron */}
       <FontAwesome
         name={"chevron-right"}
         size={25}
