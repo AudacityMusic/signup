@@ -6,10 +6,8 @@
  * - Form: abstract class to define questions, validation, and submission flow
  */
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import { Alert } from "react-native";
-import { alertError, hashForm, request } from "..";
+import { alertError, request } from "..";
 import formIDs from "../../constants/formIDs";
 
 /**
@@ -182,21 +180,6 @@ export default class Form {
     if (!isFormSuccessful) {
       this.navigation.navigate("End", { isSuccess: false });
       return;
-    }
-
-    const hash = hashForm("local", this.title, this.location, this.date);
-
-    try {
-      const submittedForms = await AsyncStorage.getItem("submittedForms");
-      if (submittedForms == null) {
-        await AsyncStorage.setItem("submittedForms", JSON.stringify([hash]));
-      } else {
-        const newForms = JSON.parse(submittedForms);
-        newForms.push(hash);
-        await AsyncStorage.setItem("submittedForms", JSON.stringify(newForms));
-      }
-    } catch (error) {
-      alertError(`Unable to get/save submittedForms: ${error}`);
     }
 
     this.navigation.navigate("End", { isSuccess: true });

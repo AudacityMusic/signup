@@ -42,7 +42,6 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
     description,
     tags,
     formURL,
-    isSubmitted,
     max,
     signedUp,
   } = route.params;
@@ -161,14 +160,9 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
           <PostersButton posters={posters} />
 
           <View style={styles.lowerRight}>
-            {isSubmitted && (
-              <Text style={styles.alreadySubmitted} selectable>
-                Warning: You have already submitted this form.
-              </Text>
-            )}
             <Pressable
               onPress={() =>
-                remainingSpots <= 0 || isSubmitted
+                remainingSpots <= 0
                   ? null
                   : navigation.navigate(
                       formURL == null ? "Sign Up Form" : "Google Forms",
@@ -182,7 +176,7 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
                     )
               }
             >
-              <NextButton disabled={remainingSpots <= 0 || isSubmitted}>
+              <NextButton disabled={remainingSpots <= 0}>
                 Sign Up
               </NextButton>
               {/* Show remaining spots if applicable */}
@@ -260,10 +254,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 5,
-  },
-  alreadySubmitted: {
-    color: colors.danger,
-    marginBottom: 10,
   },
   lowerRight: {
     flex: 1,

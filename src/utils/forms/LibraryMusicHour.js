@@ -7,12 +7,7 @@
 
 import { useState } from "react";
 
-import {
-  Question,
-  emptyQuestionState,
-  isAtLeast,
-  isNotEmpty,
-} from "..";
+import { Question, emptyQuestionState, isAtLeast, isNotEmpty } from "..";
 import Form from "./Form";
 
 import CheckBoxQuery from "../../components/CheckBoxQuery";

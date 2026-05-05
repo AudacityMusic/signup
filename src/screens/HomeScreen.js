@@ -8,20 +8,13 @@
 
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { StyleSheet, FlatList } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import FilterPanel from "../components/FilterPanel";
 import CarouselSection from "../components/CarouselSection";
 import Heading from "../components/Heading";
 import OtherOpportunities from "../components/OtherOpportunities";
 import Websites from "../components/Websites";
 // ...existing imports...
-import {
-  alertError,
-  formatDate,
-  hashForm,
-  request,
-  strToDate,
-} from "../utils";
+import { alertError, request, strToDate } from "../utils";
 import PublicGoogleSheetsParser from "../utils/PublicGoogleSheetsParser";
 import {
   initNotificationHandling,
@@ -96,16 +89,6 @@ export default function HomeScreen({ navigation, route }) {
       },
     );
 
-    const submittedForms = [];
-    try {
-      const storedForms = await AsyncStorage.getItem("submittedForms");
-      if (storedForms != null) {
-        submittedForms.push(...JSON.parse(storedForms));
-      }
-    } catch (error) {
-      alertError(`In onRefresh: ${error}`);
-    }
-
     // Fetch raw data with retry logic via request()
     const unparsedData = await request(() => parser.parse());
     if (unparsedData == null) {
@@ -142,13 +125,6 @@ export default function HomeScreen({ navigation, route }) {
       if (event_midnight < currentDate || opportunity.Date > twoMonthsLater) {
         continue;
       }
-      const hash = hashForm(
-        "local",
-        opportunity.Title,
-        opportunity.Location,
-        formatDate(opportunity.Date),
-      );
-      opportunity.isSubmitted = submittedForms.includes(hash);
       newData.push(opportunity);
     }
 

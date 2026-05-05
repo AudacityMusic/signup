@@ -36,8 +36,9 @@ function uniqueFileName(original) {
   const stamp =
     `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}` +
     `_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
-  const base = (original.endsWith(".pdf") ? original.slice(0, -4) : original)
-    .replace(/[^a-zA-Z0-9_-]/g, "_");
+  const base = (
+    original.endsWith(".pdf") ? original.slice(0, -4) : original
+  ).replace(/[^a-zA-Z0-9_-]/g, "_");
   return `${stamp}_${base}.pdf`;
 }
 
