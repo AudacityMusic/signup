@@ -2,7 +2,7 @@
  * UploadButton.js
  * Provides a PDF upload button using Google Drive API:
  * - Selects a PDF file from the device
- * - Authenticates via stored OAuth refresh token (no user sign-in required)
+ * - Exchanges a stored OAuth refresh token for a short-lived access token
  * - Uploads to Google Drive with a timestamped unique filename
  * - Sets sharing to public
  * - Updates form state with Drive URL

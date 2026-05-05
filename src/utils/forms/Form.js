@@ -137,7 +137,7 @@ export default class Form {
   }
 
   /**
-   * Perform validation, build form data, submit to Google Forms, track submissions, and navigate outcome.
+   * Validate, build form data, submit to Google Forms, and navigate to outcome screen.
    */
   async submit() {
     const invalidResponses = this.validate();

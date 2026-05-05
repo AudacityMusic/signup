@@ -1,14 +1,14 @@
 /**
  * index.js
  * Shared utility functions:
- *  - alertError: standardized error alert
- *  - openURL / maybeOpenURL: external link handling
- *  - request: retry wrapper for network calls
- *  - strToDate / formatDate: date parsing and formatting
+ *  - alertError: standardized error alert + EmailJS error report
+ *  - openURL / maybeOpenURL: external link handling with app store fallback
+ *  - request: retry wrapper with exponential backoff for network calls
+ *  - strToDate / formatDate: Google Sheets date parsing and formatting
  *  - Question: form question helper class
  *  - emptyQuestionState: hook for question state
- *  - validation helpers: isAtLeast, isNotEmpty, isExactly
- *  - hashForm: deterministic event hash
+ *  - isAtLeast, isNotEmpty, isExactly: basic validation predicates
+ *  - isValidEmail, isValidPhoneNumber: validator.js-backed field validators
  *  - openInMaps: launch maps app for a location
  */
 
@@ -215,17 +215,6 @@ export const isAtLeast = (value, len) =>
 export const isNotEmpty = (value) => isAtLeast(value, 1);
 export const isExactly = (value, len) =>
   !isAtLeast(value, len + 1) && isAtLeast(value, len);
-
-/**
- * Hash event details deterministically for submission tracking.
- * @param {string} userID
- * @param {string} title
- * @param {string} location
- * @param {string} date
- */
-export function hashForm(userID, title, location, date) {
-  return `${userID}&&&${title}&&&${location}&&&${date}`;
-}
 
 /**
  * Launch maps application or fallback to web URL for a location.

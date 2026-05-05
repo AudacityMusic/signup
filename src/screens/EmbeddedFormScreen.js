@@ -1,6 +1,6 @@
 /**
  * EmbeddedFormScreen.js
- * Displays a Google Forms URL within a WebView.
+ * Displays an external form URL in a full-screen WebView.
  * Props:
  *  - route.params.formURL: the URL string of the form to embed
  */

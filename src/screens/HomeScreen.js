@@ -2,7 +2,7 @@
  * HomeScreen.js
  * Main screen showing upcoming events in a carousel, plus extra resources.
  * - Fetches data from Google Sheets via PublicGoogleSheetsParser
- * - Filters events by date range and submission status
+ * - Filters events to the next two months
  * - Manages push notifications for each event
  */
 
@@ -13,7 +13,6 @@ import CarouselSection from "../components/CarouselSection";
 import Heading from "../components/Heading";
 import OtherOpportunities from "../components/OtherOpportunities";
 import Websites from "../components/Websites";
-// ...existing imports...
 import { alertError, request, strToDate } from "../utils";
 import PublicGoogleSheetsParser from "../utils/PublicGoogleSheetsParser";
 import {
@@ -22,13 +21,6 @@ import {
   cancelAllScheduled,
 } from "../utils/notifications";
 
-/**
- * HomeScreen: displays upcoming events in a carousel, other opportunities, and websites.
- * - Fetches event data from Google Sheets
- * - Filters events by date range
- * - Manages notification scheduling for each event
- */
-// Suppress warning about nested VirtualizedLists
 export default function HomeScreen({ navigation, route }) {
   // State: array of event objects
   const [data, setData] = useState([]);
@@ -74,8 +66,8 @@ export default function HomeScreen({ navigation, route }) {
   }, []);
 
   /**
-   * Fetch events from Google Sheets, filter by date and submission status,
-   * then update state for display and scheduling.
+   * Fetch events from Google Sheets, filter to the next two months,
+   * then update state for display and notification scheduling.
    * @returns {Promise<number|null>} number of events loaded or null on failure
    */
   const onRefresh = useCallback(async () => {
@@ -104,8 +96,6 @@ export default function HomeScreen({ navigation, route }) {
     // - Provide default Title/Location
     // - Convert date string to Date
     // - Exclude past events and events beyond two months ahead
-    // - Mark isSubmitted based on stored hashes
-    // - Collect valid events
 
     for (let i = 0; i < unparsedData.length; i++) {
       const opportunity = unparsedData[i];
