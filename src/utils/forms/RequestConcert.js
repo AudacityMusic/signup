@@ -5,7 +5,13 @@
  * - Fields include contact info, organization details, event logistics, resources, and time slots.
  */
 
-import { Question, emptyQuestionState, isAtLeast, isNotEmpty } from "..";
+import {
+  Question,
+  emptyQuestionState,
+  isNotEmpty,
+  isValidEmail,
+  isValidPhoneNumber,
+} from "..";
 import Form from "./Form";
 
 import CheckBoxQuery from "../../components/CheckBoxQuery";
@@ -60,7 +66,7 @@ export default class RequestConcert extends Form {
             setState={this.email[1]}
           />
         ),
-        validate: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+        validate: isValidEmail,
       }),
 
       new Question({
@@ -75,7 +81,7 @@ export default class RequestConcert extends Form {
             setState={this.phoneNumber[1]}
           />
         ),
-        validate: (value) => isAtLeast(value, 10),
+        validate: isValidPhoneNumber,
       }),
       // Organization name and description
       new Question({

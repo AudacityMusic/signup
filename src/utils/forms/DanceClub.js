@@ -8,9 +8,10 @@
 import {
   Question,
   emptyQuestionState,
-  isAtLeast,
   isExactly,
   isNotEmpty,
+  isValidEmail,
+  isValidPhoneNumber,
 } from "..";
 import Form from "./Form";
 
@@ -72,7 +73,7 @@ export default class DanceClub extends Form {
             setState={this.email[1]}
           />
         ),
-        validate: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+        validate: isValidEmail,
       }),
 
       new Question({
@@ -87,7 +88,7 @@ export default class DanceClub extends Form {
             setState={this.phoneNumber[1]}
           />
         ),
-        validate: (value) => isAtLeast(value, 10),
+        validate: isValidPhoneNumber,
       }),
 
       new Question({

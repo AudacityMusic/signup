@@ -14,6 +14,7 @@
  */
 
 import Constants from "expo-constants";
+import { isEmail, isMobilePhone } from "validator";
 import { createNavigationContainerRef } from "@react-navigation/native";
 import { useState } from "react";
 import { Alert, Linking, Platform } from "react-native";
@@ -57,11 +58,9 @@ export async function sendErrorEmail(error) {
   }
 }
 
-/**
- * Log error and show user-friendly alert with diagnostic info.
- * @param {string} error - error message or object to display
- * @returns {null}
- */
+export const isValidEmail = (value) => isEmail(value ?? "");
+export const isValidPhoneNumber = (value) =>
+  isMobilePhone(value ?? "", "any", { strictMode: false });
 
 /**
  * Open a URL in the default browser.

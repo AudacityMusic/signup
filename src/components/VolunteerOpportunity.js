@@ -11,7 +11,6 @@
  *  - description: event description text
  *  - tags: array of tag strings
  *  - formURL: URL string for sign-up form
- *  - isSubmitted: boolean indicating if the user has signed up
  *  - max: maximum number of volunteers for the event
  *  - signedUp: current number of signed up volunteers
  */
@@ -33,7 +32,6 @@ export default function VolunteerOpportunity({
   description,
   tags,
   formURL,
-  isSubmitted,
   max,
   signedUp,
 }) {
@@ -51,7 +49,6 @@ export default function VolunteerOpportunity({
           description,
           tags,
           formURL,
-          isSubmitted,
           max,
           signedUp,
         })
@@ -97,10 +94,10 @@ export default function VolunteerOpportunity({
       </View>
       {/* Right-side indicator: checkmark if submitted, else chevron */}
       <FontAwesome
-        name={isSubmitted ? "check" : "chevron-right"}
+        name={"chevron-right"}
         size={25}
         color="black"
-        style={isSubmitted ? styles.checkmark : styles.caret}
+        style={styles.caret}
       />
     </TouchableOpacity>
   );
