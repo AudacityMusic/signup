@@ -28,6 +28,7 @@ import { alertError, sendErrorEmail, openInMaps } from "../utils";
 import DanceClub from "../utils/forms/DanceClub";
 import LibraryMusicHour from "../utils/forms/LibraryMusicHour";
 import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
+import RequestConcert from "../utils/forms/RequestConcert";
 import colors from "../constants/colors";
 import formIDs from "../constants/formIDs";
 
@@ -37,6 +38,11 @@ function getForm(title, date, location, navigation, scrollRef) {
 
   // Define form options with their exact names and constructors
   const formOptions = [
+    {
+      name: "REQUEST A CONCERT",
+      constructor: RequestConcert,
+      aliases: ["Request a Concert", "Request Concert"],
+    },
     {
       name: "LIBRARY MUSIC HOUR",
       constructor: LibraryMusicHour,
@@ -183,7 +189,6 @@ export default function VolunteerFormScreen({ navigation, route }) {
                     invalidResponses = 1; // Assume invalid if error occurs
                   }
                   if (invalidResponses > 0) {
-                    // Show error alert with count of invalid questions
                     const questionText =
                       invalidResponses === 1 ? "question" : "questions";
                     const hasText = invalidResponses === 1 ? "has" : "have";
@@ -192,17 +197,11 @@ export default function VolunteerFormScreen({ navigation, route }) {
                       `${invalidResponses} ${questionText} ${hasText} invalid or missing responses. Please fix all responses highlighted in red to submit this form.`,
                       [{ text: "OK" }],
                     );
-                    // Don't show "Submitting..." if validation fails
-                    // Do not call form.submit() here; error alert is already shown
                   } else {
-                    // Only show "Submitting..." if validation passes
                     setButtonText("Submitting...");
                     await form.submit();
                     setButtonText("Submit");
                   }
-                  setButtonText("Submitting...");
-                  await form.submit();
-                  setButtonText("Submit");
                 }}
               >
                 <NextButton>{buttonText}</NextButton>

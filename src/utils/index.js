@@ -1,20 +1,19 @@
 /**
  * index.js
  * Shared utility functions:
- *  - alertError: standardized error alert
- *  - openURL / maybeOpenURL: external link handling
- *  - getUser: retrieve cached user from AsyncStorage
- *  - request: retry wrapper for network calls
- *  - strToDate / formatDate: date parsing and formatting
+ *  - alertError: standardized error alert + EmailJS error report
+ *  - openURL / maybeOpenURL: external link handling with app store fallback
+ *  - request: retry wrapper with exponential backoff for network calls
+ *  - strToDate / formatDate: Google Sheets date parsing and formatting
  *  - Question: form question helper class
  *  - emptyQuestionState: hook for question state
- *  - validation helpers: isAtLeast, isNotEmpty, isExactly
- *  - hashForm: deterministic event hash
+ *  - isAtLeast, isNotEmpty, isExactly: basic validation predicates
+ *  - isValidEmail, isValidPhoneNumber: validator.js-backed field validators
  *  - openInMaps: launch maps app for a location
  */
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
+import { isEmail, isMobilePhone } from "validator";
 import { createNavigationContainerRef } from "@react-navigation/native";
 import { useState } from "react";
 import { Alert, Linking, Platform } from "react-native";
@@ -58,11 +57,14 @@ export async function sendErrorEmail(error) {
   }
 }
 
-/**
- * Log error and show user-friendly alert with diagnostic info.
- * @param {string} error - error message or object to display
- * @returns {null}
- */
+const normalizeValidationInput = (value) => (value ?? "").trim();
+const normalizePhoneValidationInput = (value) =>
+  normalizeValidationInput(value).replace(/[^\d+]/g, "");
+export const isValidEmail = (value) => isEmail(normalizeValidationInput(value));
+export const isValidPhoneNumber = (value) =>
+  isMobilePhone(normalizePhoneValidationInput(value), "any", {
+    strictMode: false,
+  });
 
 /**
  * Open a URL in the default browser.
@@ -99,26 +101,6 @@ export function maybeOpenURL(url, appName, appStoreID, playStoreID) {
       );
     }
   });
-}
-
-/**
- * Retrieve the stored user object from AsyncStorage.
- * @param {boolean} [isEmptySafe=false]
- * @returns {Promise<object|undefined>}
- */
-export async function getUser(isEmptySafe = false) {
-  try {
-    const userString = await AsyncStorage.getItem("user");
-    if (userString === null) {
-      if (!isEmptySafe) {
-        alertError("Empty getUser");
-      }
-      return;
-    }
-    return JSON.parse(userString);
-  } catch (error) {
-    alertError("Unexpected error in getUser: " + error);
-  }
 }
 
 /**
@@ -233,17 +215,6 @@ export const isAtLeast = (value, len) =>
 export const isNotEmpty = (value) => isAtLeast(value, 1);
 export const isExactly = (value, len) =>
   !isAtLeast(value, len + 1) && isAtLeast(value, len);
-
-/**
- * Hash event details deterministically for submission tracking.
- * @param {string} userID
- * @param {string} title
- * @param {string} location
- * @param {string} date
- */
-export function hashForm(userID, title, location, date) {
-  return `${userID}&&&${title}&&&${location}&&&${date}`;
-}
 
 /**
  * Launch maps application or fallback to web URL for a location.

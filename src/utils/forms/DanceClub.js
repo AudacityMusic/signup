@@ -5,15 +5,13 @@
  * - Fields include full name, contact, favorite pieces, age group, styles, and consents
  */
 
-import { useEffect } from "react";
-
 import {
   Question,
   emptyQuestionState,
-  getUser,
-  isAtLeast,
   isExactly,
   isNotEmpty,
+  isValidEmail,
+  isValidPhoneNumber,
 } from "..";
 import Form from "./Form";
 
@@ -35,15 +33,9 @@ export default class DanceClub extends Form {
     super("Audacity Dance Club", date, location, navigation, scrollRef);
 
     // State hooks for each question
-    this.fullName = emptyQuestionState(); // Performer name
-    useEffect(() => {
-      // Prefill name if available
-      (async () => {
-        const user = await getUser();
-        this.fullName[1]((prev) => ({ ...prev, value: user?.name }));
-      })();
-    }, []);
-    this.phoneNumber = emptyQuestionState(); // Contact number
+    this.fullName = emptyQuestionState();
+    this.email = emptyQuestionState();
+    this.phoneNumber = emptyQuestionState();
     this.favoritePieces = emptyQuestionState(["", "", "", ""]); // Top 4 music pieces
     this.age = emptyQuestionState(); // Age selection
     this.favoriteDanceStyles = emptyQuestionState([]); // Styles selection
@@ -71,6 +63,20 @@ export default class DanceClub extends Form {
       }),
 
       new Question({
+        name: "email",
+        component: (
+          <TextField
+            title="Email"
+            keyboardType="email-address"
+            key="email"
+            state={this.email[0]}
+            setState={this.email[1]}
+          />
+        ),
+        validate: isValidEmail,
+      }),
+
+      new Question({
         name: "phoneNumber",
         component: (
           <TextField
@@ -82,7 +88,7 @@ export default class DanceClub extends Form {
             setState={this.phoneNumber[1]}
           />
         ),
-        validate: (value) => isAtLeast(value, 10),
+        validate: isValidPhoneNumber,
       }),
 
       new Question({

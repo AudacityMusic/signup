@@ -47,7 +47,6 @@ function CarouselSection({ navigation, data, onRefresh }) {
                         .filter((str) => str.length > 0)
                 }
                 formURL={event["Form Link"] ?? null}
-                isSubmitted={event.isSubmitted}
                 max={event.Max}
                 signedUp={event["Signed Up"]}
                 key={index}

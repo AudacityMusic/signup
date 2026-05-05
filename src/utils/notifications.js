@@ -89,7 +89,7 @@ export async function scheduleEventNotifications(event) {
 
 /**
  * Cancel all scheduled notifications throughout the app.
- * Useful for clearing events on logout or data refresh.
+ * Called before rescheduling on data refresh to avoid duplicates.
  */
 export function cancelAllScheduled() {
   return Notifications.cancelAllScheduledNotificationsAsync();

@@ -5,7 +5,13 @@
  * - Fields include contact info, organization details, event logistics, resources, and time slots.
  */
 
-import { Question, emptyQuestionState, isAtLeast, isNotEmpty } from "..";
+import {
+  Question,
+  emptyQuestionState,
+  isNotEmpty,
+  isValidEmail,
+  isValidPhoneNumber,
+} from "..";
 import Form from "./Form";
 
 import CheckBoxQuery from "../../components/CheckBoxQuery";
@@ -26,7 +32,8 @@ export default class RequestConcert extends Form {
     super("Request a Concert", date, location, navigation, scrollRef);
 
     // State hooks for each question field
-    this.phoneNumber = emptyQuestionState(); // Contact phone
+    this.email = emptyQuestionState();
+    this.phoneNumber = emptyQuestionState();
     this.organization = emptyQuestionState(); // Org name/description
     this.eventInfo = emptyQuestionState(); // Event details
     this.venue = emptyQuestionState(); // Venue info
@@ -48,7 +55,20 @@ export default class RequestConcert extends Form {
    */
   questions() {
     return [
-      // Phone number field
+      new Question({
+        name: "email",
+        component: (
+          <TextField
+            title="Email"
+            keyboardType="email-address"
+            key="email"
+            state={this.email[0]}
+            setState={this.email[1]}
+          />
+        ),
+        validate: isValidEmail,
+      }),
+
       new Question({
         name: "phoneNumber",
         component: (
@@ -61,7 +81,7 @@ export default class RequestConcert extends Form {
             setState={this.phoneNumber[1]}
           />
         ),
-        validate: (value) => isAtLeast(value, 10),
+        validate: isValidPhoneNumber,
       }),
       // Organization name and description
       new Question({

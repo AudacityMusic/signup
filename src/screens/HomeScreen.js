@@ -2,27 +2,18 @@
  * HomeScreen.js
  * Main screen showing upcoming events in a carousel, plus extra resources.
  * - Fetches data from Google Sheets via PublicGoogleSheetsParser
- * - Filters events by date range and submission status
+ * - Filters events to the next two months
  * - Manages push notifications for each event
  */
 
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { StyleSheet, FlatList } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import FilterPanel from "../components/FilterPanel";
 import CarouselSection from "../components/CarouselSection";
 import Heading from "../components/Heading";
 import OtherOpportunities from "../components/OtherOpportunities";
 import Websites from "../components/Websites";
-// ...existing imports...
-import {
-  alertError,
-  formatDate,
-  getUser,
-  hashForm,
-  request,
-  strToDate,
-} from "../utils";
+import { alertError, request, strToDate } from "../utils";
 import PublicGoogleSheetsParser from "../utils/PublicGoogleSheetsParser";
 import {
   initNotificationHandling,
@@ -30,13 +21,6 @@ import {
   cancelAllScheduled,
 } from "../utils/notifications";
 
-/**
- * HomeScreen: displays upcoming events in a carousel, other opportunities, and websites.
- * - Fetches event data from Google Sheets
- * - Filters events by date range
- * - Manages notification scheduling for each event
- */
-// Suppress warning about nested VirtualizedLists
 export default function HomeScreen({ navigation, route }) {
   // State: array of event objects
   const [data, setData] = useState([]);
@@ -82,8 +66,8 @@ export default function HomeScreen({ navigation, route }) {
   }, []);
 
   /**
-   * Fetch events from Google Sheets, filter by date and submission status,
-   * then update state for display and scheduling.
+   * Fetch events from Google Sheets, filter to the next two months,
+   * then update state for display and notification scheduling.
    * @returns {Promise<number|null>} number of events loaded or null on failure
    */
   const onRefresh = useCallback(async () => {
@@ -97,24 +81,12 @@ export default function HomeScreen({ navigation, route }) {
       },
     );
 
-    const submittedForms = [];
-    try {
-      const storedForms = await AsyncStorage.getItem("submittedForms");
-      if (storedForms != null) {
-        submittedForms.push(...JSON.parse(storedForms));
-      }
-    } catch (error) {
-      alertError(`In onRefresh: ${error}`);
-    }
-
     // Fetch raw data with retry logic via request()
     const unparsedData = await request(() => parser.parse());
     if (unparsedData == null) {
       return null;
     }
     const newData = [];
-    const user = await getUser();
-
     const currentDate = new Date();
 
     const twoMonthsLater = new Date();
@@ -124,8 +96,6 @@ export default function HomeScreen({ navigation, route }) {
     // - Provide default Title/Location
     // - Convert date string to Date
     // - Exclude past events and events beyond two months ahead
-    // - Mark isSubmitted based on stored hashes
-    // - Collect valid events
 
     for (let i = 0; i < unparsedData.length; i++) {
       const opportunity = unparsedData[i];
@@ -145,13 +115,6 @@ export default function HomeScreen({ navigation, route }) {
       if (event_midnight < currentDate || opportunity.Date > twoMonthsLater) {
         continue;
       }
-      const hash = hashForm(
-        user.id,
-        opportunity.Title,
-        opportunity.Location,
-        formatDate(opportunity.Date),
-      );
-      opportunity.isSubmitted = submittedForms.includes(hash);
       newData.push(opportunity);
     }
 

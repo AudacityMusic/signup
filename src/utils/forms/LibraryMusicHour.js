@@ -5,14 +5,14 @@
  * Fields include performer info, music selection, performance type, and permissions.
  */
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
   Question,
   emptyQuestionState,
-  getUser,
-  isAtLeast,
   isNotEmpty,
+  isValidEmail,
+  isValidPhoneNumber,
 } from "..";
 import Form from "./Form";
 
@@ -33,15 +33,8 @@ export default class LibraryMusicHour extends Form {
     super("Library Music Hour", date, location, navigation, scrollRef);
 
     // Question states: [stateValue, setState] hooks for each input
-    this.fullName = emptyQuestionState(); // Performer's name
-
-    // Prefill fullName from stored user on mount
-    useEffect(() => {
-      (async () => {
-        const user = await getUser();
-        this.fullName[1]((prev) => ({ ...prev, value: user?.name }));
-      })();
-    }, []);
+    this.fullName = emptyQuestionState();
+    this.email = emptyQuestionState();
 
     // Other fields
     this.city = emptyQuestionState(); // City of residence
@@ -107,6 +100,20 @@ export default class LibraryMusicHour extends Form {
       }),
 
       new Question({
+        name: "email",
+        component: (
+          <TextField
+            title="Email"
+            keyboardType="email-address"
+            key="email"
+            state={this.email[0]}
+            setState={this.email[1]}
+          />
+        ),
+        validate: isValidEmail,
+      }),
+
+      new Question({
         name: "phoneNumber",
         component: (
           <TextField
@@ -118,7 +125,7 @@ export default class LibraryMusicHour extends Form {
             setState={this.phoneNumber[1]}
           />
         ),
-        validate: (value) => isAtLeast(value, 10),
+        validate: isValidPhoneNumber,
       }),
 
       new Question({
@@ -305,7 +312,6 @@ export default class LibraryMusicHour extends Form {
             key="pianoAccompaniment"
             state={this.pianoAccompaniment[0]}
             setState={this.pianoAccompaniment[1]}
-            navigation={this.navigation}
           />
         ),
         validate: () => this.pianoAccompaniment[0].value != "Uploading",
@@ -320,7 +326,6 @@ export default class LibraryMusicHour extends Form {
                 key="ensembleProfile"
                 state={this.ensembleProfile[0]}
                 setState={this.ensembleProfile[1]}
-                navigation={this.navigation}
                 required={true}
               />
             ),
