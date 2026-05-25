@@ -21,6 +21,7 @@ import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { Image } from "expo-image";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Markdown from "react-native-markdown-display";
 
 export default function VolunteerOpportunity({
   navigation,
@@ -80,16 +81,23 @@ export default function VolunteerOpportunity({
             {date}
           </Text>
           {/* Location info with icon */}
-          <Text style={styles.info} selectable>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <SimpleLineIcons
               name="location-pin"
               size={10}
               color="black"
               style={styles.icon}
             />
-            {"  "}
-            {location}
-          </Text>
+            <Markdown
+              style={{
+                body: { fontSize: 10, color: "#555" },
+                paragraph: { marginTop: 0, marginBottom: 0 },
+                link: { color: "#555" },
+              }}
+            >
+              {location}
+            </Markdown>
+          </View>
         </View>
       </View>
       {/* Right-side indicator chevron */}

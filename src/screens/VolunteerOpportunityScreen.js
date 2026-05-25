@@ -14,14 +14,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  Linking,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 import Heading from "../components/Heading";
 import NextButton from "../components/NextButton";
@@ -29,7 +22,7 @@ import PersistScrollView from "../components/PersistScrollView";
 import PostersButton from "../components/PostersButton";
 import Tag from "../components/Tag";
 import colors from "../constants/colors";
-import { openInMaps } from "../utils";
+import { openURL } from "../utils";
 
 export default function VolunteerOpportunityScreen({ route, navigation }) {
   // Destructure parameters passed via navigation
@@ -95,14 +88,19 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
                 size={20}
                 color={colors.black}
               />
-              <Pressable onPress={() => openInMaps(location)}>
-                <Text
-                  style={[styles.detailsText, styles.locationText]}
-                  selectable
-                >
-                  {location}
-                </Text>
-              </Pressable>
+              <Markdown
+                onLinkPress={(url) => {
+                  openURL(url);
+                  return false;
+                }}
+                style={{
+                  body: {
+                    fontSize: 18,
+                  },
+                }}
+              >
+                {location}
+              </Markdown>
             </View>
           </View>
           {/* Optional description section */}
@@ -111,7 +109,7 @@ export default function VolunteerOpportunityScreen({ route, navigation }) {
               <Heading>About</Heading>
               <Markdown
                 onLinkPress={(url) => {
-                  Linking.openURL(url);
+                  openURL(url);
                   return false;
                 }}
                 style={{
@@ -268,9 +266,5 @@ const styles = StyleSheet.create({
   },
   detailsText: {
     fontSize: 18,
-  },
-  locationText: {
-    textDecorationLine: "underline",
-    color: colors.primary,
   },
 });

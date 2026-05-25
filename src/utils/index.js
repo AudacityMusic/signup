@@ -2,14 +2,13 @@
  * index.js
  * Shared utility functions:
  *  - alertError: standardized error alert + EmailJS error report
- *  - openURL / maybeOpenURL: external link handling with app store fallback
+ *  - openURL: external link handling with app store fallback
  *  - request: retry wrapper with exponential backoff for network calls
  *  - strToDate / formatDate: Google Sheets date parsing and formatting
  *  - Question: form question helper class
  *  - emptyQuestionState: hook for question state
  *  - isAtLeast, isNotEmpty, isExactly: basic validation predicates
  *  - isValidEmail, isValidPhoneNumber: validator.js-backed field validators
- *  - openInMaps: launch maps app for a location
  */
 
 import Constants from "expo-constants";
@@ -76,30 +75,6 @@ export function openURL(url) {
       `Unable to open URL`,
       `Your device does not support opening ${url} from this app. Please copy and paste the URL into your browser.`,
     );
-  });
-}
-
-/**
- * Try to open URL, fallback to app store if scheme fails.
- * @param {string} url
- * @param {string} appName
- * @param {string} appStoreID
- * @param {string} playStoreID
- */
-export function maybeOpenURL(url, appName, appStoreID, playStoreID) {
-  Linking.openURL(url).catch((error) => {
-    if (error.code == "EUNSPECIFIED") {
-      if (Platform.OS == "ios") {
-        openURL(`https://apps.apple.com/us/app/${appName}/id${appStoreID}`);
-      } else {
-        openURL(`https://play.google.com/store/apps/details?id=${playStoreID}`);
-      }
-    } else {
-      Alert.alert(
-        `Unable to open URL`,
-        `Your device does not support opening ${url} from this app. Please copy and paste the URL into your browser.`,
-      );
-    }
   });
 }
 
@@ -215,25 +190,3 @@ export const isAtLeast = (value, len) =>
 export const isNotEmpty = (value) => isAtLeast(value, 1);
 export const isExactly = (value, len) =>
   !isAtLeast(value, len + 1) && isAtLeast(value, len);
-
-/**
- * Launch maps application or fallback to web URL for a location.
- * @param {string} location
- */
-export function openInMaps(location) {
-  const encodedLocation = encodeURIComponent(location);
-  const url = Platform.select({
-    ios: `maps://maps.apple.com/?q=${encodedLocation}`,
-    android: `https://www.google.com/maps/search/?api=1&query=${encodedLocation}`,
-  });
-  Linking.canOpenURL(url).then((supported) => {
-    if (supported) {
-      Linking.openURL(url);
-    } else {
-      // Fallback to Google Maps web URL
-      Linking.openURL(
-        `https://www.google.com/maps/search/?api=1&query=${encodedLocation}`,
-      );
-    }
-  });
-}

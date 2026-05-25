@@ -17,6 +17,7 @@ import {
   Text,
   View,
 } from "react-native";
+import Markdown from "react-native-markdown-display";
 import WebView from "react-native-webview";
 import Fuse from "fuse.js";
 import ErrorBoundary from "react-native-error-boundary";
@@ -24,12 +25,11 @@ import ErrorBoundary from "react-native-error-boundary";
 import NextButton from "../components/NextButton";
 import PersistScrollView from "../components/PersistScrollView";
 
-import { alertError, sendErrorEmail, openInMaps } from "../utils";
+import { openURL, sendErrorEmail } from "../utils";
 import DanceClub from "../utils/forms/DanceClub";
 import LibraryMusicHour from "../utils/forms/LibraryMusicHour";
 import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
 import RequestConcert from "../utils/forms/RequestConcert";
-import colors from "../constants/colors";
 import formIDs from "../constants/formIDs";
 
 // Factory: choose form class by event title using fuzzy matching
@@ -160,14 +160,21 @@ export default function VolunteerFormScreen({ navigation, route }) {
                   </Text>
                 )}
                 {location == null ? null : (
-                  <Pressable onPress={() => openInMaps(location)}>
-                    <Text
-                      style={[styles.headerText, styles.locationText]}
-                      selectable={true}
+                  <View style={{ alignItems: "center" }}>
+                    <Markdown
+                      onLinkPress={(url) => {
+                        openURL(url);
+                        return false;
+                      }}
+                      style={{
+                        body: {
+                          fontSize: 18,
+                        },
+                      }}
                     >
                       {location}
-                    </Text>
-                  </Pressable>
+                    </Markdown>
+                  </View>
                 )}
               </View>
               {/* Render each question component from form */}
@@ -261,9 +268,5 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     justifyContent: "flex-end",
     marginBottom: 50,
-  },
-  locationText: {
-    textDecorationLine: "underline",
-    color: colors.primary,
   },
 });
