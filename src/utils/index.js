@@ -9,7 +9,6 @@
  *  - emptyQuestionState: hook for question state
  *  - isAtLeast, isNotEmpty, isExactly: basic validation predicates
  *  - isValidEmail, isValidPhoneNumber: validator.js-backed field validators
- *  - openInMaps: launch maps app for a location
  */
 
 import Constants from "expo-constants";

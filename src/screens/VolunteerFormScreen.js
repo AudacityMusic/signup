@@ -30,7 +30,6 @@ import DanceClub from "../utils/forms/DanceClub";
 import LibraryMusicHour from "../utils/forms/LibraryMusicHour";
 import MusicByTheTracks from "../utils/forms/MusicByTheTracks";
 import RequestConcert from "../utils/forms/RequestConcert";
-import colors from "../constants/colors";
 import formIDs from "../constants/formIDs";
 
 // Factory: choose form class by event title using fuzzy matching
@@ -269,9 +268,5 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     justifyContent: "flex-end",
     marginBottom: 50,
-  },
-  locationText: {
-    textDecorationLine: "underline",
-    color: colors.primary,
   },
 });
