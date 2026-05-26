@@ -14,6 +14,9 @@ export default {
   ios: {
     supportsTablet: true,
     bundleIdentifier: "org.eternityband.signup",
+    infoPlist: {
+      ITSAppUsesNonExemptEncryption: false,
+    },
   },
   android: {
     adaptiveIcon: {
