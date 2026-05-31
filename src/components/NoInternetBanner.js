@@ -13,7 +13,7 @@ import colors from "../constants/colors";
 
 const NoInternetBanner = () => {
   const [isConnected, setIsConnected] = useState(true);
-  const [slideAnim] = useState(new Animated.Value(-100));
+  const [slideAnim] = useState(new Animated.Value(-200));
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
@@ -35,7 +35,7 @@ const NoInternetBanner = () => {
     } else {
       // Slide up animation
       Animated.spring(slideAnim, {
-        toValue: -100,
+        toValue: -200,
         useNativeDriver: true,
         tension: 100,
         friction: 8,
