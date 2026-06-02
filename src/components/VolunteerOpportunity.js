@@ -88,7 +88,15 @@ export default function VolunteerOpportunity({
               color="black"
               style={styles.icon}
             />
-            <Text style={{ fontSize: 10, color: "#555", marginTop: 0, marginBottom: 0 }} selectable>
+            <Text
+              style={{
+                fontSize: 10,
+                color: "#555",
+                marginTop: 0,
+                marginBottom: 0,
+              }}
+              selectable
+            >
               {extractNameFromMarkdown(location)}
             </Text>
           </View>

@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useRef, useState, useEffect } from "react";
+import React, {
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  useEffect,
+} from "react";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Image } from "expo-image";
 import {
@@ -36,12 +42,12 @@ export default function PostersButton({ posters }) {
 
   const looped = useMemo(
     () => (usesLoop ? [...images, ...images, ...images] : images),
-    [usesLoop, images]
+    [usesLoop, images],
   );
 
   const ZoomFlatList = useMemo(
     () => createZoomListWithReanimatedComponent(FlatList),
-    []
+    [],
   );
 
   const keyExtractor = useCallback((item, i) => `${item}-${i}`, []);
@@ -52,7 +58,7 @@ export default function PostersButton({ posters }) {
       offset: dims.width * i,
       index: i,
     }),
-    [dims.width]
+    [dims.width],
   );
 
   const renderItem = useCallback(
@@ -80,12 +86,12 @@ export default function PostersButton({ posters }) {
         </View>
       );
     },
-    [dims.width, dims.height, failedMap, count]
+    [dims.width, dims.height, failedMap, count],
   );
 
   useEffect(() => {
     const sub = Dimensions.addEventListener?.("change", ({ window }) =>
-      setDims(window)
+      setDims(window),
     );
     return () => sub?.remove?.();
   }, []);
@@ -143,8 +149,7 @@ export default function PostersButton({ posters }) {
 
   if (count === 0) return null;
 
-  const displayIndex =
-    ((currentIndex % count) + count) % count + 1;
+  const displayIndex = (((currentIndex % count) + count) % count) + 1;
 
   return (
     <View>
@@ -158,9 +163,7 @@ export default function PostersButton({ posters }) {
           size={22}
           color={colors.primary}
         />
-        <Text style={styles.buttonText}>
-          Show Posters & Programs
-        </Text>
+        <Text style={styles.buttonText}>Show Posters & Programs</Text>
       </Pressable>
 
       <Modal
@@ -175,11 +178,7 @@ export default function PostersButton({ posters }) {
             onPress={() => setShowGallery(false)}
             accessibilityLabel="Close posters"
           >
-            <MaterialCommunityIcons
-              name="close"
-              size={28}
-              color="white"
-            />
+            <MaterialCommunityIcons name="close" size={28} color="white" />
           </Pressable>
 
           {showGallery && (

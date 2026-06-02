@@ -195,7 +195,9 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
         backgroundColor: selected ? "#f0f0f0" : "white",
       }}
     >
-      <Text style={styles.dropdownItemText}>{extractNameFromMarkdown(item.label)}</Text>
+      <Text style={styles.dropdownItemText}>
+        {extractNameFromMarkdown(item.label)}
+      </Text>
       {selected && (
         <MaterialIcons name="check" size={20} color={colors.primaryLight} />
       )}
@@ -212,7 +214,11 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
       />
       {/* Location filter via single-select Dropdown */}
       <Dropdown
-        data={locations.map((loc) => ({ label: loc, value: loc, display: extractNameFromMarkdown(loc) }))}
+        data={locations.map((loc) => ({
+          label: loc,
+          value: loc,
+          display: extractNameFromMarkdown(loc),
+        }))}
         labelField="display"
         valueField="value"
         placeholder="Select Location"
