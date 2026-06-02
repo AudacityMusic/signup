@@ -20,6 +20,7 @@ import TimeSlot from "./TimeSlot";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 import colors from "../constants/colors";
+import { extractNameFromMarkdown } from "../utils";
 
 export default function FilterPanel({ data, onFilteredDataChange }) {
   // Filter states
@@ -183,6 +184,24 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
     );
   };
 
+  const renderDropdownItem = (item, selected) => (
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingVertical: 8,
+        paddingHorizontal: 10,
+        backgroundColor: selected ? "#f0f0f0" : "white",
+      }}
+    >
+      <Text style={styles.dropdownItemText}>{extractNameFromMarkdown(item.label)}</Text>
+      {selected && (
+        <MaterialIcons name="check" size={20} color={colors.primaryLight} />
+      )}
+    </View>
+  );
+
   return (
     <View style={styles.filters}>
       <TextInput
@@ -193,8 +212,8 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
       />
       {/* Location filter via single-select Dropdown */}
       <Dropdown
-        data={locations.map((loc) => ({ label: loc, value: loc }))}
-        labelField="label"
+        data={locations.map((loc) => ({ label: loc, value: loc, display: extractNameFromMarkdown(loc) }))}
+        labelField="display"
         valueField="value"
         placeholder="Select Location"
         searchPlaceholder="Search Locations..."
@@ -212,6 +231,7 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
         selectedTextStyle={styles.dropdownSelectedText}
         placeholderStyle={styles.dropdownPlaceholder}
         itemTextStyle={styles.dropdownItemText}
+        renderItem={renderDropdownItem}
         renderRightIcon={(visible) => (
           <MaterialIcons
             name={visible ? "keyboard-arrow-up" : "keyboard-arrow-down"}
@@ -230,8 +250,8 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
         autoOpen={false}
         startPickerMode="datetime"
         endPickerMode="datetime"
-        startTitle="Select Earliest Date & Time"
-        endTitle="Select Latest Date & Time"
+        startTitle="Start Date & Time"
+        endTitle="End Date & Time"
         style={styles.dateFilterBox}
         textStyle={styles.dateFilterText}
         placeholder="Filter by date & time"

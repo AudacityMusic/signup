@@ -79,6 +79,17 @@ export function openURL(url) {
 }
 
 /**
+ * Extract the visible name from a simple markdown link of the form [Name](url)
+ * If the string is already plain text, return as-is.
+ */
+export function extractNameFromMarkdown(str) {
+  if (!str) return "";
+  const match = str.match(/^\s*\[([^\]]+)\]\([^\)]+\)\s*$/);
+  if (match) return match[1];
+  return str;
+}
+
+/**
  * Utility delay function for retry backoff.
  */
 function wait(time) {

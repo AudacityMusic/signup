@@ -21,7 +21,7 @@ import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { Image } from "expo-image";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import Markdown from "react-native-markdown-display";
+import { extractNameFromMarkdown } from "../utils";
 
 export default function VolunteerOpportunity({
   navigation,
@@ -88,15 +88,9 @@ export default function VolunteerOpportunity({
               color="black"
               style={styles.icon}
             />
-            <Markdown
-              style={{
-                body: { fontSize: 10, color: "#555" },
-                paragraph: { marginTop: 0, marginBottom: 0 },
-                link: { color: "#555" },
-              }}
-            >
-              {location}
-            </Markdown>
+            <Text style={{ fontSize: 10, color: "#555", marginTop: 0, marginBottom: 0 }} selectable>
+              {extractNameFromMarkdown(location)}
+            </Text>
           </View>
         </View>
       </View>

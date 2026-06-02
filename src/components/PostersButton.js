@@ -1,6 +1,6 @@
+import React, { useCallback, useMemo, useRef, useState, useEffect } from "react";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Image } from "expo-image";
-import { useCallback, useMemo, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -9,93 +9,158 @@ import {
   StyleSheet,
   Text,
   View,
+  InteractionManager,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Zoom, createZoomListComponent } from "react-native-reanimated-zoom";
+import {
+  Zoom,
+  createZoomListWithReanimatedComponent,
+} from "react-native-reanimated-zoom";
 
 import colors from "../constants/colors";
 
-const ZoomFlatList = createZoomListComponent(FlatList);
-const { width, height } = Dimensions.get("window");
+const initialDims = Dimensions.get("window");
 
 export default function PostersButton({ posters }) {
   const [showGallery, setShowGallery] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [dims, setDims] = useState(initialDims);
+  const [failedMap, setFailedMap] = useState({});
+  const [hasPositioned, setHasPositioned] = useState(false);
+
   const flatListRef = useRef(null);
 
   const images = useMemo(() => Array.from(new Set(posters ?? [])), [posters]);
   const count = images.length;
+  const usesLoop = count > 1;
+
   const looped = useMemo(
-    () => (count > 0 ? [...images, ...images, ...images] : []),
-    [count, images],
+    () => (usesLoop ? [...images, ...images, ...images] : images),
+    [usesLoop, images]
   );
 
+  const ZoomFlatList = useMemo(
+    () => createZoomListWithReanimatedComponent(FlatList),
+    []
+  );
+
+  const keyExtractor = useCallback((item, i) => `${item}-${i}`, []);
+
+  const getItemLayout = useCallback(
+    (_, i) => ({
+      length: dims.width,
+      offset: dims.width * i,
+      index: i,
+    }),
+    [dims.width]
+  );
+
+  const renderItem = useCallback(
+    ({ item, index }) => {
+      const realIndex = index % count;
+
+      return (
+        <View style={{ width: dims.width, height: dims.height }}>
+          <Zoom style={{ width: dims.width, height: dims.height }}>
+            {failedMap[realIndex] ? (
+              <View style={styles.fallback}>
+                <Text style={{ color: "white" }}>Image unavailable</Text>
+              </View>
+            ) : (
+              <Image
+                source={{ uri: item }}
+                style={{ width: dims.width, height: dims.height }}
+                contentFit="contain"
+                onError={() =>
+                  setFailedMap((f) => ({ ...f, [realIndex]: true }))
+                }
+              />
+            )}
+          </Zoom>
+        </View>
+      );
+    },
+    [dims.width, dims.height, failedMap, count]
+  );
+
+  useEffect(() => {
+    const sub = Dimensions.addEventListener?.("change", ({ window }) =>
+      setDims(window)
+    );
+    return () => sub?.remove?.();
+  }, []);
+
   function openGallery() {
-    setCurrentIndex(count);
+    const startIndex = usesLoop ? count : 0;
+
+    setCurrentIndex(startIndex);
     setShowGallery(true);
-    setTimeout(() => {
-      flatListRef.current?.scrollToIndex({ index: count, animated: false });
-    }, 0);
+    setFailedMap({});
+    setHasPositioned(false);
+
+    InteractionManager.runAfterInteractions(() => {
+      flatListRef.current?.scrollToIndex({
+        index: startIndex,
+        animated: false,
+      });
+      setHasPositioned(true);
+    });
   }
 
   function onMomentumScrollEnd(e) {
-    const idx = Math.round(e.nativeEvent.contentOffset.x / width);
+    const idx = Math.round(e.nativeEvent.contentOffset.x / dims.width);
     let normalized = idx;
 
-    if (idx < count) {
-      normalized = idx + count;
-      flatListRef.current?.scrollToIndex({
-        index: normalized,
-        animated: false,
-      });
-    } else if (idx >= count * 2) {
-      normalized = idx - count;
-      flatListRef.current?.scrollToIndex({
-        index: normalized,
-        animated: false,
-      });
+    if (usesLoop) {
+      if (idx < count) {
+        normalized = idx + count;
+        flatListRef.current?.scrollToIndex({
+          index: normalized,
+          animated: false,
+        });
+      } else if (idx >= count * 2) {
+        normalized = idx - count;
+        flatListRef.current?.scrollToIndex({
+          index: normalized,
+          animated: false,
+        });
+      }
     }
 
     setCurrentIndex(normalized);
   }
 
-  const keyExtractor = useCallback((_, i) => String(i), []);
+  function onScrollToIndexFailed(info) {
+    const offset = info.index * dims.width;
 
-  const getItemLayout = useCallback(
-    (_, i) => ({
-      length: width,
-      offset: width * i,
-      index: i,
-    }),
-    [],
-  );
-
-  const renderItem = useCallback(
-    ({ item }) => (
-      <View style={styles.imagePage}>
-        <Zoom style={styles.image}>
-          <Image
-            source={{ uri: item }}
-            style={styles.image}
-            contentFit="contain"
-          />
-        </Zoom>
-      </View>
-    ),
-    [],
-  );
+    InteractionManager.runAfterInteractions(() => {
+      flatListRef.current?.scrollToOffset({
+        offset,
+        animated: false,
+      });
+    });
+  }
 
   if (count === 0) return null;
 
+  const displayIndex =
+    ((currentIndex % count) + count) % count + 1;
+
   return (
     <View>
-      <Pressable onPress={openGallery} style={styles.button}>
+      <Pressable
+        onPress={openGallery}
+        style={styles.button}
+        accessibilityLabel="Show posters"
+      >
         <MaterialCommunityIcons
           name="image-multiple-outline"
           size={22}
           color={colors.primary}
         />
-        <Text style={styles.buttonText}>Show Posters & Programs</Text>
+        <Text style={styles.buttonText}>
+          Show Posters & Programs
+        </Text>
       </Pressable>
 
       <Modal
@@ -108,30 +173,39 @@ export default function PostersButton({ posters }) {
           <Pressable
             style={styles.closeButton}
             onPress={() => setShowGallery(false)}
+            accessibilityLabel="Close posters"
           >
-            <MaterialCommunityIcons name="close" size={28} color="white" />
+            <MaterialCommunityIcons
+              name="close"
+              size={28}
+              color="white"
+            />
           </Pressable>
 
-          <ZoomFlatList
-            ref={flatListRef}
-            data={looped}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={keyExtractor}
-            getItemLayout={getItemLayout}
-            initialScrollIndex={count}
-            onMomentumScrollEnd={onMomentumScrollEnd}
-            renderItem={renderItem}
-            initialNumToRender={1}
-            maxToRenderPerBatch={2}
-            windowSize={3}
-            removeClippedSubviews
-          />
+          {showGallery && (
+            <ZoomFlatList
+              ref={flatListRef}
+              data={looped}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={keyExtractor}
+              getItemLayout={getItemLayout}
+              onMomentumScrollEnd={onMomentumScrollEnd}
+              onScrollToIndexFailed={onScrollToIndexFailed}
+              renderItem={renderItem}
+              initialNumToRender={1}
+              maxToRenderPerBatch={2}
+              windowSize={3}
+              removeClippedSubviews={false}
+            />
+          )}
 
-          <Text style={styles.footer}>
-            {(currentIndex % count) + 1} / {count}
-          </Text>
+          {hasPositioned && (
+            <Text style={styles.footer}>
+              {displayIndex} / {count}
+            </Text>
+          )}
         </GestureHandlerRootView>
       </Modal>
     </View>
@@ -159,7 +233,6 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     backgroundColor: "black",
-    justifyContent: "center",
   },
   closeButton: {
     position: "absolute",
@@ -167,19 +240,10 @@ const styles = StyleSheet.create({
     right: 20,
     zIndex: 10,
   },
-  imagePage: {
-    width,
-    height,
+  fallback: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: 50,
-    paddingBottom: 50,
-    paddingLeft: 50,
-    paddingRight: 50,
-  },
-  image: {
-    width: "100%",
-    height: "100%",
   },
   footer: {
     color: "white",
