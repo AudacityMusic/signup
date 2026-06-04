@@ -203,5 +203,6 @@ export default function HomeScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     margin: 15,
+    paddingBottom: 40,
   },
 });
