@@ -2,7 +2,7 @@ import 'dotenv/config';
 export default {
   name: "Audacity Sign Up",
   slug: "audacity-music-club",
-  version: "1.0.0",
+  version: "2.0.3",
   orientation: "portrait",
   icon: "./src/assets/eternity-band.png",
   userInterfaceStyle: "light",

@@ -7,17 +7,18 @@
  */
 
 import NetInfo from "@react-native-community/netinfo";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import colors from "../constants/colors";
 
 const NoInternetBanner = () => {
   const [isConnected, setIsConnected] = useState(true);
-  const [slideAnim] = useState(new Animated.Value(-200));
+  const [shouldRender, setShouldRender] = useState(false);
+  const slideAnim = useRef(new Animated.Value(-200)).current;
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
-      setIsConnected(state.isConnected);
+      setIsConnected(state.isConnected ?? true);
     });
 
     return () => unsubscribe();
@@ -25,7 +26,7 @@ const NoInternetBanner = () => {
 
   useEffect(() => {
     if (!isConnected) {
-      // Slide down animation
+      setShouldRender(true);
       Animated.spring(slideAnim, {
         toValue: 0,
         useNativeDriver: true,
@@ -33,15 +34,16 @@ const NoInternetBanner = () => {
         friction: 8,
       }).start();
     } else {
-      // Slide up animation
       Animated.spring(slideAnim, {
         toValue: -200,
         useNativeDriver: true,
         tension: 100,
         friction: 8,
-      }).start();
+      }).start(() => setShouldRender(false));
     }
   }, [isConnected]);
+
+  if (!shouldRender) return null;
 
   return (
     <Animated.View

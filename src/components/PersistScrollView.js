@@ -37,6 +37,7 @@ export default function PersistScrollView({
       {/* Main scroll container with vertical scroll indicator */}
       <FlatList
         style={style}
+        contentContainerStyle={{ paddingBottom: 40 }}
         ref={scrollRef}
         data={childrenArray}
         renderItem={renderItem}
