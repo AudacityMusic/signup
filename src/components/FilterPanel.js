@@ -43,7 +43,7 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
   const [allTags, setAllTags] = useState([]);
 
   // Deduplicate very similar items using fuzzy matching
-  const deduplicateSimilar = useCallback((items, threshold = 0.2) => {
+  const deduplicateSimilar = useCallback((items, threshold = 0.1) => {
     if (items.length === 0) return items;
 
     const deduplicated = [];
@@ -73,7 +73,7 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
   // Derive unique locations and tags when data loads
   useEffect(() => {
     const rawLocs = Array.from(new Set(data.map((e) => e.Location)));
-    const deduplicatedLocs = deduplicateSimilar(rawLocs, 0.15); // Very strict for locations
+    const deduplicatedLocs = deduplicateSimilar(rawLocs); // Very strict for locations
     setLocations(deduplicatedLocs);
 
     const tags = new Set();
@@ -81,7 +81,7 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
       e.Tags?.split(",").forEach((t) => tags.add(t.trim()));
     });
     const rawTags = Array.from(tags).filter((t) => t);
-    const deduplicatedTags = deduplicateSimilar(rawTags, 0.2); // Slightly more lenient for tags
+    const deduplicatedTags = deduplicateSimilar(rawTags); // Slightly more lenient for tags
     setAllTags(deduplicatedTags);
   }, [data, deduplicateSimilar]);
 
@@ -101,7 +101,7 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
       if (appliedLocationFilter.length > 0) {
         const selectedLocation = appliedLocationFilter[0];
         const locationFuse = new Fuse([e.Location], {
-          threshold: 0.3, // Stricter threshold for locations
+          threshold: 0.1, // Stricter threshold for locations
           minMatchCharLength: 1,
         });
         const locationMatch =
@@ -124,7 +124,7 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
 
         // Use fuzzy matching for tags - all selected tags must match
         const tagFuse = new Fuse(eventTags, {
-          threshold: 0.3, // Stricter threshold for tags
+          threshold: 0.1, // Stricter threshold for tags
           minMatchCharLength: 1,
         });
 
