@@ -18,10 +18,7 @@ import {
   InteractionManager,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import {
-  Zoom,
-  createZoomListWithReanimatedComponent,
-} from "react-native-reanimated-zoom";
+import { Zoom, createZoomListComponent } from "react-native-reanimated-zoom";
 
 import colors from "../constants/colors";
 
@@ -45,10 +42,7 @@ export default function PostersButton({ posters }) {
     [usesLoop, images],
   );
 
-  const ZoomFlatList = useMemo(
-    () => createZoomListWithReanimatedComponent(FlatList),
-    [],
-  );
+  const ZoomFlatList = useMemo(() => createZoomListComponent(FlatList), []);
 
   const keyExtractor = useCallback((item, i) => `${item}-${i}`, []);
 
@@ -64,18 +58,32 @@ export default function PostersButton({ posters }) {
   const renderItem = useCallback(
     ({ item, index }) => {
       const realIndex = index % count;
+      const innerWidth = dims.width - 100;
+      const innerHeight = dims.height - 100;
 
       return (
-        <View style={{ width: dims.width, height: dims.height }}>
-          <Zoom style={{ width: dims.width, height: dims.height }}>
+        <View
+          style={{
+            width: dims.width,
+            height: dims.height,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Zoom style={{ width: innerWidth, height: innerHeight }}>
             {failedMap[realIndex] ? (
-              <View style={styles.fallback}>
+              <View
+                style={[
+                  styles.fallback,
+                  { width: innerWidth, height: innerHeight },
+                ]}
+              >
                 <Text style={{ color: "white" }}>Image unavailable</Text>
               </View>
             ) : (
               <Image
                 source={{ uri: item }}
-                style={{ width: dims.width, height: dims.height }}
+                style={{ width: innerWidth, height: innerHeight }}
                 contentFit="contain"
                 onError={() =>
                   setFailedMap((f) => ({ ...f, [realIndex]: true }))
