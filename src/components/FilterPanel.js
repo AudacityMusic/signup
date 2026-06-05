@@ -81,7 +81,7 @@ export default function FilterPanel({ data, onFilteredDataChange }) {
       e.Tags?.split(",").forEach((t) => tags.add(t.trim()));
     });
     const rawTags = Array.from(tags).filter((t) => t);
-    const deduplicatedTags = deduplicateSimilar(rawTags); // Slightly more lenient for tags
+    const deduplicatedTags = deduplicateSimilar(rawTags, 0.1); // Strict for tags
     setAllTags(deduplicatedTags);
   }, [data, deduplicateSimilar]);
 
