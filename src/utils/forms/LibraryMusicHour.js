@@ -144,7 +144,7 @@ export default class LibraryMusicHour extends Form {
           if (isNaN(age)) {
             return false;
           }
-          return age >= 5 && age <= 125;
+          return age >= 0;
         },
       }),
 
