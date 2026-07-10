@@ -140,11 +140,11 @@ export default class LibraryMusicHour extends Form {
           />
         ),
         validate(value) {
-          const age = Number(value);
-          if (isNaN(age)) {
+          if (typeof value !== 'string' || value.trim() === '') {
             return false;
           }
-          return age >= 0;
+          const age = Number(value);
+          return Number.isInteger(age) && age >= 0;
         },
       }),
 
