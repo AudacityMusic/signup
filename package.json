@@ -22,7 +22,7 @@
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.10.0",
     "@robinbobin/react-native-google-drive-api-wrapper": "^1.2.4",
-    "expo": "^54.0.10",
+    "expo": "^57.0.9",
     "expo-checkbox": "~5.0.8",
     "expo-constants": "~18.0.12",
     "expo-dev-client": "~6.0.20",
